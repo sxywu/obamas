@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Tonight Show Starring Jimmy Fallon",
+    "id": "UC8-Th83bH_thdKZDJCrn88g",
+    "dates": [
+      "June 9, 2016", "April 2, 2015", "February 20, 2014",
+      "February 22, 2013", "February 7, 2012"
+    ]
+  },
+  {
+    "name": "The Ellen Degeneres Show",
+    "id": "UCp0hYYBW6IMayGgR-WeoCvQ",
+    "dates": [
+      "September 13, 2016", "February 12, 2016",
+      "March 16, 2015", "March 3, 2014"
+    ]
+  },
+  {
+    "name": "Late Show with Stephen Colbert",
+    "id": "UCMtFAi84ehTSYSE9XoHefig",
+    "dates": [
+      "September 20, 2016", "February 7, 2016",
+      "February 7, 2016", "September 28, 2015"
+    ]
+  },
+  {
+    "name": "Daily Show with John Stewart",
+    "id": "UCUsN5ZwHx2kILm84-jPDeXw",
+    "dates": [
+      "July 21, 2015", "October 18, 2012",
+      "October 27, 2012", "May 29, 2012"
+    ]
+  },
+  {
+    "name": "Jimmy Kimmel Live!",
+    "id": "UCa6vGFO9ty8v5KZJXQxdhaw",
+    "dates": [
+      "March 12, 2015", "August 20, 2015"
+    ]
+  },
+  {
+    "name": "Colbert Report",
+    "id": "UCUsN5ZwHx2kILm84-jPDeXw",
+    "dates": [
+      "December 8, 2014", "April 11, 2012", "June 8, 2009"
+    ]
+  },
+  {
+    "name": "Late Night with Seth Meyers",
+    "id": "UCVTyTA7-g9nopHeHbeuvpRA",
+    "dates": [
+      "September 9, 2016"
+    ]
+  },
+  {
+    "name": "Late Late Show with James Corden",
+    "id": "UCJ0uqCI0Vqr2Rrt1HseGirg",
+    "dates": ["July 20, 2016"]
+  },
+  {
+    "name": "Conan",
+    "id": "UCi7GJNg51C3jgmYTUwqoUXA",
+    "dates": ["January 25, 2016"]
+  }
+]
