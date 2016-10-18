@@ -3,6 +3,7 @@
 # dependencies
 node_modules
 data/videos
+data/screenshots
 
 # testing
 coverage
@@ -16,3 +17,4 @@ build
 npm-debug.log
 
 key.txt
+data/google_cloud_key.json
