@@ -29,7 +29,9 @@ function getAnnotations(image, images, videoName, videoNames) {
     }
     console.log('annotated ', image);
 
-    !_.isEmpty(detections) && allAnnotations.push(detections);
+    if (!_.isEmpty(detections)) {
+      allAnnotations[image] = detections;
+    }
     image = images.shift();
     getAnnotations(image, images, videoName, videoNames);
   });
@@ -42,7 +44,7 @@ function getImages(videoName, videoNames) {
   var allImages = fs.readdirSync('screenshots/' + videoName);
   allImages = _.filter(allImages, function(image) {return image !== '.DS_Store'});
 
-  allAnnotations = [];
+  allAnnotations = {};
   var image = allImages.shift();
   getAnnotations(image, allImages, videoName, videoNames);
 }
