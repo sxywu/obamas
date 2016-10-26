@@ -58,12 +58,17 @@ var App = React.createClass({
     this.setState({data: annotationsSubtitles});
   },
 
+  randomize() {
+    this.forceUpdate();
+  },
+
   render() {
     var imageHeight = 360;
-    var emotions = ['happy', 'mad', 'sad', 'surprised', 'hat'];
+    var emotions = ['happy', 'happy', 'happy', 'happy'];
     var faces = _.map(emotions, (emotion) => {
-      var emotionObj = _.find(this.state.data, d => d.faces.length && d.faces[0][emotion]);
-      if (!emotionObj) return;
+      var emotionObj = _.filter(this.state.data, d => d.faces.length && d.faces[0][emotion]);
+      if (!emotionObj.length) return;
+      emotionObj = emotionObj[_.random(emotionObj.length - 1)];
 
       var emotionFaces = _.map(emotionObj.faces, (face, i) => {
         var fontSize = face.bounds.head[1].x - face.bounds.head[0].x;
@@ -71,7 +76,7 @@ var App = React.createClass({
 
         var style = {
           position: 'absolute',
-          top: face.hat ? face.bounds.face[0].y - dy : face.bounds.head[0].y,
+          top: face.hat ? face.bounds.face[0].y - dy - 10 : face.bounds.head[0].y,
           left: face.bounds.head[0].x,
           fontSize,
         };
@@ -89,6 +94,9 @@ var App = React.createClass({
 
     return (
       <div className="App">
+        <div>
+          <button onClick={this.randomize}>Random!</button>
+        </div>
         {faces}
       </div>
     );
