@@ -12,7 +12,7 @@
     ]
   },
   {
-    "name": ["The Ellen Degeneres Show"],
+    "shows": ["The Ellen Degeneres Show"],
     "id": ["UCp0hYYBW6IMayGgR-WeoCvQ"],
     "host": "Ellen Degeneres",
     "dates": [
@@ -23,7 +23,7 @@
     ]
   },
   {
-    "name": ["Late Show with Stephen Colbert", "Colbert Report"],
+    "shows": ["Late Show with Stephen Colbert", "Colbert Report"],
     "id": ["UCMtFAi84ehTSYSE9XoHefig", "UCUsN5ZwHx2kILm84-jPDeXw"],
     "host": "Stephen Colbert",
     "dates": [
@@ -38,7 +38,7 @@
     ]
   },
   {
-    "name": ["Daily Show with John Stewart"],
+    "shows": ["Daily Show with John Stewart"],
     "id": ["UCUsN5ZwHx2kILm84-jPDeXw"],
     "host": "John Stewart",
     "dates": [
@@ -49,7 +49,7 @@
     ]
   },
   {
-    "name": ["Late Show with David Letterman"],
+    "shows": ["Late Show with David Letterman"],
     "host": "David Letterman",
     "dates": [
       ["May 20, 2015", "B"],
@@ -63,7 +63,7 @@
     ]
   },
   {
-    "name": ["Jimmy Kimmel Live!"],
+    "shows": ["Jimmy Kimmel Live!"],
     "id": ["UCa6vGFO9ty8v5KZJXQxdhaw"],
     "host": "Jimmy Kimmel",
     "dates": [
@@ -73,7 +73,7 @@
     ]
   },
   {
-    "name": ["Tonight Show with Jay Leno"],
+    "shows": ["Tonight Show with Jay Leno"],
     "host": "Jay Leno",
     "dates": [
       ["September 12, 2013", "M"],
@@ -86,7 +86,7 @@
     ]
   },
   {
-    "name": ["Late Night with Seth Meyers"],
+    "shows": ["Late Night with Seth Meyers"],
     "id": ["UCVTyTA7-g9nopHeHbeuvpRA"],
     "host": "Seth Meyers",
     "dates": [
@@ -94,7 +94,7 @@
     ]
   },
   {
-    "name": ["Late Late Show with James Corden"],
+    "shows": ["Late Late Show with James Corden"],
     "id": ["UCJ0uqCI0Vqr2Rrt1HseGirg"],
     "host": "James Corden",
     "dates": [
@@ -102,7 +102,7 @@
     ]
   },
   {
-    "name": ["Conan", "Tonight Show with Conan O'Brien"],
+    "shows": ["Conan", "Tonight Show with Conan O'Brien"],
     "id": ["UCi7GJNg51C3jgmYTUwqoUXA"],
     "host": "Conan O'Brien",
     "dates": [
