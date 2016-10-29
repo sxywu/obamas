@@ -2,11 +2,13 @@ import React from 'react';
 import _ from 'lodash';
 
 import Header from './Header';
+import Section from './Section';
 
 import videosData from './data/videos.json';
 import annotationsData from './data/annotation_subtitles.json';
 import showsData from './data/shows.json';
 import metadata from './data/metadata.json';
+import sectionData from './data/sections.js';
 
 var emojis = {
   happy: ['😆', '😀', '😁', '😄', '😃'],
@@ -34,6 +36,7 @@ var images = {
   B: require('./images/barack.png'),
   M: require('./images/michelle.png'),
 };
+var data = {videosData, annotationsData, showsData};
 
 var App = React.createClass({
   componentWillMount() {
@@ -50,8 +53,10 @@ var App = React.createClass({
     });
 
     _.each(annotationsData, annotation => {
-      annotation.guest = _.find(videosData, video => video.videoId === annotation.videoId).guest;
+      annotation.video = _.find(videosData, video => video.videoId === annotation.videoId);
     });
+
+    data.sectionData = sectionData(data);
   },
 
   render() {
@@ -61,11 +66,14 @@ var App = React.createClass({
       width,
       margin: 'auto',
     };
-    var data = {videosData, annotationsData, showsData};
+    var sections = _.map(sectionData, section => {
+      return <Section {...section} />;
+    });
 
     return (
       <div className="App" style={style}>
         <Header {...data} emojis={emojis} images={images} />
+        {sections}
       </div>
     );
   }
