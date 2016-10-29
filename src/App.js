@@ -30,7 +30,9 @@ var emojis = {
   building: '🏢',
   car: '🚘',
   floristry: '💐',
-  presentation: '📽'
+  presentation: '📽',
+  'White House': '🏛',
+  'U.S. Capitol': '🏛',
 };
 var images = {
   B: require('./images/barack.png'),
