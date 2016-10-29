@@ -62,14 +62,28 @@ var Header = React.createClass({
 
     var style = {
       textAlign: 'center',
+      marginBottom: '50vh',
+    };
+    var buttonStyle = {
+      padding: '10px 20px',
+      border: '3px solid #666',
+      color: '#666',
+      cursor: 'pointer',
+      display: 'inline-block',
+      position: 'relative',
+      top: -90,
     };
 
     return (
       <div className="Header" style={style}>
-        <div>
-          <button onClick={this.randomize}>Random!</button>
-        </div>
+        <h3>
+          <a href='https://twitter.com/sxywu' target='_new'>Shirley Wu</a>
+        </h3>
         {faces}
+        <br />
+        <h3 style={buttonStyle} onClick={this.randomize}>
+          Random
+        </h3>
       </div>
     );
   }

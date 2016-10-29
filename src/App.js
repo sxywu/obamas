@@ -55,7 +55,7 @@ var App = React.createClass({
   },
 
   render() {
-    var width = 1000;
+    var width = 1200;
     var style = {
       position: 'relative',
       width,
