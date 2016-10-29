@@ -1,11 +1,9 @@
 import React from 'react';
 import _ from 'lodash';
-import * as d3 from 'd3';
 
 import Header from './Header';
 
 import videosData from './data/videos.json';
-import subtitlesData from './data/all_subtitles.json';
 import annotationsData from './data/annotation_subtitles.json';
 import showsData from './data/shows.json';
 import metadata from './data/metadata.json';

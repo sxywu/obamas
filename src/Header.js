@@ -16,7 +16,6 @@ var Header = React.createClass({
 
   render() {
     var imageScale = 0.65;
-    var imageHeight = 360 * imageScale;
     var imageWidth = 640 * imageScale;
 
     var images = [[this.barackPhotos, 'B'], [this.michellePhotos, 'M']];
@@ -28,7 +27,6 @@ var Header = React.createClass({
 
       var emotionFaces = _.map(emotionObj.faces, (face, i) => {
         var fontSize = face.bounds.head[1].x - face.bounds.head[0].x;
-        var dy = face.bounds.face[2].y - face.bounds.face[0].y;
 
         var style = {
           position: 'absolute',
@@ -53,10 +51,11 @@ var Header = React.createClass({
       return (
         <span style={style}>
           <div>
-            <img src={process.env.PUBLIC_URL + '/' + emotionObj.filename} width={imageWidth} />
+            <img src={process.env.PUBLIC_URL + '/' + emotionObj.filename}
+              width={imageWidth} role="presentation" />
             {emotionFaces}
           </div>
-          <img src={this.props.images[guest]} width={100} />
+          <img src={this.props.images[guest]} width={100} role="presentation" />
         </span>
       );
     });
