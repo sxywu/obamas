@@ -18,9 +18,15 @@ _.each(annotationsData, (annotations, videoId) => {
     var subtitle = subtitleByStart[time];
     if (!subtitle) {
       // if there's no subtitle delete the corresponding photo
-      fs.unlinkSync('../public/' + filename);
+      // fs.unlinkSync('../public/' + filename);
       return;
     }
+    // delete features from annotation
+    _.each(annotation.faces, face => {
+      delete face.features;
+    });
+    // also delete text
+    delete annotation.text;
 
     annotationsSubtitles.push(Object.assign({
       start: subtitle[0].start,
