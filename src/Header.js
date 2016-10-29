@@ -5,9 +5,9 @@ var Header = React.createClass({
   componentWillMount() {
     var emotion = 'happy';
     this.barackPhotos = _.filter(this.props.annotationsData, d =>
-      d.guest === 'B' && d.faces.length && d.faces[0][emotion]);
+      d.video.guest === 'B' && d.faces.length && d.faces[0][emotion]);
     this.michellePhotos = _.filter(this.props.annotationsData, d =>
-      d.guest === 'M' && d.faces.length && d.faces[0][emotion]);
+      d.video.guest === 'M' && d.faces.length && d.faces[0][emotion]);
   },
 
   randomize() {
@@ -47,13 +47,22 @@ var Header = React.createClass({
       var style = {
         position: 'relative',
         display: 'inline-block',
+        width: imageWidth,
       };
+      var footerStyle = {
+        fontSize: 10,
+        textAlign: 'left',
+        fontStyle: 'italic',
+        paddingBottom: 10,
+      };
+
       return (
         <span style={style}>
           <div>
             <img src={process.env.PUBLIC_URL + '/' + emotionObj.filename}
               width={imageWidth} role="presentation" />
             {emotionFaces}
+            <div style={footerStyle}>{emotionObj.video.channelTitle}</div>
           </div>
           <img src={this.props.images[guest]} width={100} role="presentation" />
         </span>
