@@ -1,0 +1,240 @@
+[
+  {
+    "id": "RDocnbkHjhI",
+    "social media": "twitter",
+    "guest": "Barack",
+    "actions": ["read"],
+    "political": false
+  },
+  {
+    "id": "ln3wAdRAim4",
+    "initiative": ["Let Girls Learn", "https://letgirlslearn.gov/", "mentioned"],
+    "social media": "Snapchat",
+    "guest": "Michelle",
+    "co-guests": ["Missy Elliot"],
+    "actions": ["sing"],
+    "political": false
+  },
+  {
+    "id": "Hq-URl9F17Y",
+    "initiative": ["Let's Move", "http://www.letsmove.gov/", "mentioned"],
+    "guest": "Michelle",
+    "actions": ["dance"],
+    "political": false
+  },
+  {
+    "id": "HOK4aBYNh3s",
+    "initiative": ["Let's Move", "http://www.letsmove.gov/", "implied"],
+    "guest": "Michelle",
+    "actions": ["dance"],
+    "political": false
+  },
+  {
+    "id": "QmPLGt5rd_k",
+    "guest": "Barack",
+    "political": false
+  },
+  {
+    "id": "ziwYbVx_-qg",
+    "guest": "Barack",
+    "actions": ["sing"],
+    "political": ["unemployment", "economy", "clean energy",
+      "Affordable Care Act", "same sex marriage", "Donald Trump",
+      "Iran Nuclear Deal", "Cuba", "Trans-Pacific Partnership"]
+  },
+  {
+    "id": "2ihOXaU0I8o",
+    "guest": "Michelle",
+    "actions": ["shop"],
+    "political": false
+  },
+  {
+    "id": "rZnXbPZ6R3w",
+    "guest": "Barack",
+    "co-guests": ["Macey Hensley"],
+    "political": false
+  },
+  {
+    "id": "_qWuOtP9eZE",
+    "guest": "Michelle",
+    "initiative": ["Let's Move/#GimmeFive", "http://www.letsmove.gov/", "mentioned"],
+    "actions": ["dance"],
+    "political": false
+  },
+  {
+    "id": "uNyd34TPXUg",
+    "guest": "Barack",
+    "political": false
+  },
+  {
+    "id": "EYzRY2XpLBk",
+    "guest": "Barack",
+    "political": false
+  },
+  {
+    "id": "lahqqFx84q8",
+    "guest": "Barack",
+    "political": false
+  },
+  {
+    "id": "ymGENUjIdIg",
+    "guest": "Barack",
+    "actions": ["write"],
+    "political": false
+  },
+  {
+    "id": "jiMUoVjQ5uI",
+    "guest": "Michelle",
+    "political": false
+  },
+  {
+    "id": "PLHo6uyICVk",
+    "guest": "Barack",
+    "political": ["economy", "deficit"]
+  },
+  {
+    "id": "sZdetmEAtxA",
+    "guest": "Michelle",
+    "political": false
+  },
+  {
+    "id": "lTf-QrU2pjA",
+    "guest": "Michelle",
+    "co-guest": "Stephen Curry",
+    "political": false
+  },
+  {
+    "id": "i_Ijjkt6Fkw",
+    "guest": "Obama",
+    "political": ["Donald Trump", "Republican party", "democracy",
+      "economy", "troops", "Supreme Court"]
+  },
+  {
+    "id": "O6Yl1Ub3eT4",
+    "guest": "Barack"
+  },
+  {
+    "id": "6kcHglDoDjI",
+    "guest": "Michelle"
+  },
+  {
+    "id": "RecREW7iZz8",
+    "guest": "Barack"
+  },
+  {
+    "id": "Efc8UnyEHzM",
+    "guest": "Barack"
+  },
+  {
+    "id": "etEkKixh5Qg",
+    "guest": "Barack"
+  },
+  {
+    "id": "aMcKi1TS2Zs",
+    "guest": "Barack"
+  },
+  {
+    "id": "95KTrtzOY-g",
+    "guest": "Barack"
+  },
+  {
+    "id": "2TtdPbeKNFc",
+    "guest": "Barack"
+  },
+  {
+    "id": "m1LXS4ObtEo",
+    "guest": "Barack"
+  },
+  {
+    "id": "L88H2HWEXrw",
+    "guest": "Barack"
+  },
+  {
+    "id": "xRkoRHiSsTY",
+    "guest": "Michelle"
+  },
+  {
+    "id": "tCCx9vEvOHs",
+    "guest": "Michelle"
+  },
+  {
+    "id": "g_8gQzq6Mcc",
+    "guest": "Barack"
+  },
+  {
+    "id": "iAArzQOcoZQ",
+    "guest": "Michelle"
+  },
+  {
+    "id": "yaiPYu6Eduw",
+    "guest": "Barack"
+  },
+  {
+    "id": "x7VSkwDwfOI",
+    "guest": "Barack"
+  },
+  {
+    "id": "RNanuxME2ts",
+    "guest": "Michelle"
+  },
+  {
+    "id": "vJZqTdWNd3c",
+    "guest": "Barack"
+  },
+  {
+    "id": "hEfDQaBCUL0",
+    "guest": "Michelle"
+  },
+  {
+    "id": "dbYEEBrjOAA",
+    "guest": "Michelle"
+  },
+  {
+    "id": "w4vJ0oTtbHY",
+    "guest": "Michelle"
+  },
+  {
+    "id": "xAbJ8RZQJmY",
+    "guest": "Michelle"
+  },
+  {
+    "id": "nIKWOQjqlok",
+    "guest": "Michelle"
+  },
+  {
+    "id": "j7jZbuVSEG0",
+    "guest": "Michelle"
+  },
+  {
+    "id": "nH2OVbgD7G8",
+    "guest": "Barack"
+  },
+  {
+    "id": "8cKtijgcVJw",
+    "guest": "Barack"
+  },
+  {
+    "id": "jAbOss8T3hM",
+    "guest": "Michelle"
+  },
+  {
+    "id": "kCkVLg4aPIY",
+    "guest": "Michelle"
+  },
+  {
+    "id": "Lal8zWHkdgU",
+    "guest": "Michelle"
+  },
+  {
+    "id": "EYco1RQw66I",
+    "guest": "Michelle"
+  },
+  {
+    "id": "nLt2hPklBrE",
+    "guest": "Michelle"
+  },
+  {
+    "id": "2jcYRBByUWk",
+    "guest": "Michelle"
+  }
+]
