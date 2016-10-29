@@ -57,10 +57,16 @@ var App = React.createClass({
   },
 
   render() {
+    var width = 1000;
+    var style = {
+      position: 'relative',
+      width,
+      margin: 'auto',
+    };
     var data = {videosData, annotationsData, showsData};
 
     return (
-      <div className="App">
+      <div className="App" style={style}>
         <Header {...data} emojis={emojis} images={images} />
       </div>
     );

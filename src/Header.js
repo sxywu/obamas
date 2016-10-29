@@ -2,6 +2,14 @@ import React from 'react';
 import _ from 'lodash';
 
 var Header = React.createClass({
+  componentWillMount() {
+    var emotion = 'happy';
+    this.barackPhotos = _.filter(this.props.annotationsData, d =>
+      d.guest === 'B' && d.faces.length && d.faces[0][emotion]);
+    this.michellePhotos = _.filter(this.props.annotationsData, d =>
+      d.guest === 'M' && d.faces.length && d.faces[0][emotion]);
+  },
+
   randomize() {
     this.forceUpdate();
   },
@@ -10,12 +18,11 @@ var Header = React.createClass({
     var imageScale = 0.65;
     var imageHeight = 360 * imageScale;
     var imageWidth = 640 * imageScale;
-    var images = [['happy', 'B'], ['happy', 'M']];
+
+    var images = [[this.barackPhotos, 'B'], [this.michellePhotos, 'M']];
     var faces = _.map(images, (image) => {
-      var emotion = image[0];
+      var emotionObj = image[0];
       var guest = image[1];
-      var emotionObj = _.filter(this.props.annotationsData, d =>
-        d.guest === guest && d.faces.length && d.faces[0][emotion]);
       if (!emotionObj.length) return;
       emotionObj = emotionObj[_.random(emotionObj.length - 1)];
 
@@ -33,9 +40,8 @@ var Header = React.createClass({
         style.left *= imageScale;
         style.fontSize *= imageScale;
 
-        // if  emoji is an array, randomly pick one from it
-        var emoji = this.props.emojis[face[emotion] ? emotion : 'neutral'];
-        emoji = _.isArray(emoji) ? emoji[_.random(emoji.length - 1)] : emoji;
+        var emoji = this.props.emojis.happy;
+        emoji = emoji[_.random(emoji.length - 1)];
 
         return (<div key={i} style={style}>{emoji}</div>);
       });
@@ -43,7 +49,6 @@ var Header = React.createClass({
       var style = {
         position: 'relative',
         display: 'inline-block',
-        textAlign: 'center',
       };
       return (
         <span style={style}>
@@ -56,8 +61,12 @@ var Header = React.createClass({
       );
     });
 
+    var style = {
+      textAlign: 'center',
+    };
+
     return (
-      <div className="Header">
+      <div className="Header" style={style}>
         <div>
           <button onClick={this.randomize}>Random!</button>
         </div>
