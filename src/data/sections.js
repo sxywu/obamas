@@ -8,19 +8,33 @@ export default function(data, images) {
     {
       id: 'all_hosts',
       position(width, top) {
-        width *= 0.75;
+        width *= 2 / 3;
 
         var hostSize = 50;
         var obamaSize = 40;
 
         // position hosts first
-        var perRow = 5;
-        var perWidth = width / (perRow + 1);
+        var perRow = 4;
+        var perWidth = width / perRow;
+        var length = data.showsData.length;
+        var rows = Math.floor(length / perRow);
+        var extras = length - rows * perRow;
+
         var hosts = _.chain(data.showsData)
           .sortBy(show => -show.dates.length)
           .map((show, i) => {
-            var x = (i % perRow + 0.5) * perWidth + padding.left;
-            var y = 1.75 * (Math.floor(i / perRow) + 0.5) * perWidth + top;
+            var row = Math.floor(i / perRow);
+            var x = (i % perRow + 0.5) * perWidth;
+            var y = row * perWidth + top;
+
+            if (row === rows) {
+              // if it's the last row
+              x = x + (perRow * perWidth - extras * perWidth) / 2;
+            }
+
+            if (row !== 0) {
+              y += 0.25 * perWidth;
+            }
 
             return {
               x,
@@ -32,13 +46,13 @@ export default function(data, images) {
           }).value();
         var hostsByKey = _.keyBy(hosts, 'host');
 
-        var perRow = 3;
+        perRow = 3;
         var obamas = _.chain(data.showsData)
           .map(show => {
             var host = hostsByKey[show.host];
-            var length = show.dates.length;
-            var rows = Math.floor(length / perRow);
-            var extras = length - rows * perRow;
+            length = show.dates.length;
+            rows = Math.floor(length / perRow);
+            extras = length - rows * perRow;
 
             return _.chain(show.dates)
               .sortBy(date => date[1])
