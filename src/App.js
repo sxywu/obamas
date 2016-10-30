@@ -41,9 +41,9 @@ var images = {
   M: require('./images/michelle.png'),
 };
 var colors = {
-  B: '#8A9B0F',
-  M: '#BD1550',
-  host: '#F9CDAD',
+  B: '#FF6B6B',
+  M: '#4ECDC4',
+  host: '#C7F464',
 };
 var data = {videosData, annotationsData, showsData};
 

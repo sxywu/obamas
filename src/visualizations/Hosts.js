@@ -34,7 +34,7 @@ var Hosts = React.createClass({
 
     this.hosts.selectAll('.stroke')
       .attr('r', d => d.radius);
-    var padding = 3;
+    var padding = 2;
     this.hosts.selectAll('.image')
       .attr('x', d => -(d.radius - padding))
       .attr('y', d => -(d.radius - padding))
