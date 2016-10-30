@@ -5,9 +5,10 @@ var padding = {top: 20, left: 20};
 var simulation = d3.forceSimulation()
   .force('charge', d3.forceCollide(d => d.radius))
   .force('x', d3.forceX(d => d.focusX))
-  .force('y', d3.forceY(d => d.focusY));
+  .force('y', d3.forceY(d => d.focusY))
+  .stop();
 
-export default function(data) {
+export default function(data, images) {
   return [
     {
       id: 'all_hosts',
@@ -29,8 +30,29 @@ export default function(data) {
             image: show.image,
           };
         });
+        var hostsByKey = _.keyBy(hosts, 'host');
 
-        return {hosts};
+        var obamas = _.chain(data.showsData)
+          .map(show => {
+            var host = hostsByKey[show.host];
+            return _.map(show.dates, data => {
+              var [date, guest] = data;
+              return {
+                focusX: host.x,
+                focusY: host.y + perWidth,
+                image: images[guest],
+                guest,
+                radius: 10,
+              };
+            });
+          }).flatten().value()
+
+        simulation.nodes(obamas);
+        _.times(1000, i => {
+          simulation.tick();
+        });
+
+        return {hosts, obamas};
       },
       text: `
 

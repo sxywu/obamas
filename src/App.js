@@ -76,7 +76,7 @@ var App = React.createClass({
       annotation.video = _.find(videosData, video => video.videoId === annotation.videoId);
     });
 
-    data.sectionData = sectionData(data);
+    data.sectionData = sectionData(data, images);
   },
 
   componentDidMount() {
