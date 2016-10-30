@@ -1,8 +1,10 @@
 import React from 'react';
 import _ from 'lodash';
+import * as d3 from 'd3';
 
 import Header from './Header';
 import Section from './Section';
+import Visualization from './visualizations/Visualization';
 
 import videosData from './data/videos.json';
 import annotationsData from './data/annotation_subtitles.json';
@@ -40,9 +42,20 @@ var images = {
 };
 var data = {videosData, annotationsData, showsData};
 
+var width = 1200;
+var sectionPositions = [];
+var prevSection;
+
 var App = React.createClass({
+  getInitialState() {
+    return {
+      hosts: [],
+    };
+  },
+
   componentWillMount() {
     _.each(showsData, show => {
+      show.image = require('./images/' + show.host.split(' ')[1].toLowerCase() + '.png');
       show.dates = _.map(show.dates, date => {
         date[0] = new Date(date[0]);
         return date;
@@ -61,19 +74,57 @@ var App = React.createClass({
     data.sectionData = sectionData(data);
   },
 
+  componentDidMount() {
+    this.updateSectionPositions();
+    this.onScroll();
+    window.addEventListener('scroll', this.onScroll);
+  },
+
+  componentDidUpdate() {
+    this.updateSectionPositions();
+  },
+
+  updateSectionPositions() {
+    var bodyRect = document.body.getBoundingClientRect();
+    sectionPositions = _.map(data.sectionData, section => {
+      var sectionRect = d3.select('.Section#' + section.id).node().getBoundingClientRect();
+      var top = (sectionRect.top - bodyRect.top);
+      var bottom = top + sectionRect.height * (section.bottomMultiple || 0.8);
+      top += window.innerHeight * (section.topMultiple || 0.5);
+
+      return Object.assign({top, bottom}, section);
+    });
+  },
+
+  onScroll() {
+    var scrollTop = document.body.scrollTop;
+
+    var section = _.find(sectionPositions, section => {
+      return section.top <= scrollTop && scrollTop < section.bottom;
+    });
+
+    // if this section is different from previous, calculate the new positions
+    if (section !== prevSection) {
+      var {hosts} = section.position(width);
+      this.setState({hosts});
+      console.log(hosts)
+    }
+  },
+
   render() {
-    var width = 1200;
     var style = {
       position: 'relative',
       width,
       margin: 'auto',
+      paddingBottom: '100vh',
     };
-    var sections = _.map(sectionData, section => {
+    var sections = _.map(data.sectionData, section => {
       return <Section {...section} />;
     });
 
     return (
       <div className="App" style={style}>
+        <Visualization {...this.state} />
         <Header {...data} emojis={emojis} images={images} />
         {sections}
       </div>

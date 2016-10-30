@@ -4,11 +4,11 @@ import _ from 'lodash';
 var Section = React.createClass({
   render() {
     var style = {
-      margin: '50vh 0',
+      padding: (this.props.paddingMultiple || 0.5) * 100 + 'vh 0',
     };
 
     return (
-      <div className="Section" style={style}>
+      <div className="Section" id={this.props.id} style={style}>
         {this.props.text}
       </div>
     );
