@@ -40,6 +40,11 @@ var images = {
   B: require('./images/barack.png'),
   M: require('./images/michelle.png'),
 };
+var colors = {
+  B: '#8A9B0F',
+  M: '#BD1550',
+  host: '#F9CDAD',
+};
 var data = {videosData, annotationsData, showsData};
 
 var width = 1200;
@@ -89,8 +94,7 @@ var App = React.createClass({
     sectionPositions = _.map(data.sectionData, section => {
       var sectionRect = d3.select('.Section#' + section.id).node().getBoundingClientRect();
       var top = (sectionRect.top - bodyRect.top);
-      var bottom = top + sectionRect.height * (section.bottomMultiple || 0.8);
-      top += window.innerHeight * (section.topMultiple || 0.5);
+      var bottom = top + sectionRect.height;
 
       return Object.assign({top, bottom}, section);
     });
@@ -104,10 +108,10 @@ var App = React.createClass({
     });
 
     // if this section is different from previous, calculate the new positions
-    if (section !== prevSection) {
-      var {hosts} = section.position(width);
+    if (section && section !== prevSection) {
+      var top = section.top + window.innerHeight * (section.topMultiple || 0.25);
+      var {hosts} = section.position(width, top);
       this.setState({hosts});
-      console.log(hosts)
     }
   },
 
@@ -121,11 +125,16 @@ var App = React.createClass({
     var sections = _.map(data.sectionData, section => {
       return <Section {...section} />;
     });
+    var props = {
+      emojis,
+      images,
+      colors,
+    };
 
     return (
       <div className="App" style={style}>
-        <Visualization {...this.state} />
-        <Header {...data} emojis={emojis} images={images} />
+        <Visualization {...props} {...this.state} />
+        <Header {...props} {...data} />
         {sections}
       </div>
     );
