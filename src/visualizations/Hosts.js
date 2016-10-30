@@ -40,17 +40,17 @@ var Hosts = React.createClass({
       .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
 
     this.hosts.selectAll('.stroke')
-      .attr('r', d => d.radius);
+      .attr('r', d => d.radius / 2);
     var padding = 3;
     this.hosts.selectAll('.image')
-      .attr('x', d => -(d.radius - padding))
-      .attr('y', d => -(d.radius - padding))
-      .attr('width', d => (d.radius - padding) * 2)
-      .attr('height', d => (d.radius - padding) * 2)
+      .attr('x', d => -(d.radius - padding) / 2)
+      .attr('y', d => -(d.radius - padding) / 2)
+      .attr('width', d => (d.radius - padding))
+      .attr('height', d => (d.radius - padding))
       .attr('xlink:href', d => d.image);
 
     this.hosts.selectAll('.name')
-      .attr('y', d => d.radius + 15)
+      .attr('y', d => d.radius / 2 + 15)
       .text(d => d.host);
   },
 
