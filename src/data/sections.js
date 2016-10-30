@@ -2,16 +2,15 @@ import * as d3 from 'd3';
 import _ from 'lodash';
 
 var padding = {top: 20, left: 20};
+var hostSize = 50;
+var obamaSize = 40;
 
 export default function(data, images) {
   return [
     {
-      id: 'all_hosts',
+      id: 'by_hosts',
       position(width, top) {
         width *= 2 / 3;
-
-        var hostSize = 50;
-        var obamaSize = 40;
 
         // position hosts first
         var perRow = 4;
@@ -85,6 +84,49 @@ export default function(data, images) {
       text: `
 
       `
+    },
+    {
+      id: 'by_time',
+      position(width, top) {
+        var xScale = d3.scaleLinear()
+          .domain([new Date('January 20, 2009'), new Date('November 8, 2016')])
+          .range([padding.left, width - padding.left]);
+
+        var hosts = [];
+        var height = window.innerHeight * 2 / 3;
+
+        var obamas = _.chain(data.showsData)
+          .map(show => {
+            return _.map(show.dates, data => {
+              var [date, guest] = data;
+              return {
+                image: images[guest],
+                date,
+                guest,
+                radius: obamaSize * 0.85,
+              };
+            });
+          }).flatten()
+          .groupBy(data => {
+            var {date} = data;
+            // group by quarter
+            var quarter = Math.floor(date.getMonth() / 3) * 3;
+            data.quarter = new Date(date.getFullYear(), quarter, 1);
+
+            return data.quarter;
+          }).map(dates => {
+            return _.chain(dates)
+              .sortBy(date => date.guest)
+              .map((data, i) => {
+                var {date, quarter} = data;
+                return Object.assign(data, {
+                  x: xScale(quarter),
+                  y: top + height - i * obamaSize,
+                });
+              }).value();
+          }).flatten().value()
+        return {hosts, obamas};
+      },
     }
   ];
 }
