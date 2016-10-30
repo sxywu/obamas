@@ -55,6 +55,7 @@ var App = React.createClass({
   getInitialState() {
     return {
       hosts: [],
+      obamas: [],
     };
   },
 
@@ -108,10 +109,12 @@ var App = React.createClass({
     });
 
     // if this section is different from previous, calculate the new positions
-    if (section && section !== prevSection) {
+    if (section && (!prevSection || section.id !== prevSection.id)) {
       var top = section.top + window.innerHeight * (section.topMultiple || 0.25);
-      var {hosts} = section.position(width, top);
-      this.setState({hosts});
+      var {hosts, obamas} = section.position(width, top);
+      prevSection = section;
+
+      this.setState({hosts, obamas});
     }
   },
 

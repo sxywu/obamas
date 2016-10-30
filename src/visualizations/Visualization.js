@@ -2,6 +2,7 @@ import React from 'react';
 // import _ from 'lodash';
 
 import Hosts from './Hosts';
+import Obamas from './Obamas';
 
 var Visualization = React.createClass({
   render() {
@@ -15,6 +16,7 @@ var Visualization = React.createClass({
 
     return (
       <svg className="Visualization" style={style}>
+        <Obamas {...this.props} />
         <Hosts {...this.props} />
       </svg>
     );
