@@ -43,7 +43,7 @@ var images = {
 var colors = {
   B: '#FF6B6B',
   M: '#4ECDC4',
-  host: '#C7F464',
+  host: '#556270',
 };
 var data = {videosData, annotationsData, showsData};
 
