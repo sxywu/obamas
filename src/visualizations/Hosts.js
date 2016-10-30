@@ -28,13 +28,20 @@ var Hosts = React.createClass({
       .attr('fill', this.props.colors.host);
     enter.append('image')
       .classed('image', true);
+    enter.append('text')
+      .classed('name', true)
+      .attr('dy', '.35em')
+      .attr('text-anchor', 'middle')
+      .attr('font-size', 12)
+      .attr('font-weight', 700)
+      .attr('fill', this.props.colors.host);
 
     this.hosts = enter.merge(this.hosts)
       .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
 
     this.hosts.selectAll('.stroke')
       .attr('r', d => d.radius);
-    var padding = 2;
+    var padding = 3;
     this.hosts.selectAll('.image')
       .attr('x', d => -(d.radius - padding))
       .attr('y', d => -(d.radius - padding))
@@ -42,12 +49,15 @@ var Hosts = React.createClass({
       .attr('height', d => (d.radius - padding) * 2)
       .attr('xlink:href', d => d.image);
 
+    this.hosts.selectAll('.name')
+      .attr('y', d => d.radius + 15)
+      .text(d => d.host);
   },
 
   render() {
 
     return (
-      <g ref='container' />
+      <g ref='container' className='hosts' />
     );
   }
 });
