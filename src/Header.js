@@ -38,8 +38,8 @@ var Header = React.createClass({
         style.left *= imageScale;
         style.fontSize *= imageScale;
 
-        var emoji = this.props.emojis.happy;
-        emoji = emoji[_.random(emoji.length - 1)];
+        var emoji = face.happy ? this.props.emojis.happy : this.props.emojis.neutral;
+        emoji = _.isArray(emoji) ? emoji[_.random(emoji.length - 1)] : emoji;
 
         return (<div key={i} style={style}>{emoji}</div>);
       });
