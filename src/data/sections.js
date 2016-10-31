@@ -11,6 +11,7 @@ export default function(data, images) {
       id: 'by_hosts',
       position(width, top) {
         width *= 2 / 3;
+        top += window.innerHeight * 0.25;
 
         // position hosts first
         var perRow = 4;
@@ -69,6 +70,7 @@ export default function(data, images) {
                 y = y * obamaSize;
 
                 return {
+                  key: show.channelId + date + guest,
                   x: host.x + x,
                   y: host.y + 1.5 * host.radius + y,
                   image: images[guest],
@@ -82,24 +84,24 @@ export default function(data, images) {
         return {hosts, obamas};
       },
       text: `
-
+Bloop.
       `
     },
     {
       id: 'by_time',
-      position(width, top) {
+      position(width, top, bottom) {
         var xScale = d3.scaleLinear()
           .domain([new Date('January 20, 2009'), new Date('November 8, 2016')])
           .range([padding.left, width - padding.left]);
 
         var hosts = [];
-        var height = window.innerHeight * 2 / 3;
 
         var obamas = _.chain(data.showsData)
           .map(show => {
             return _.map(show.dates, data => {
               var [date, guest] = data;
               return {
+                key: show.channelId + date + guest,
                 image: images[guest],
                 date,
                 guest,
@@ -121,12 +123,15 @@ export default function(data, images) {
                 var {date, quarter} = data;
                 return Object.assign(data, {
                   x: xScale(quarter),
-                  y: top + height - i * obamaSize,
+                  y: bottom - padding.top - obamaSize - i * obamaSize,
                 });
               }).value();
           }).flatten().value()
         return {hosts, obamas};
       },
+      text: `
+Bloop.
+      `,
     }
   ];
 }

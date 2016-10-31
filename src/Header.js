@@ -71,7 +71,8 @@ var Header = React.createClass({
 
     var style = {
       textAlign: 'center',
-      paddingBottom: '25vh',
+      height: '100vh',
+      border: '1px solid',
     };
     var buttonStyle = {
       padding: '10px 20px',

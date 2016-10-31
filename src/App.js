@@ -47,7 +47,7 @@ var colors = {
 };
 var data = {videosData, annotationsData, showsData};
 
-var width = 1200;
+var width = 1000;
 var sectionPositions = [];
 var prevSection;
 
@@ -56,6 +56,7 @@ var App = React.createClass({
     return {
       hosts: [],
       obamas: [],
+      interpolateScroll: 0,
     };
   },
 
@@ -95,26 +96,65 @@ var App = React.createClass({
     sectionPositions = _.map(data.sectionData, section => {
       var sectionRect = d3.select('.Section#' + section.id).node().getBoundingClientRect();
       var top = (sectionRect.top - bodyRect.top);
+      var halfway = top + sectionRect.height * 0.25;
       var bottom = top + sectionRect.height;
 
-      return Object.assign({top, bottom}, section);
+      return Object.assign({top, halfway, bottom}, section);
     });
   },
 
   onScroll() {
     var scrollTop = document.body.scrollTop;
 
-    var section = _.find(sectionPositions, section => {
-      return section.top <= scrollTop && scrollTop < section.bottom;
+    var next;
+    var section = _.find(sectionPositions, (section, i) => {
+      if (section.top <= scrollTop && scrollTop < section.bottom) {
+        next = sectionPositions[i + 1];
+        return true;
+      }
+      return false;
     });
 
-    // if this section is different from previous, calculate the new positions
-    if (section && (!prevSection || section.id !== prevSection.id)) {
-      var top = section.top + window.innerHeight * (section.topMultiple || 0.25);
-      var {hosts, obamas} = section.position(width, top);
+    // if there's no section, then just set prevSection and return
+    if (!section) {
       prevSection = section;
+      return;
+    }
 
-      this.setState({hosts, obamas});
+    // if user is between top and 50%
+    if (section.top <= scrollTop && scrollTop < section.halfway) {
+      // did they just scroll into it?
+      if (!prevSection || (prevSection && prevSection.id !== section.id)) {
+        // then calculate the new positions
+        var {hosts, obamas} = section.position(width, section.top, section.bottom);
+        this.setState({hosts, obamas});
+        return;
+      }
+    } else if (section.halfway <= scrollTop && scrollTop < section.bottom) {
+      // if instead they are in the bottom half of section
+      var newState = {};
+      if (!prevSection || prevSection.id !== section.id) {
+        // if we just entered a new section, then calculate section positions
+        // as well as the next section positions
+        var {hosts, obamas} = section.position(width, section.top, section.bottom);
+        if (next) {
+          var nextPos = next.position(width, next.top, next.bottom);
+          var nextObamas = _.keyBy(nextPos.obamas, 'key');
+
+          _.each(obamas, obama => {
+            var nextObama = nextObamas[obama.key];
+            obama.interpolateX = d3.interpolate(obama.x, nextObama.x);
+            obama.interpolateY = d3.interpolate(obama.y, nextObama.y);
+          });
+        }
+
+        newState.hosts = hosts;
+        newState.obamas = obamas;
+      }
+
+      // interpolate
+      newState.interpolateScroll = (scrollTop - section.halfway) / (section.bottom - section.halfway);
+      this.setState(newState);
     }
   },
 

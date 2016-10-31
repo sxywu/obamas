@@ -4,7 +4,8 @@ import _ from 'lodash';
 var Section = React.createClass({
   render() {
     var style = {
-      padding: (this.props.paddingMultiple || 0.25) * 100 + 'vh 0',
+      minHeight: '125vh',
+      border: '1px solid',
     };
 
     return (

@@ -22,11 +22,15 @@ var Obamas = React.createClass({
     this.obamas = this.obamas.enter().append('image')
       .classed('obama', true)
       .merge(this.obamas)
-      .attr('x', d => d.x - d.radius / 2)
-      .attr('y', d => d.y - d.radius / 2)
-      .attr('width', d => d.radius)
-      .attr('height', d => d.radius)
-      .attr('xlink:href', d => d.image);
+      .attr('xlink:href', d => d.image)
+      .attr('x', d => {
+        var x = d.interpolateX ? d.interpolateX(this.props.interpolateScroll) : d.x;
+        return x - d.radius / 2;
+      }).attr('y', d => {
+        var y = d.interpolateY ? d.interpolateY(this.props.interpolateScroll) : d.y;
+        return y - d.radius / 2;
+      }).attr('width', d => d.radius)
+      .attr('height', d => d.radius);
   },
 
   render() {
