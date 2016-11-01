@@ -50,6 +50,7 @@ var data = {videosData, annotationsData, showsData};
 var width = 1000;
 var sectionPositions = [];
 var prevSection;
+var interpolateSection;
 
 var App = React.createClass({
   getInitialState() {
@@ -115,11 +116,15 @@ var App = React.createClass({
       return false;
     });
 
-    // if there's no section, then just set prevSection and return
+    // if there's no section, then just return
     if (!section) {
-      prevSection = section;
+      prevSection = interpolateSection = section;
+      // if there's no section, just draw the first one
+      section = sectionPositions[0];
+      var {hosts, obamas} = section.position(width, section.top, section.bottom);
+      this.setState({hosts, obamas});
       return;
-    }
+    };
 
     // if user is between top and 50%
     if (section.top <= scrollTop && scrollTop < section.halfway) {
@@ -127,15 +132,16 @@ var App = React.createClass({
       if (!prevSection || (prevSection && prevSection.id !== section.id)) {
         // then calculate the new positions
         var {hosts, obamas} = section.position(width, section.top, section.bottom);
+        prevSection = section;
         this.setState({hosts, obamas});
-        return;
       }
     } else if (section.halfway <= scrollTop && scrollTop < section.bottom) {
       // if instead they are in the bottom half of section
       var newState = {};
-      if (!prevSection || prevSection.id !== section.id) {
-        // if we just entered a new section, then calculate section positions
-        // as well as the next section positions
+      if ((prevSection && prevSection.id !== section.id) ||
+        (!interpolateSection || interpolateSection.id !== section.id)) {
+        // if we just entered a new section, or if we havne't calculated the interpolation before
+        // then calculate section positions as well as the next section positions
         var {hosts, obamas} = section.position(width, section.top, section.bottom);
         if (next) {
           var nextPos = next.position(width, next.top, next.bottom);
@@ -152,6 +158,8 @@ var App = React.createClass({
             host.interpolateX = d3.interpolate(host.x, nextHost.x);
             host.interpolateY = d3.interpolate(host.y, nextHost.y);
           });
+          interpolateSection = section;
+          prevSection = section;
         }
 
         newState.hosts = hosts;

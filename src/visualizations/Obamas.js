@@ -6,16 +6,17 @@ var duration = 500;
 var Obamas = React.createClass({
   componentDidMount() {
     this.container = d3.select(this.refs.container);
-    this.renderObamas();
+    this.renderObamas(this.props);
   },
 
-  componentDidUpdate() {
-    this.renderObamas();
+  shouldComponentUpdate(nextProps) {
+    this.renderObamas(nextProps);
+    return false;
   },
 
-  renderObamas() {
+  renderObamas(props) {
     this.obamas = this.container.selectAll('.obama')
-      .data(this.props.obamas, d => d.date + d.guest);
+      .data(props.obamas, d => d.date + d.guest);
 
     this.obamas.exit().remove();
 
@@ -24,10 +25,10 @@ var Obamas = React.createClass({
       .merge(this.obamas)
       .attr('xlink:href', d => d.image)
       .attr('x', d => {
-        var x = d.interpolateX ? d.interpolateX(this.props.interpolateScroll) : d.x;
+        var x = d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x;
         return x - d.radius / 2;
       }).attr('y', d => {
-        var y = d.interpolateY ? d.interpolateY(this.props.interpolateScroll) : d.y;
+        var y = d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y;
         return y - d.radius / 2;
       }).attr('width', d => d.radius)
       .attr('height', d => d.radius);

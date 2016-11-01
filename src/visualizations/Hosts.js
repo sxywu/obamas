@@ -7,16 +7,17 @@ var duration = 500;
 var Hosts = React.createClass({
   componentDidMount() {
     this.container = d3.select(this.refs.container);
-    this.renderHosts();
+    this.renderHosts(this.props);
   },
 
-  componentDidUpdate() {
-    this.renderHosts();
+  shouldComponentUpdate(nextProps) {
+    this.renderHosts(nextProps);
+    return false;
   },
 
-  renderHosts() {
+  renderHosts(props) {
     this.hosts = this.container.selectAll('.host')
-      .data(this.props.hosts, d => d.host);
+      .data(props.hosts, d => d.host);
 
     this.hosts.exit().remove();
 
@@ -25,7 +26,7 @@ var Hosts = React.createClass({
 
     enter.append('circle')
       .classed('stroke', true)
-      .attr('fill', this.props.colors.host);
+      .attr('fill', props.colors.host);
     enter.append('image')
       .classed('image', true);
     enter.append('text')
@@ -34,12 +35,12 @@ var Hosts = React.createClass({
       .attr('text-anchor', 'middle')
       .attr('font-size', 12)
       .attr('font-weight', 700)
-      .attr('fill', this.props.colors.host);
+      .attr('fill', props.colors.host);
 
     this.hosts = enter.merge(this.hosts)
       .attr('transform', d => {
-        var x = d.interpolateX ? d.interpolateX(this.props.interpolateScroll) : d.x;
-        var y = d.interpolateY ? d.interpolateY(this.props.interpolateScroll) : d.y;
+        var x = d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x;
+        var y = d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y;
         return 'translate(' + [x, y] + ')';
       });
 

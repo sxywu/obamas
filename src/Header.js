@@ -10,6 +10,10 @@ var Header = React.createClass({
       d.video.guest === 'M' && d.faces.length && d.faces[0][emotion]);
   },
 
+  shouldComponentUpdate() {
+    return false;
+  },
+
   randomize() {
     this.forceUpdate();
   },
