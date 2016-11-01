@@ -37,7 +37,11 @@ var Hosts = React.createClass({
       .attr('fill', this.props.colors.host);
 
     this.hosts = enter.merge(this.hosts)
-      .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
+      .attr('transform', d => {
+        var x = d.interpolateX ? d.interpolateX(this.props.interpolateScroll) : d.x;
+        var y = d.interpolateY ? d.interpolateY(this.props.interpolateScroll) : d.y;
+        return 'translate(' + [x, y] + ')';
+      });
 
     this.hosts.selectAll('.stroke')
       .attr('r', d => d.radius / 2);
@@ -49,9 +53,9 @@ var Hosts = React.createClass({
       .attr('height', d => (d.radius - padding))
       .attr('xlink:href', d => d.image);
 
-    this.hosts.selectAll('.name')
-      .attr('y', d => d.radius / 2 + 15)
-      .text(d => d.host);
+    // this.hosts.selectAll('.name')
+    //   .attr('y', d => d.radius / 2 + 15)
+    //   .text(d => d.host);
   },
 
   render() {

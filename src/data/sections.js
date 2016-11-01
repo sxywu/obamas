@@ -25,18 +25,15 @@ export default function(data, images) {
           .map((show, i) => {
             var row = Math.floor(i / perRow);
             var x = (i % perRow + 0.5) * perWidth;
-            var y = row * perWidth + top;
+            var y = 1.5 * row * perWidth + top;
 
             if (row === rows) {
               // if it's the last row
               x = x + (perRow * perWidth - extras * perWidth) / 2;
             }
 
-            if (row !== 0) {
-              y += 0.25 * perWidth;
-            }
-
             return {
+              key: show.host,
               x,
               y,
               radius: hostSize,
@@ -70,7 +67,7 @@ export default function(data, images) {
                 y = y * obamaSize;
 
                 return {
-                  key: show.channelId + date + guest,
+                  key: date + guest,
                   x: host.x + x,
                   y: host.y + 1.5 * host.radius + y,
                   image: images[guest],
@@ -89,24 +86,44 @@ Bloop.
     },
     {
       id: 'by_time',
-      position(width, top, bottom) {
+      position(width, top) {
+        top += window.innerHeight * 0.25 + 2 * hostSize;
+
         var xScale = d3.scaleLinear()
           .domain([new Date('January 20, 2009'), new Date('November 8, 2016')])
-          .range([padding.left, width - padding.left]);
+          .range([padding.left + obamaSize, width - padding.left - obamaSize]);
 
-        var hosts = [];
+        var perWidth = width / data.showsData.length;
+        var hosts = _.map(data.showsData, (show, i) => {
+          return {
+            key: show.host,
+            fy: (i % 2 === 0) ? top : top + 2 * hostSize,
+            radius: hostSize,
+            host: show.host,
+            image: show.image,
+          };
+        });
+        var links = [];
 
+        // group obama interviews by quarter, and then position them
         var obamas = _.chain(data.showsData)
           .map(show => {
+            var host = _.find(hosts, d => d.key === show.host);
+
             return _.map(show.dates, data => {
               var [date, guest] = data;
-              return {
-                key: show.channelId + date + guest,
+              var interview = {
+                key: date + guest,
                 image: images[guest],
                 date,
                 guest,
                 radius: obamaSize * 0.85,
               };
+
+              // add this to the links
+              links.push({source: host, target: interview});
+
+              return interview;
             });
           }).flatten()
           .groupBy(data => {
@@ -122,12 +139,23 @@ Bloop.
               .map((data, i) => {
                 var {date, quarter} = data;
                 return Object.assign(data, {
-                  x: xScale(quarter),
-                  y: bottom - padding.top - obamaSize - i * obamaSize,
+                  fx: xScale(quarter),
+                  fy: top + 5 * hostSize + 6 * obamaSize - i * obamaSize,
                 });
               }).value();
           }).flatten().value()
-        return {hosts, obamas};
+
+        // use force layout to lay out the hosts/obamas and the links
+        var simulation = d3.forceSimulation(_.union(obamas, hosts))
+          .force('charge', d3.forceCollide(d => d.radius))
+          .force("link", d3.forceLink(links))
+          .stop();
+
+        _.times(1000, i => {
+          simulation.tick();
+        });
+
+        return {hosts, obamas, links};
       },
       text: `
 Bloop.

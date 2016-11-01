@@ -140,11 +140,17 @@ var App = React.createClass({
         if (next) {
           var nextPos = next.position(width, next.top, next.bottom);
           var nextObamas = _.keyBy(nextPos.obamas, 'key');
+          var nextHosts = _.keyBy(nextPos.hosts, 'key');
 
           _.each(obamas, obama => {
             var nextObama = nextObamas[obama.key];
             obama.interpolateX = d3.interpolate(obama.x, nextObama.x);
             obama.interpolateY = d3.interpolate(obama.y, nextObama.y);
+          });
+          _.each(hosts, host => {
+            var nextHost = nextHosts[host.key];
+            host.interpolateX = d3.interpolate(host.x, nextHost.x);
+            host.interpolateY = d3.interpolate(host.y, nextHost.y);
           });
         }
 
