@@ -47,7 +47,7 @@ var colors = {
 };
 var data = {videosData, annotationsData, showsData};
 
-var width = 1000;
+var width = 1100;
 var sectionPositions = [];
 var prevSection;
 var interpolateSection;
@@ -57,6 +57,7 @@ var App = React.createClass({
     return {
       hosts: [],
       obamas: [],
+      links: [],
       interpolateScroll: 0,
     };
   },
@@ -131,9 +132,9 @@ var App = React.createClass({
       // did they just scroll into it?
       if (!prevSection || (prevSection && prevSection.id !== section.id)) {
         // then calculate the new positions
-        var {hosts, obamas} = section.position(width, section.top, section.bottom);
+        var {hosts, obamas, links} = section.position(width, section.top, section.bottom);
         prevSection = section;
-        this.setState({hosts, obamas});
+        this.setState({hosts, obamas, links});
       }
     } else if (section.halfway <= scrollTop && scrollTop < section.bottom) {
       // if instead they are in the bottom half of section
@@ -142,7 +143,7 @@ var App = React.createClass({
         (!interpolateSection || interpolateSection.id !== section.id)) {
         // if we just entered a new section, or if we havne't calculated the interpolation before
         // then calculate section positions as well as the next section positions
-        var {hosts, obamas} = section.position(width, section.top, section.bottom);
+        var {hosts, obamas, links} = section.position(width, section.top, section.bottom);
         if (next) {
           var nextPos = next.position(width, next.top, next.bottom);
           var nextObamas = _.keyBy(nextPos.obamas, 'key');
@@ -164,6 +165,7 @@ var App = React.createClass({
 
         newState.hosts = hosts;
         newState.obamas = obamas;
+        newState.links = links;
       }
 
       // interpolate

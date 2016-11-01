@@ -78,7 +78,7 @@ export default function(data, images) {
               }).value();
           }).flatten().value()
 
-        return {hosts, obamas};
+        return {hosts, obamas, links: []};
       },
       text: `
 Bloop.
@@ -92,6 +92,10 @@ Bloop.
         var xScale = d3.scaleLinear()
           .domain([new Date('January 20, 2009'), new Date('November 8, 2016')])
           .range([padding.left + obamaSize, width - padding.left - obamaSize]);
+        var opacityScale = d3.scaleLinear()
+          .domain([new Date('January 20, 2009'),
+            new Date('January 1, 2016'), new Date('November 8, 2016')])
+          .range([0.05, 0.35, 1]);
 
         var perWidth = width / data.showsData.length;
         var hosts = _.map(data.showsData, (show, i) => {
@@ -121,7 +125,11 @@ Bloop.
               };
 
               // add this to the links
-              links.push({source: host, target: interview});
+              links.push({
+                source: host,
+                target: interview,
+                opacity: opacityScale(date),
+              });
 
               return interview;
             });
@@ -140,7 +148,7 @@ Bloop.
                 var {date, quarter} = data;
                 return Object.assign(data, {
                   fx: xScale(quarter),
-                  fy: top + 5 * hostSize + 6 * obamaSize - i * obamaSize,
+                  fy: top + 4 * hostSize + 4 * obamaSize - i * obamaSize,
                 });
               }).value();
           }).flatten().value()
