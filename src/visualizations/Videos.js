@@ -25,11 +25,8 @@ var Videos = React.createClass({
       .classed('video', true);
 
     enter.append('circle')
-      .classed('background', true)
-      .attr('opacity', 0.5)
-      .transition().duration(duration)
-      .attr('r', d => d.radius / 2);
-    enter.filter(d => d.caption)
+      .classed('background', true);
+    enter.filter(d => d.captionRadius)
       .append('circle')
       .classed('caption', true)
       .attr('opacity', 0.75)
@@ -47,9 +44,11 @@ var Videos = React.createClass({
 
     this.videos.selectAll('.background')
       .attr('fill', d => props.colors[d.guest])
+      .transition().duration(duration)
+      .attr('opacity', d => d.opacity)
       .attr('r', d => d.radius / 2);
     this.videos.selectAll('.caption')
-      .attr('r', d => d.radius / 2 + 2);
+      .attr('r', d => d.captionRadius / 2);
   },
 
   render() {

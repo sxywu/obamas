@@ -78,6 +78,8 @@ var App = React.createClass({
       video.caption = false;
       video.date = new Date(video.publishedAt);
       video.guest = _.find(metadata, data => data.id === video.videoId).guest[0];
+      video.duration = (video.duration.minutes ? video.duration.minutes * 60 : 0) +
+        (video.duration.seconds ? video.duration.seconds : 0);
       video.host = _.filter(showsData, show => _.includes(show.id, video.channelId));
 
       // if there's more than one show, match the title of the video

@@ -6,22 +6,25 @@ var hostSize = 50;
 var obamaSize = 40;
 var videoSize = 40;
 
-var xScale = d3.scaleTime()
-  .domain([new Date('January 1, 2009'), new Date('November 8, 2016')]);
-var opacityScale = d3.scaleLinear()
-  .domain([new Date('January 20, 2009'),
-    new Date('January 1, 2016'), new Date('November 8, 2016')])
-  .range([0.05, 0.25, 1]);
-
 function getQuarterFromDate(date) {
   var quarter = Math.floor(date.getMonth() / 3) * 3;
   return new Date(date.getFullYear(), quarter, 1);
 }
 
 export default function(data, images) {
+  // initialize all the scales
   var viewExtent = d3.extent(data.videosData, d => d.statistics.viewCount);
-  var radiusScale = d3.scaleLog()
-    .domain(viewExtent).range([videoSize / 8, videoSize]);
+  var durationExtent = d3.extent(data.videosData, d => d.duration);
+
+  var xScale = d3.scaleTime();
+  var yScale = d3.scaleLog().domain(viewExtent);
+  var opacityScale = d3.scaleLinear()
+    .domain([new Date('January 20, 2009'),
+      new Date('January 1, 2016'), new Date('November 8, 2016')])
+    .range([0.05, 0.25, 1]);
+  var radiusScale = d3.scaleLog().domain(viewExtent).range([videoSize / 8, videoSize]);
+  var captionRadiusScale = d3.scaleLog().domain(durationExtent)
+    .range([videoSize / 4, videoSize * 2]);
 
   return [
     {
@@ -111,7 +114,8 @@ export default function(data, images) {
         top += this.half + 2 * hostSize;
         var bottom = top + 4 * hostSize + 6 * obamaSize;
 
-        xScale.range([padding.left + obamaSize, width - padding.left - obamaSize]);
+        xScale.domain([new Date('January 1, 2009'), new Date('November 8, 2016')])
+          .range([padding.left + obamaSize, width - padding.left - obamaSize]);
 
         var hosts = _.map(data.showsData, (show, i) => {
           return {
@@ -177,12 +181,14 @@ export default function(data, images) {
           .map((data, key) => {
             var x = xScale(data[0].quarter);
             return _.map(data, video => {
+              var radius = radiusScale(video.statistics.viewCount);
               return {
                 key: video.videoId,
-                caption: video.caption,
                 x,
                 y: bottom,
-                radius: radiusScale(video.statistics.viewCount),
+                radius,
+                captionRadius: video.caption ? radius + 4 : 0,
+                opacity: 0.5,
                 guest: video.guest,
               }
             });
@@ -214,12 +220,13 @@ export default function(data, images) {
     {
       id: 'show_videos',
       position(width, top) {
-        top += 2 * hostSize + 5 * obamaSize;
+        var obamaHeight = 2 * hostSize + 5 * obamaSize;
+        top += obamaHeight;
         var left = width - padding.left - obamaSize;
 
-        xScale.range([padding.left + obamaSize, left]);
-        var yScale = d3.scaleLog()
-          .domain(viewExtent).range([top + Math.min(450, window.innerHeight), top])
+        xScale.domain([new Date('January 1, 2009'), new Date('November 8, 2016')])
+          .range([padding.left + obamaSize, left]);
+        yScale.range([top + window.innerHeight * 0.9 - obamaHeight, top]);
 
         // calculate videos
         var videos = _.chain(data.videosData)
@@ -231,8 +238,9 @@ export default function(data, images) {
               var radius = radiusScale(video.statistics.viewCount);
               return {
                 key: video.videoId,
-                caption: video.caption,
                 radius,
+                captionRadius: video.caption ? radius + 4 : 0,
+                opacity: 0.5,
                 x,
                 y: yScale(video.statistics.viewCount),
                 host: video.host,
@@ -265,6 +273,60 @@ export default function(data, images) {
       },
       text: `
 3.
+      `
+    },
+    {
+      id: 'show_captions',
+      position(width, top) {
+        var obamaHeight = 2 * hostSize + 5 * obamaSize;
+        top += obamaHeight;
+        var bottom = top + window.innerHeight * 0.85 - obamaHeight;
+
+        var filteredDates = _.filter(data.videosData, d => d.caption);
+        var dateExtent = d3.extent(filteredDates, d => d.date);
+        xScale.domain(dateExtent)
+          .range([2 * padding.left + obamaSize, width - 2 * padding.left - obamaSize]);
+        yScale.range([bottom, top]);
+
+        // calculate videos
+        var videos = _.chain(data.videosData)
+          .sortBy(d => d.date)
+          .map(video => {
+            return {
+              key: video.videoId,
+              radius: radiusScale(video.statistics.viewCount),
+              captionRadius: video.caption ? captionRadiusScale(video.duration) : 0,
+              opacity: video.caption ? 0.5 : 0.15,
+              focusX: xScale(video.date),
+              focusY: yScale(video.statistics.viewCount),
+              host: video.host,
+              guest: video.guest,
+              video,
+            };
+          }).value();
+
+        // use force layout to lay out the hosts/obamas and the links
+        var simulation = d3.forceSimulation(videos)
+          .force('charge', d3.forceCollide(d => d.captionRadius * 0.5))
+          .force('x', d3.forceX(d => d.focusX))
+          .force('y', d3.forceY(d => d.focusY))
+          .stop();
+
+        _.times(1000, i => {
+          simulation.tick();
+        });
+
+        var axes = {
+          x: {
+            scale: xScale,
+            transform: 'translate(' + [0, bottom + 2 * padding.top] + ')',
+          }
+        };
+
+        return {videos, axes};
+      },
+      text: `
+
       `
     }
   ];
