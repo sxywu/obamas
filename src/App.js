@@ -61,6 +61,7 @@ var App = React.createClass({
       links: [],
       axes: null,
       interpolateScroll: 0,
+      scrollDuration: 200,
     };
   },
 
@@ -96,6 +97,11 @@ var App = React.createClass({
         annotation.video = video;
       }
     });
+    console.log(
+      _.chain(annotationsData)
+        .filter(d => _.some(d.faces, face => face.happy))
+        .countBy(d => d.videoId).value()
+    )
 
     data.sectionData = sectionData(data, images);
   },
@@ -103,7 +109,7 @@ var App = React.createClass({
   componentDidMount() {
     this.updateSectionPositions();
     this.onScroll();
-    window.addEventListener('scroll', this.onScroll);
+    window.addEventListener('scroll', _.throttle(this.onScroll, this.state.scrollDuration / 2));
   },
 
   componentDidUpdate() {

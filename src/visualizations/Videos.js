@@ -36,7 +36,9 @@ var Videos = React.createClass({
       .attr('fill', 'none')
       .attr('stroke', props.colors.host);
 
-    this.videos = enter.merge(this.videos)
+    this.videos = enter.merge(this.videos);
+
+    this.videos.transition().duration(props.scrollDuration)
       .attr('transform', d => {
         var x = d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x;
         var y = d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y;

@@ -2,6 +2,8 @@ import React from 'react';
 // import _ from 'lodash';
 import * as d3 from 'd3';
 
+var duration = 100;
+
 var Hosts = React.createClass({
   componentDidMount() {
     this.container = d3.select(this.refs.container);
@@ -35,7 +37,9 @@ var Hosts = React.createClass({
       .attr('font-weight', 700)
       .attr('fill', props.colors.host);
 
-    this.hosts = enter.merge(this.hosts)
+    this.hosts = enter.merge(this.hosts);
+
+    this.hosts.transition().duration(props.scrollDuration)  
       .attr('transform', d => {
         var x = d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x;
         var y = d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y;

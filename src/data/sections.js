@@ -11,7 +11,7 @@ var xScale = d3.scaleTime()
 var opacityScale = d3.scaleLinear()
   .domain([new Date('January 20, 2009'),
     new Date('January 1, 2016'), new Date('November 8, 2016')])
-  .range([0.05, 0.35, 1]);
+  .range([0.05, 0.25, 1]);
 
 function getQuarterFromDate(date) {
   var quarter = Math.floor(date.getMonth() / 3) * 3;
