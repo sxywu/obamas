@@ -25,7 +25,9 @@ var Videos = React.createClass({
       .classed('video', true);
 
     enter.append('circle')
-      .classed('background', true);
+      .classed('background', true)
+      .transition().duration(duration)
+      .attr('r', d => d.radius / 2);
     enter.filter(d => d.captionRadius)
       .append('circle')
       .classed('caption', true)
@@ -41,14 +43,15 @@ var Videos = React.createClass({
         var y = d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y;
         return 'translate(' + [x, y] + ')';
       });
-
-    this.videos.selectAll('.background')
+    this.videos.select('.background')
+      .datum(d => d)
       .attr('fill', d => props.colors[d.guest])
-      .transition().duration(duration)
-      .attr('opacity', d => d.opacity)
-      .attr('r', d => d.radius / 2);
-    this.videos.selectAll('.caption')
-      .attr('r', d => d.captionRadius / 2);
+      .attr('opacity', d => d.opacity);
+    this.videos.select('.caption')
+      .datum(d => d)
+      .transition().duration(props.scrollDuration)
+      .attr('r', d => (d.interpolateCaption ?
+        d.interpolateCaption(props.interpolateScroll) : d.captionRadius) / 2);
   },
 
   render() {
