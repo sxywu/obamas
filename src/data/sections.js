@@ -88,9 +88,10 @@ Bloop.
       id: 'by_time',
       position(width, top) {
         top += window.innerHeight * 0.25 + 2 * hostSize;
+        var bottom = top + 4 * hostSize + 6 * obamaSize;
 
-        var xScale = d3.scaleLinear()
-          .domain([new Date('January 20, 2009'), new Date('November 8, 2016')])
+        var xScale = d3.scaleTime()
+          .domain([new Date('January 1, 2009'), new Date('November 8, 2016')])
           .range([padding.left + obamaSize, width - padding.left - obamaSize]);
         var opacityScale = d3.scaleLinear()
           .domain([new Date('January 20, 2009'),
@@ -148,7 +149,7 @@ Bloop.
                 var {date, quarter} = data;
                 return Object.assign(data, {
                   fx: xScale(quarter),
-                  fy: top + 4 * hostSize + 4 * obamaSize - i * obamaSize,
+                  fy: bottom - (i + 0.75) * obamaSize,
                 });
               }).value();
           }).flatten().value()
@@ -163,7 +164,14 @@ Bloop.
           simulation.tick();
         });
 
-        return {hosts, obamas, links};
+        var axes = {
+          x: {
+            transform: 'translate(' + [0, bottom] + ')',
+            scale: xScale,
+          },
+        };
+
+        return {hosts, obamas, links, axes};
       },
       text: `
 Bloop.

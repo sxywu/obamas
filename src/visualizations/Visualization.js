@@ -4,6 +4,7 @@ import React from 'react';
 import Hosts from './Hosts';
 import Obamas from './Obamas';
 import Links from './Links';
+import Axes from './Axes';
 
 var Visualization = React.createClass({
   render() {
@@ -17,6 +18,7 @@ var Visualization = React.createClass({
 
     return (
       <svg className="Visualization" style={style}>
+        <Axes {...this.props} />
         <Links {...this.props} />
         <Obamas {...this.props} />
         <Hosts {...this.props} />

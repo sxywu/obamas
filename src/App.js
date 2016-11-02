@@ -58,6 +58,7 @@ var App = React.createClass({
       hosts: [],
       obamas: [],
       links: [],
+      axes: null,
       interpolateScroll: 0,
     };
   },
@@ -132,9 +133,9 @@ var App = React.createClass({
       // did they just scroll into it?
       if (!prevSection || (prevSection && prevSection.id !== section.id)) {
         // then calculate the new positions
-        var {hosts, obamas, links} = section.position(width, section.top, section.bottom);
+        var newState = section.position(width, section.top, section.bottom);
         prevSection = section;
-        this.setState({hosts, obamas, links});
+        this.setState(newState);
       }
     } else if (section.halfway <= scrollTop && scrollTop < section.bottom) {
       // if instead they are in the bottom half of section
@@ -143,18 +144,18 @@ var App = React.createClass({
         (!interpolateSection || interpolateSection.id !== section.id)) {
         // if we just entered a new section, or if we havne't calculated the interpolation before
         // then calculate section positions as well as the next section positions
-        var {hosts, obamas, links} = section.position(width, section.top, section.bottom);
+        newState = section.position(width, section.top, section.bottom);
         if (next) {
           var nextPos = next.position(width, next.top, next.bottom);
           var nextObamas = _.keyBy(nextPos.obamas, 'key');
           var nextHosts = _.keyBy(nextPos.hosts, 'key');
 
-          _.each(obamas, obama => {
+          _.each(newState.obamas, obama => {
             var nextObama = nextObamas[obama.key];
             obama.interpolateX = d3.interpolate(obama.x, nextObama.x);
             obama.interpolateY = d3.interpolate(obama.y, nextObama.y);
           });
-          _.each(hosts, host => {
+          _.each(newState.hosts, host => {
             var nextHost = nextHosts[host.key];
             host.interpolateX = d3.interpolate(host.x, nextHost.x);
             host.interpolateY = d3.interpolate(host.y, nextHost.y);
@@ -162,10 +163,6 @@ var App = React.createClass({
           interpolateSection = section;
           prevSection = section;
         }
-
-        newState.hosts = hosts;
-        newState.obamas = obamas;
-        newState.links = links;
       }
 
       // interpolate
