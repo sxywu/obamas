@@ -59,6 +59,10 @@ var Header = React.createClass({
         fontStyle: 'italic',
         paddingBottom: 10,
       };
+      var imageStyle = {
+        borderBottom: '3px solid ' + this.props.colors[guest],
+        width: 100,
+      };
 
       return (
         <span style={style}>
@@ -68,7 +72,7 @@ var Header = React.createClass({
             {emotionFaces}
             <div style={footerStyle}>{emotionObj.video.channelTitle}</div>
           </div>
-          <img src={this.props.images[guest]} width={100} role="presentation" />
+          <img src={this.props.images[guest]} style={imageStyle} role="presentation" />
         </span>
       );
     });
@@ -80,8 +84,8 @@ var Header = React.createClass({
     };
     var buttonStyle = {
       padding: '10px 20px',
-      border: '3px solid #666',
-      color: '#666',
+      border: '3px solid ' + this.props.colors.host,
+      color: this.props.colors.host,
       cursor: 'pointer',
       display: 'inline-block',
       position: 'relative',

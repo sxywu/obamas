@@ -18,20 +18,28 @@ var Obamas = React.createClass({
 
     this.obamas.exit().remove();
 
-    this.obamas = this.obamas.enter().append('image')
-      .classed('obama', true)
-      .merge(this.obamas)
+    var enter = this.obamas.enter().append('g')
+      .classed('obama', true);
+    enter.append('image')
       .attr('xlink:href', d => d.image)
       .attr('width', d => d.radius)
       .attr('height', d => d.radius);
+    enter.append('line')
+      .attr('x1', d => d.radius * 0.15)
+      .attr('x2', d => d.radius * 0.85)
+      .attr('y1', d => d.radius)
+      .attr('y2', d => d.radius)
+      .attr('stroke', d => props.colors[d.guest])
+      .attr('stroke-width', 3)
+      .attr('opacity', 0.5);
+
+    this.obamas = this.obamas.merge(enter);
 
     this.obamas.transition().duration(props.scrollDuration)
-      .attr('x', d => {
+      .attr('transform', d => {
         var x = d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x;
-        return x - d.radius / 2;
-      }).attr('y', d => {
         var y = d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y;
-        return y - d.radius / 2;
+        return 'translate(' + [x - d.radius / 2, y - d.radius / 2] + ')';
       });
   },
 
