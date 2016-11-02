@@ -1,6 +1,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 
+var duration = 1500;
 function link(d) {
   return "M" + d.source.x + "," + d.source.y
       + "C" + d.source.x +  "," + (d.source.y + d.target.y) / 2
@@ -27,12 +28,17 @@ var Links = React.createClass({
 
     this.links = this.links.enter().append('path')
       .classed('link', true)
-      .merge(this.links)
+      .attr('d', link)
       .attr('fill', 'none')
       .attr('stroke-width', 3)
-      .attr('d', link)
       .attr('opacity', d => d.opacity)
-      .attr('stroke', d => props.colors[d.target.guest]);
+      .attr('stroke', d => props.colors[d.target.guest])
+      .attr('stroke-dasharray', function(d) {
+        d.length = this.getTotalLength();
+        return d.length;
+      }).attr('stroke-dashoffset', d => d.length)
+      .transition().duration(duration)
+      .attr('stroke-dashoffset', 0);
   },
 
   render() {
