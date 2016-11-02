@@ -179,7 +179,7 @@ export default function(data, images) {
             return _.map(data, video => {
               return {
                 key: video.videoId,
-                caption: video.caption === 'true',
+                caption: video.caption,
                 x,
                 y: bottom,
                 radius: radiusScale(video.statistics.viewCount),
@@ -231,7 +231,7 @@ export default function(data, images) {
               var radius = radiusScale(video.statistics.viewCount);
               return {
                 key: video.videoId,
-                caption: video.caption === 'true',
+                caption: video.caption,
                 radius,
                 x,
                 y: yScale(video.statistics.viewCount),

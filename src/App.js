@@ -74,6 +74,7 @@ var App = React.createClass({
     });
 
     _.each(videosData, video => {
+      video.caption = false;
       video.date = new Date(video.publishedAt);
       video.guest = _.find(metadata, data => data.id === video.videoId).guest[0];
       video.host = _.filter(showsData, show => _.includes(show.id, video.channelId));
@@ -89,7 +90,11 @@ var App = React.createClass({
     });
 
     _.each(annotationsData, annotation => {
-      annotation.video = _.find(videosData, video => video.videoId === annotation.videoId);
+      var video = _.find(videosData, video => video.videoId === annotation.videoId);
+      if (video) {
+        video.caption = true;
+        annotation.video = video;
+      }
     });
 
     data.sectionData = sectionData(data, images);

@@ -25,14 +25,16 @@ var Videos = React.createClass({
       .classed('video', true);
 
     enter.append('circle')
+      .classed('background', true)
       .attr('opacity', 0.5)
       .transition().duration(duration)
       .attr('r', d => d.radius / 2);
-    enter.append('text')
-      .attr('fill', props.colors.host)
-      .attr('text-anchor', 'middle')
-      .attr('dy', '.35em')
-      .attr('font-size', 12);
+    enter.filter(d => d.caption)
+      .append('circle')
+      .classed('caption', true)
+      .attr('opacity', 0.75)
+      .attr('fill', 'none')
+      .attr('stroke', props.colors.host);
 
     this.videos = enter.merge(this.videos)
       .attr('transform', d => {
@@ -41,8 +43,11 @@ var Videos = React.createClass({
         return 'translate(' + [x, y] + ')';
       });
 
-    this.videos.selectAll('circle')
-      .attr('fill', d => props.colors[d.guest]);
+    this.videos.selectAll('.background')
+      .attr('fill', d => props.colors[d.guest])
+      .attr('r', d => d.radius / 2);
+    this.videos.selectAll('.caption')
+      .attr('r', d => d.radius / 2 + 2);
   },
 
   render() {
