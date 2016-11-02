@@ -1,5 +1,8 @@
 import React from 'react';
+import _ from 'lodash';
 import * as d3 from 'd3';
+
+var duration = 250;
 
 var Videos = React.createClass({
   componentDidMount() {
@@ -18,15 +21,28 @@ var Videos = React.createClass({
 
     this.videos.exit().remove();
 
-    this.videos = this.videos.enter().append('circle')
-      .classed('video', true)
-      .merge(this.videos)
-      .attr('cx', d => d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x)
-      .attr('cy', d => d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y)
-      .attr('r', d => (d.interpolateRadius ?
-        d.interpolateRadius(props.interpolateScroll) : d.radius) / 2)
-      .attr('fill', d => props.colors[d.guest])
-      .attr('opacity', 0.5);
+    var enter = this.videos.enter().append('g')
+      .classed('video', true);
+
+    enter.append('circle')
+      .attr('opacity', 0.5)
+      .transition().duration(duration)
+      .attr('r', d => d.radius / 2);
+    enter.append('text')
+      .attr('fill', props.colors.host)
+      .attr('text-anchor', 'middle')
+      .attr('dy', '.35em')
+      .attr('font-size', 12);
+
+    this.videos = enter.merge(this.videos)
+      .attr('transform', d => {
+        var x = d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x;
+        var y = d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y;
+        return 'translate(' + [x, y] + ')';
+      });
+
+    this.videos.selectAll('circle')
+      .attr('fill', d => props.colors[d.guest]);
   },
 
   render() {
