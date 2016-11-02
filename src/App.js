@@ -49,7 +49,8 @@ var data = {videosData, annotationsData, showsData};
 
 var width = 1100;
 var sectionPositions = [];
-var prevSection;
+var topSection;
+var bottomSection;
 var interpolateSection;
 
 var App = React.createClass({
@@ -99,11 +100,6 @@ var App = React.createClass({
         annotation.video = video;
       }
     });
-    console.log(
-      _.chain(annotationsData)
-        .filter(d => _.some(d.faces, face => face.happy))
-        .countBy(d => d.videoId).value()
-    )
 
     data.sectionData = sectionData(data, images);
   },
@@ -144,7 +140,7 @@ var App = React.createClass({
 
     // if there's no section, then just return
     if (!section) {
-      prevSection = interpolateSection = section;
+      topSection = bottomSection = interpolateSection = section;
       // if there's no section, just draw the first one
       section = sectionPositions[0];
       var {hosts, obamas} = section.position(width, section.top, section.bottom);
@@ -155,18 +151,19 @@ var App = React.createClass({
     var newState = {};
     // if user is between top and 50%
     if (section.top <= scrollTop && scrollTop < section.halfway) {
-      // did they just scroll into it?
-      if (!prevSection || (prevSection && prevSection.id !== section.id)) {
-        // then calculate the new positions
+      // have we come into this top section before?
+      if (!topSection || (topSection && topSection.id !== section.id)) {
+        // if not, calculate the new positions
         newState = section.position(width, section.top, section.bottom);
-        prevSection = section;
+        topSection = section;
         this.setState(newState);
       }
     } else if (section.halfway <= scrollTop && scrollTop < section.bottom) {
       // if instead they are in the bottom half of section
-      if ((prevSection && prevSection.id !== section.id) ||
+      if ((bottomSection && bottomSection.id !== section.id) ||
         (!interpolateSection || interpolateSection.id !== section.id)) {
-        // if we just entered a new section, or if we havne't calculated the interpolation before
+        // if we just entered this bottom section,
+        // or if we havne't calculated the interpolation before
         // then calculate section positions as well as the next section positions
         newState = section.position(width, section.top, section.bottom);
         if (next) {
@@ -194,17 +191,18 @@ var App = React.createClass({
               var nextVideo = nextVideos[video.key];
               video.interpolateX = d3.interpolate(video.x, nextVideo.x);
               video.interpolateY = d3.interpolate(video.y, nextVideo.y);
-              video.radius = nextVideo.radius;
+              video.interpolateCaption = d3.interpolate(video.captionRadius, nextVideo.captionRadius);
             });
           }
 
           interpolateSection = section;
-          prevSection = section;
+          bottomSection = section;
         }
       }
 
       // interpolate
-      newState.interpolateScroll = (scrollTop - section.halfway) / (section.bottom - section.halfway);
+      var scrollRange = (section.bottom - section.halfway - 20);
+      newState.interpolateScroll = Math.min((scrollTop - section.halfway) / scrollRange, 1);
       this.setState(newState);
     }
   },
