@@ -1,6 +1,6 @@
 [
   {
-    "shows": ["Tonight Show Starring Jimmy Fallon"],
+    "shows": ["The Tonight Show Starring Jimmy Fallon"],
     "id": ["UC8-Th83bH_thdKZDJCrn88g"],
     "host": "Jimmy Fallon",
     "dates": [
@@ -12,7 +12,7 @@
     ]
   },
   {
-    "shows": ["The Ellen Degeneres Show"],
+    "shows": ["TheEllenShow"],
     "id": ["UCp0hYYBW6IMayGgR-WeoCvQ"],
     "host": "Ellen Degeneres",
     "dates": [
@@ -23,7 +23,7 @@
     ]
   },
   {
-    "shows": ["Late Show with Stephen Colbert", "Colbert Report"],
+    "shows": ["The Late Show with Stephen Colbert", "Colbert Report"],
     "id": ["UCMtFAi84ehTSYSE9XoHefig", "UCUsN5ZwHx2kILm84-jPDeXw"],
     "host": "Stephen Colbert",
     "dates": [
@@ -38,7 +38,7 @@
     ]
   },
   {
-    "shows": ["Daily Show with John Stewart"],
+    "shows": ["Daily Show"],
     "id": ["UCUsN5ZwHx2kILm84-jPDeXw"],
     "host": "John Stewart",
     "dates": [
@@ -102,7 +102,7 @@
     ]
   },
   {
-    "shows": ["Conan", "Tonight Show with Conan O'Brien"],
+    "shows": ["Team Coco", "Tonight Show with Conan O'Brien"],
     "id": ["UCi7GJNg51C3jgmYTUwqoUXA"],
     "host": "Conan O'Brien",
     "dates": [

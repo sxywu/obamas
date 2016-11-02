@@ -1,8 +1,6 @@
 import React from 'react';
 import * as d3 from 'd3';
 
-var duration = 500;
-
 var Obamas = React.createClass({
   componentDidMount() {
     this.container = d3.select(this.refs.container);

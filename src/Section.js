@@ -3,10 +3,10 @@ import _ from 'lodash';
 
 var Section = React.createClass({
   render() {
-    var style = {
+    var style = Object.assign({
       minHeight: '125vh',
       border: '1px solid',
-    };
+    }, this.props.style);
 
     return (
       <div className="Section" id={this.props.id} style={style}>

@@ -2,8 +2,6 @@ import React from 'react';
 // import _ from 'lodash';
 import * as d3 from 'd3';
 
-var duration = 500;
-
 var Hosts = React.createClass({
   componentDidMount() {
     this.container = d3.select(this.refs.container);

@@ -57,6 +57,7 @@ var App = React.createClass({
     return {
       hosts: [],
       obamas: [],
+      videos: [],
       links: [],
       axes: null,
       interpolateScroll: 0,
@@ -75,6 +76,16 @@ var App = React.createClass({
     _.each(videosData, video => {
       video.date = new Date(video.publishedAt);
       video.guest = _.find(metadata, data => data.id === video.videoId).guest[0];
+      video.host = _.filter(showsData, show => _.includes(show.id, video.channelId));
+
+      // if there's more than one show, match the title of the video
+      if (video.host.length > 1) {
+        video.host = _.find(video.host, host => {
+          return _.find(host.shows, show => _.includes(video.title, show));
+        }).host;
+      } else {
+        video.host = video.host[0].host;
+      }
     });
 
     _.each(annotationsData, annotation => {
@@ -99,7 +110,7 @@ var App = React.createClass({
     sectionPositions = _.map(data.sectionData, section => {
       var sectionRect = d3.select('.Section#' + section.id).node().getBoundingClientRect();
       var top = (sectionRect.top - bodyRect.top);
-      var halfway = top + sectionRect.height * 0.25;
+      var halfway = top + (section.half || sectionRect.height * 0.25);
       var bottom = top + sectionRect.height;
 
       return Object.assign({top, halfway, bottom}, section);
@@ -128,38 +139,52 @@ var App = React.createClass({
       return;
     };
 
+    var newState = {};
     // if user is between top and 50%
     if (section.top <= scrollTop && scrollTop < section.halfway) {
       // did they just scroll into it?
       if (!prevSection || (prevSection && prevSection.id !== section.id)) {
         // then calculate the new positions
-        var newState = section.position(width, section.top, section.bottom);
+        newState = section.position(width, section.top, section.bottom);
         prevSection = section;
         this.setState(newState);
       }
     } else if (section.halfway <= scrollTop && scrollTop < section.bottom) {
       // if instead they are in the bottom half of section
-      var newState = {};
       if ((prevSection && prevSection.id !== section.id) ||
         (!interpolateSection || interpolateSection.id !== section.id)) {
         // if we just entered a new section, or if we havne't calculated the interpolation before
         // then calculate section positions as well as the next section positions
         newState = section.position(width, section.top, section.bottom);
         if (next) {
-          var nextPos = next.position(width, next.top, next.bottom);
-          var nextObamas = _.keyBy(nextPos.obamas, 'key');
-          var nextHosts = _.keyBy(nextPos.hosts, 'key');
+          var nextState = next.position(width, next.top, next.bottom);
+          var nextObamas = _.keyBy(nextState.obamas, 'key');
+          var nextHosts = _.keyBy(nextState.hosts, 'key');
+          var nextVideos = _.keyBy(nextState.videos, 'key');
 
-          _.each(newState.obamas, obama => {
-            var nextObama = nextObamas[obama.key];
-            obama.interpolateX = d3.interpolate(obama.x, nextObama.x);
-            obama.interpolateY = d3.interpolate(obama.y, nextObama.y);
-          });
-          _.each(newState.hosts, host => {
-            var nextHost = nextHosts[host.key];
-            host.interpolateX = d3.interpolate(host.x, nextHost.x);
-            host.interpolateY = d3.interpolate(host.y, nextHost.y);
-          });
+          if (!_.isEmpty(nextObamas)) {
+            _.each(newState.obamas, obama => {
+              var nextObama = nextObamas[obama.key];
+              obama.interpolateX = d3.interpolate(obama.x, nextObama.x);
+              obama.interpolateY = d3.interpolate(obama.y, nextObama.y);
+            });
+          }
+          if (!_.isEmpty(nextHosts)) {
+            _.each(newState.hosts, host => {
+              var nextHost = nextHosts[host.key];
+              host.interpolateX = d3.interpolate(host.x, nextHost.x);
+              host.interpolateY = d3.interpolate(host.y, nextHost.y);
+            });
+          }
+          if (!_.isEmpty(nextVideos)) {
+            _.each(newState.videos, video => {
+              var nextVideo = nextVideos[video.key];
+              video.interpolateX = d3.interpolate(video.x, nextVideo.x);
+              video.interpolateY = d3.interpolate(video.y, nextVideo.y);
+              video.radius = nextVideo.radius;
+            });
+          }
+
           interpolateSection = section;
           prevSection = section;
         }

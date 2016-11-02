@@ -1,7 +1,6 @@
 import React from 'react';
 import * as d3 from 'd3';
 
-var duration = 500;
 function link(d) {
   return "M" + d.source.x + "," + d.source.y
       + "C" + d.source.x +  "," + (d.source.y + d.target.y) / 2

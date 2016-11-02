@@ -4,8 +4,25 @@ import _ from 'lodash';
 var padding = {top: 20, left: 20};
 var hostSize = 50;
 var obamaSize = 40;
+var videoSize = 50;
+
+var xScale = d3.scaleTime()
+  .domain([new Date('January 1, 2009'), new Date('November 8, 2016')]);
+var opacityScale = d3.scaleLinear()
+  .domain([new Date('January 20, 2009'),
+    new Date('January 1, 2016'), new Date('November 8, 2016')])
+  .range([0.05, 0.35, 1]);
+
+function getQuarterFromDate(date) {
+  var quarter = Math.floor(date.getMonth() / 3) * 3;
+  return new Date(date.getFullYear(), quarter, 1);
+}
 
 export default function(data, images) {
+  var radiusDomain = d3.extent(data.videosData, d => d.statistics.viewCount);
+  var radiusScale = d3.scaleLog()
+    .domain(radiusDomain).range([videoSize / 8, videoSize]);
+
   return [
     {
       id: 'by_hosts',
@@ -29,7 +46,7 @@ export default function(data, images) {
 
             if (row === rows) {
               // if it's the last row
-              x = x + (perRow * perWidth - extras * perWidth) / 2;
+              x += (perRow * perWidth - extras * perWidth) / 2;
             }
 
             return {
@@ -60,11 +77,11 @@ export default function(data, images) {
 
                 if (y === rows) {
                   // if it's the last row
-                  x = x - (extras * obamaSize) / 2;
+                  x -= (extras * obamaSize) / 2;
                 } else {
-                  x = x - (perRow * obamaSize) / 2;
+                  x -= (perRow * obamaSize) / 2;
                 }
-                y = y * obamaSize;
+                y *= obamaSize;
 
                 return {
                   key: date + guest,
@@ -78,27 +95,24 @@ export default function(data, images) {
               }).value();
           }).flatten().value()
 
-        return {hosts, obamas, links: []};
+        return {hosts, obamas, links: [], videos: []};
       },
       text: `
-Bloop.
+1.
       `
     },
     {
       id: 'by_time',
+      half: 200,
+      style: {
+        minHeight: 500,
+      },
       position(width, top) {
-        top += window.innerHeight * 0.25 + 2 * hostSize;
+        top += this.half + 2 * hostSize;
         var bottom = top + 4 * hostSize + 6 * obamaSize;
 
-        var xScale = d3.scaleTime()
-          .domain([new Date('January 1, 2009'), new Date('November 8, 2016')])
-          .range([padding.left + obamaSize, width - padding.left - obamaSize]);
-        var opacityScale = d3.scaleLinear()
-          .domain([new Date('January 20, 2009'),
-            new Date('January 1, 2016'), new Date('November 8, 2016')])
-          .range([0.05, 0.35, 1]);
+        xScale.range([padding.left + obamaSize, width - padding.left - obamaSize]);
 
-        var perWidth = width / data.showsData.length;
         var hosts = _.map(data.showsData, (show, i) => {
           return {
             key: show.host,
@@ -108,8 +122,8 @@ Bloop.
             image: show.image,
           };
         });
-        var links = [];
 
+        var links = [];
         // group obama interviews by quarter, and then position them
         var obamas = _.chain(data.showsData)
           .map(show => {
@@ -138,21 +152,43 @@ Bloop.
           .groupBy(data => {
             var {date} = data;
             // group by quarter
-            var quarter = Math.floor(date.getMonth() / 3) * 3;
-            data.quarter = new Date(date.getFullYear(), quarter, 1);
-
-            return data.quarter;
+            return data.quarter = getQuarterFromDate(date);
           }).map(dates => {
             return _.chain(dates)
               .sortBy(date => date.guest)
               .map((data, i) => {
-                var {date, quarter} = data;
+                var {quarter} = data;
+                var x = xScale(quarter);
+                var y = bottom - (i + 0.75) * obamaSize;
+
                 return Object.assign(data, {
-                  fx: xScale(quarter),
-                  fy: bottom - (i + 0.75) * obamaSize,
+                  x, y,
+                  fx: x,
+                  fy: y,
                 });
               }).value();
-          }).flatten().value()
+          }).flatten().value();
+
+        // videos
+        // calculate videos
+        var videos = _.chain(data.videosData)
+          .sortBy(d => d.date)
+          .groupBy(d => d.quarter = getQuarterFromDate(d.date))
+          .map((data, key) => {
+            var x = xScale(data[0].quarter);
+            var y = top;
+            return _.map(data, video => {
+              return {
+                key: video.videoId,
+                caption: video.caption === 'true',
+                x,
+                y: bottom,
+                radius: radiusScale(video.statistics.viewCount),
+                host: video.host,
+                guest: video.guest,
+              }
+            });
+          }).flatten().value();
 
         // use force layout to lay out the hosts/obamas and the links
         var simulation = d3.forceSimulation(_.union(obamas, hosts))
@@ -171,11 +207,47 @@ Bloop.
           },
         };
 
-        return {hosts, obamas, links, axes};
+        return {hosts, obamas, links, axes, videos};
       },
       text: `
-Bloop.
+2.
       `,
+    },
+    {
+      id: 'show_videos',
+      position(width, top) {
+        top += 2 * hostSize + 5 * obamaSize;
+
+        xScale.range([padding.left + obamaSize, width - padding.left - obamaSize]);
+
+        // calculate videos
+        var videos = _.chain(data.videosData)
+          .sortBy(d => d.date)
+          .groupBy(d => d.quarter = getQuarterFromDate(d.date))
+          .map((data, key) => {
+            var x = xScale(data[0].quarter);
+            var y = top;
+            return _.map(data, video => {
+              var radius = radiusScale(video.statistics.viewCount);
+              var originalY = y;
+              y += radius / 2 + 40;
+              return {
+                key: video.videoId,
+                caption: video.caption === 'true',
+                radius,
+                x,
+                y: originalY,
+                host: video.host,
+                guest: video.guest,
+              }
+            });
+          }).flatten().value();
+
+        return {videos};
+      },
+      text: `
+3.
+      `
     }
   ];
 }
