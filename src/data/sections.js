@@ -1,6 +1,11 @@
 import * as d3 from 'd3';
 import _ from 'lodash';
 
+// import positions
+var positions = {
+  videoCaptions: require('../positions/video_captions.json'),
+};
+
 var padding = {top: 20, left: 20};
 var hostSize = 50;
 var obamaSize = 40;
@@ -278,48 +283,60 @@ export default function(data, images) {
     {
       id: 'show_captions',
       position(width, top) {
-        var obamaHeight = 2 * hostSize + 5 * obamaSize;
-        top += obamaHeight;
-        var bottom = top + window.innerHeight * 0.85 - obamaHeight;
+        var vizHeight = window.innerHeight * 0.85;
+        var vizSide = 2 * padding.left + obamaSize;
+        var vizWidth = width - 2 * vizSide;
 
         var filteredDates = _.filter(data.videosData, d => d.caption);
         var dateExtent = d3.extent(filteredDates, d => d.date);
         xScale.domain(dateExtent)
-          .range([2 * padding.left + obamaSize, width - 2 * padding.left - obamaSize]);
-        yScale.range([bottom, top]);
+          .range([vizSide, width - vizSide]);
+        // yScale.range([top + vizHeight, top]);
 
         // calculate videos
         var videos = _.chain(data.videosData)
           .sortBy(d => d.date)
           .map(video => {
+            var position = positions.videoCaptions[video.videoId];
             return {
               key: video.videoId,
               radius: radiusScale(video.statistics.viewCount),
               captionRadius: video.caption ? captionRadiusScale(video.duration) : 0,
               opacity: video.caption ? 0.5 : 0.15,
-              focusX: xScale(video.date),
-              focusY: yScale(video.statistics.viewCount),
+              x: position.x * vizWidth + vizSide,
+              y: position.y * vizHeight + top,
+              // focusX: xScale(video.date),
+              // focusY: yScale(video.statistics.viewCount),
               host: video.host,
               guest: video.guest,
               video,
             };
           }).value();
 
-        // use force layout to lay out the hosts/obamas and the links
-        var simulation = d3.forceSimulation(videos)
-          .force('charge', d3.forceCollide(d => d.captionRadius * 0.5))
-          .force('x', d3.forceX(d => d.focusX))
-          .force('y', d3.forceY(d => d.focusY))
-          .stop();
-
-        _.times(1000, i => {
-          simulation.tick();
-        });
+        // // use force layout to lay out the hosts/obamas and the links
+        // var simulation = d3.forceSimulation(videos)
+        //   .force('charge', d3.forceCollide(d => d.captionRadius * 0.5))
+        //   .force('x', d3.forceX(d => d.focusX))
+        //   .force('y', d3.forceY(d => d.focusY))
+        //   .stop();
+        //
+        // _.times(1000, i => {
+        //   simulation.tick();
+        // });
+        //
+        // var positions = _.reduce(videos, (obj, video) => {
+        //   obj[video.key] = {
+        //     x: (video.x - vizSide) / vizWidth,
+        //     y: (video.y - top) / vizHeight,
+        //   };
+        //   return obj;
+        // }, {});
+        // console.log(JSON.stringify(positions));
 
         var axes = {
           x: {
             scale: xScale,
-            transform: 'translate(' + [0, bottom + 2 * padding.top] + ')',
+            transform: 'translate(' + [0, top + vizHeight + 2 * padding.top] + ')',
           }
         };
 
