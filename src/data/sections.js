@@ -4,7 +4,7 @@ import _ from 'lodash';
 var padding = {top: 20, left: 20};
 var hostSize = 50;
 var obamaSize = 40;
-var videoSize = 50;
+var videoSize = 40;
 
 var xScale = d3.scaleTime()
   .domain([new Date('January 1, 2009'), new Date('November 8, 2016')]);
@@ -19,9 +19,9 @@ function getQuarterFromDate(date) {
 }
 
 export default function(data, images) {
-  var radiusDomain = d3.extent(data.videosData, d => d.statistics.viewCount);
+  var viewExtent = d3.extent(data.videosData, d => d.statistics.viewCount);
   var radiusScale = d3.scaleLog()
-    .domain(radiusDomain).range([videoSize / 8, videoSize]);
+    .domain(viewExtent).range([videoSize / 8, videoSize]);
 
   return [
     {
@@ -159,7 +159,7 @@ export default function(data, images) {
               .map((data, i) => {
                 var {quarter} = data;
                 var x = xScale(quarter);
-                var y = bottom - (i + 0.75) * obamaSize;
+                var y = bottom - (i + 1.25) * obamaSize;
 
                 return Object.assign(data, {
                   x, y,
@@ -176,7 +176,6 @@ export default function(data, images) {
           .groupBy(d => d.quarter = getQuarterFromDate(d.date))
           .map((data, key) => {
             var x = xScale(data[0].quarter);
-            var y = top;
             return _.map(data, video => {
               return {
                 key: video.videoId,
@@ -184,7 +183,6 @@ export default function(data, images) {
                 x,
                 y: bottom,
                 radius: radiusScale(video.statistics.viewCount),
-                host: video.host,
                 guest: video.guest,
               }
             });
@@ -217,8 +215,11 @@ export default function(data, images) {
       id: 'show_videos',
       position(width, top) {
         top += 2 * hostSize + 5 * obamaSize;
+        var left = width - padding.left - obamaSize;
 
-        xScale.range([padding.left + obamaSize, width - padding.left - obamaSize]);
+        xScale.range([padding.left + obamaSize, left]);
+        var yScale = d3.scaleLog()
+          .domain(viewExtent).range([top + Math.min(450, window.innerHeight), top])
 
         // calculate videos
         var videos = _.chain(data.videosData)
@@ -226,24 +227,41 @@ export default function(data, images) {
           .groupBy(d => d.quarter = getQuarterFromDate(d.date))
           .map((data, key) => {
             var x = xScale(data[0].quarter);
-            var y = top;
             return _.map(data, video => {
               var radius = radiusScale(video.statistics.viewCount);
-              var originalY = y;
-              y += radius / 2 + 40;
               return {
                 key: video.videoId,
                 caption: video.caption === 'true',
                 radius,
                 x,
-                y: originalY,
+                y: yScale(video.statistics.viewCount),
                 host: video.host,
                 guest: video.guest,
+                video,
               }
             });
           }).flatten().value();
 
-        return {videos};
+        var axes = {
+          y: {
+            transform: 'translate(' + [left, 0] + ')',
+            scale: yScale,
+            format: (d, i) => {
+              if (d >= 10000000) {
+                // 10 million
+                return d / 1000000 + 'm';
+              } else if ((d > 1000000 && d % 2000000 === 0) || d === 1000000) {
+                // million and evens
+                return d / 1000000 + 'm';
+              } else if (d >= 1000 && d < 1000000 && (d % 200000 === 0)) {
+                // thousands and evens
+                return d / 1000 + 'k';
+              }
+            },
+          },
+        };
+
+        return {videos, axes};
       },
       text: `
 3.
