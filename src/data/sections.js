@@ -4,6 +4,7 @@ import _ from 'lodash';
 // import positions
 var positions = {
   videoCaptions: require('../positions/video_captions.json'),
+  hostTime: require('../positions/host_time.json'),
 };
 
 var padding = {top: 20, left: 20};
@@ -123,9 +124,12 @@ export default function(data, images) {
           .range([padding.left + obamaSize, width - padding.left - obamaSize]);
 
         var hosts = _.map(data.showsData, (show, i) => {
+          var position = positions.hostTime[show.host];
+
           return {
             key: show.host,
-            fy: (i % 2 === 0) ? top : top + 2 * hostSize,
+            x: position.x * width,
+            y: (i % 2 === 0) ? top : top + 2 * hostSize,
             radius: hostSize,
             host: show.host,
             image: show.image,
@@ -172,8 +176,8 @@ export default function(data, images) {
 
                 return Object.assign(data, {
                   x, y,
-                  fx: x,
-                  fy: y,
+                  // fx: x,
+                  // fy: y,
                 });
               }).value();
           }).flatten().value();
@@ -199,15 +203,23 @@ export default function(data, images) {
             });
           }).flatten().value();
 
-        // use force layout to lay out the hosts/obamas and the links
-        var simulation = d3.forceSimulation(_.union(obamas, hosts))
-          .force('charge', d3.forceCollide(d => d.radius))
-          .force("link", d3.forceLink(links))
-          .stop();
+        // // use force layout to lay out the hosts/obamas and the links
+        // var simulation = d3.forceSimulation(_.union(obamas, hosts))
+        //   .force('charge', d3.forceCollide(d => d.radius))
+        //   .force("link", d3.forceLink(links))
+        //   .stop();
+        //
+        // _.times(1000, i => {
+        //   simulation.tick();
+        // });
 
-        _.times(1000, i => {
-          simulation.tick();
-        });
+        // var positions = _.reduce(hosts, (obj, host) => {
+        //   obj[host.key] = {
+        //     x: host.x / width,
+        //   };
+        //   return obj;
+        // }, {});
+        // console.log(JSON.stringify(positions));
 
         var axes = {
           x: {
