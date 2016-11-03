@@ -19,6 +19,8 @@ var SelectedVideo = React.createClass({
   componentDidMount() {
     this.container = d3.select(this.refs.container);
     this.annotationsContainer = d3.select(this.refs.annotations);
+    this.facesContainer = d3.select(this.refs.faces);
+
     this.annotationsContainer.append('g')
       .classed('x axis', true)
       .attr('transform', 'translate(' + [0, wordsHeight] + ')');
@@ -36,7 +38,10 @@ var SelectedVideo = React.createClass({
     this.container.attr('transform', 'translate(' + [0, props.section.top + top] + ')')
 
     this.calculateAnnotation(props, props.selectedVideo);
+    this.calculateFaces(props, props.selectedVideo);
+
     this.renderAnnotation();
+    this.renderFaces();
   },
 
   calculateAnnotation(props, video) {
@@ -62,7 +67,7 @@ var SelectedVideo = React.createClass({
       .call(xAxis);
 
     this.annotations = this.annotationsContainer
-      .selectAll('rect').data(this.annotationsData, d => d.filename);
+      .selectAll('rect').data(this.annotationsData);
 
     this.annotations.exit().remove();
 
@@ -76,11 +81,54 @@ var SelectedVideo = React.createClass({
       .attr('opacity', 0.5);
   },
 
+  calculateFaces(props, video) {
+    var fontSize = 12;
+    this.facesData = _.chain(video.annotations)
+      .filter(d => _.some(d.faces, face => face.happy))
+      .map(d => {
+        var index = 0;
+        return _.map(d.faces, (face) => {
+          if (!face.happy) return;
+
+          var i = index;
+          index += 1;
+          return {
+            x: xScale(d.start),
+            y: wordsHeight + i * fontSize,
+            emoji: props.emojis.happy[0],
+            fontSize,
+            filename: d.filename,
+          };
+        });
+      }).flatten().filter().value();
+  },
+
+  renderFaces() {
+    this.faces = this.facesContainer.selectAll('.face').data(this.facesData);
+
+    this.faces.exit().remove();
+
+    var enter = this.faces.enter().append('g')
+      .classed('face', true);
+    enter.append('text')
+      .classed('emoji', true)
+      .attr('text-anchor', 'middle')
+      .attr('dy', '.35em');
+
+    this.faces = this.faces.merge(enter)
+      .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
+
+    this.faces.select('.emoji')
+      .attr('font-size', d => d.fontSize)
+      .text(d => d.emoji);
+  },
+
   render() {
 
     return (
       <g ref='container' className='SelectedVideo'>
         <g ref='annotations' />
+        <g ref='faces' />
       </g>
     );
   }
