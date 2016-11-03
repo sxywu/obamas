@@ -13,7 +13,7 @@ var xAxis = d3.axisBottom().scale(xScale)
   });
 var heightScale = d3.scaleLinear();
 var wordsHeight = 100;
-var top = 220;
+var top = 250;
 var imageScale = 0.25;
 var imageWidth = 640 * imageScale;
 var imageHeight = 360 * imageScale;
@@ -21,9 +21,13 @@ var imageHeight = 360 * imageScale;
 var SelectedVideo = React.createClass({
   componentDidMount() {
     this.container = d3.select(this.refs.container);
+    this.titleContainer = d3.select(this.refs.videoTitle);
     this.annotationsContainer = d3.select(this.refs.annotations);
     this.facesContainer = d3.select(this.refs.faces);
     this.emojisContainer = d3.select(this.refs.emojis);
+    this.captionContainer = d3.select(this.refs.videoCaption);
+
+    this.selectedCaption = null;
 
     this.annotationsContainer.append('g')
       .classed('x axis', true)
@@ -39,13 +43,26 @@ var SelectedVideo = React.createClass({
 
   renderSelectedVideo(props) {
     if (!props.section.updateSelectedVideo) return;
-    this.container.attr('transform', 'translate(' + [0, props.section.top + top] + ')')
+    // default the selected caption to the first smiling image
+    this.selectedCaption = this.selectedCaption ||
+      _.find(props.selectedVideo.annotations, d => _.some(d.faces, face => face.happy));
+
+    this.container.attr('transform', 'translate(' + [0, props.section.top + top] + ')');
+    this.titleContainer
+      .attr('y', -30)
+      .attr('dy', '.35em')
+      .attr('text-anchor', 'middle')
+      .attr('font-weight', 700)
+      .attr('x', props.vizWidth / 2 + props.vizSide)
+      .text(props.selectedVideo.video.title);
 
     this.calculateAnnotation(props, props.selectedVideo);
     this.calculateFaces(props, props.selectedVideo);
 
     this.renderAnnotation();
     this.renderFaces(props);
+
+    this.renderCaption(props);
   },
 
   calculateAnnotation(props, video) {
@@ -64,6 +81,7 @@ var SelectedVideo = React.createClass({
         height: heightScale(d.words.length),
         width: x2 - x1,
         fill: props.colors[video.guest],
+        annotation: d,
       };
     });
   },
@@ -77,7 +95,7 @@ var SelectedVideo = React.createClass({
 
     this.annotations.exit().remove();
 
-    this.annotations.enter().append('rect')
+    this.annotations = this.annotations.enter().append('rect')
       .merge(this.annotations)
       .attr('x', d => d.x)
       .attr('y', d => d.y)
@@ -85,7 +103,12 @@ var SelectedVideo = React.createClass({
       .attr('height', d => d.height)
       .attr('fill', d => d.fill)
       .attr('stroke', '#fff')
-      .attr('opacity', 0.5);
+      .attr('opacity', d => this.selectedCaption &&
+        this.selectedCaption.start === d.annotation.start ? 1 : 0.25)
+      .style('cursor', 'pointer')
+      .on('click', this.selectCaption)
+      .on('mouseover', this.mouseoverCaption)
+      .on('mouseleave', this.mouseleaveCaption);
   },
 
   calculateFaces(props, video) {
@@ -108,6 +131,7 @@ var SelectedVideo = React.createClass({
           fontSize,
           filename: d.filename,
           opacity: emojis.length ? 1 : 0.25,
+          key: d.start,
         };
       });
   },
@@ -150,13 +174,40 @@ var SelectedVideo = React.createClass({
       .attr('opacity', d => d.opacity);
   },
 
+  renderCaption(props) {
+    this.captionContainer
+      .attr('transform', 'translate(' + [props.vizWidth / 2 + props.vizSide, wordsHeight * 2.25] + ')')
+      .attr('text-anchor', 'middle')
+      .attr('dy', '.35em')
+      .attr('font-size', 12)
+      .text(_.unescape(this.hoveredCaption ? this.hoveredCaption.words : this.selectedCaption.words));
+  },
+
+  selectCaption(d) {
+    this.selectedCaption = d.annotation;
+    this.renderCaption(this.props);
+    this.renderAnnotation(this.props);
+  },
+
+  mouseoverCaption(d) {
+    this.hoveredCaption = d.annotation;
+    this.renderCaption(this.props);
+  },
+
+  mouseleaveCaption() {
+    this.hoveredCaption = null;
+    this.renderCaption(this.props);
+  },
+
   render() {
 
     return (
       <g ref='container' className='SelectedVideo'>
+        <text ref='videoTitle' />
         <g ref='faces' />
         <g ref='emojis' />
         <g ref='annotations' />
+        <text ref='videoCaption' />
       </g>
     );
   }

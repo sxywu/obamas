@@ -388,11 +388,12 @@ export default function(data, images) {
         var vizSide = 2 * padding.left + obamaSize;
         var vizWidth = width - 2 * vizSide;
 
-        var filteredDates = _.filter(data.videosData, d => d.caption);
+        var filteredVideos = _.filter(data.videosData, d => d.caption &&
+          _.some(d.annotations, annotation => _.some(annotation.faces, face => face.happy)));
 
         // calculate videos
-        var perWidth = vizWidth / filteredDates.length;
-        var videos = _.chain(filteredDates)
+        var perWidth = vizWidth / filteredVideos.length;
+        var videos = _.chain(filteredVideos)
           .sortBy(d => d.date)
           .map((video, i) => {
             var radius = radiusScale(video.statistics.viewCount) / 2;
