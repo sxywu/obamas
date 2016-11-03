@@ -23,6 +23,7 @@ var SelectedVideo = React.createClass({
     this.container = d3.select(this.refs.container);
     this.annotationsContainer = d3.select(this.refs.annotations);
     this.facesContainer = d3.select(this.refs.faces);
+    this.emojisContainer = d3.select(this.refs.emojis);
 
     this.annotationsContainer.append('g')
       .classed('x axis', true)
@@ -89,9 +90,7 @@ var SelectedVideo = React.createClass({
 
   calculateFaces(props, video) {
     var fontSize = 12;
-    this.facesData = _.chain(video.annotations)
-      .filter(d => _.some(d.faces, face => face.happy))
-      .map(d => {
+    this.facesData = _.map(video.annotations, d => {
         var emojis = _.chain(d.faces)
           .filter(face => face.happy)
           .map((d, i) => {
@@ -108,27 +107,22 @@ var SelectedVideo = React.createClass({
           emojis,
           fontSize,
           filename: d.filename,
+          opacity: emojis.length ? 1 : 0.25,
         };
-      }).value();
+      });
   },
 
   renderFaces(props) {
-    this.faces = this.facesContainer.selectAll('.face').data(this.facesData);
+    this.emojis = this.emojisContainer.selectAll('g').data(this.facesData);
 
-    this.faces.exit().remove();
+    this.emojis.exit().remove();
 
-    var enter = this.faces.enter().append('g')
-      .classed('face', true);
-    enter.append('image')
-      .classed('image', true)
-      .attr('preserveAspectRatio', 'xMidYMid slice')
-      .attr('height', imageHeight)
-      .attr('stroke', props.colors.host);
+    var enter = this.emojis.enter().append('g');
 
-    this.faces = this.faces.merge(enter)
+    this.emojis = this.emojis.merge(enter)
       .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
 
-    var emojis = this.faces.selectAll('.emoji').data(d => d.emojis);
+    var emojis = this.emojis.selectAll('.emoji').data(d => d.emojis);
     emojis.exit().remove();
     emojis.enter().append('text')
       .classed('emoji', true)
@@ -139,20 +133,30 @@ var SelectedVideo = React.createClass({
       .attr('font-size', d => d.fontSize)
       .text(d => d.emoji);
 
-    this.faces.select('image')
+    // add images
+    this.facesContainer.attr('transform', 'translate(' + [0, wordsHeight] + ')');
+
+    this.faces = this.facesContainer.selectAll('image').data(this.facesData);
+    this.faces.exit().remove();
+
+    this.faces = this.faces.enter().append('image')
+      .attr('preserveAspectRatio', 'xMidYMid slice')
+      .attr('height', imageHeight)
+      .merge(this.faces)
       .attr('viewBox', d => '0 0 ' + [_.round(d.x2 - d.x1), imageHeight].join(' '))
       .attr('xlink:href', d => process.env.PUBLIC_URL + '/' + d.filename)
       .attr('width', d => d.x2 - d.x1)
-      .attr('x', d => -(d.x2 - d.x1) / 2)
-      .attr('y', d => d.fontSize * 2);
+      .attr('x', d => d.x1)
+      .attr('opacity', d => d.opacity);
   },
 
   render() {
 
     return (
       <g ref='container' className='SelectedVideo'>
-        <g ref='annotations' />
         <g ref='faces' />
+        <g ref='emojis' />
+        <g ref='annotations' />
       </g>
     );
   }
