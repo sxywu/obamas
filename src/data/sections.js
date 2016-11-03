@@ -379,6 +379,7 @@ export default function(data, images) {
     },
     {
       id: 'choose_video',
+      updateSelectedVideo: true,
       position(width, top) {
         var paddingTop = 4 * videoSize;
         top += paddingTop;

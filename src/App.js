@@ -64,6 +64,8 @@ var App = React.createClass({
       axes: null,
       interpolateScroll: 0,
       scrollDuration: 200,
+      section: {},
+      selectedVideo: null,
     };
   },
 
@@ -160,6 +162,12 @@ var App = React.createClass({
       if (!topSection || (topSection && topSection.id !== section.id)) {
         // if not, calculate the new positions
         newState = section.position(width, section.top, section.bottom);
+
+        // set things for pulsing
+        newState.section = section;
+        newState.selectedVideo = this.state.selectedVideo ||
+          newState.videos[_.random(newState.videos.length)];
+
         topSection = section;
         bottomSection = null;
         this.setState(newState);
