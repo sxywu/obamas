@@ -304,8 +304,6 @@ export default function(data, images) {
         var dateExtent = d3.extent(filteredDates, d => d.date);
         xScale.domain(dateExtent)
           .range([vizSide, width - vizSide]);
-        var yScale = d3.scaleLog().domain(viewExtent)
-          .range([top + vizHeight, top]);
 
         // calculate videos
         var videos = _.chain(data.videosData)
@@ -316,7 +314,7 @@ export default function(data, images) {
               key: video.videoId,
               radius: radiusScale(video.statistics.viewCount),
               captionRadius: video.caption ? captionRadiusScale(video.duration) : 0,
-              opacity: video.caption ? 0.5 : 0.15,
+              opacity: video.caption ? 0.5 : 0.05,
               x: position.x * vizWidth + vizSide,
               y: position.y * vizHeight + top,
               // focusX: xScale(video.date),
@@ -352,22 +350,6 @@ export default function(data, images) {
             scale: xScale,
             transform: 'translate(' + [0, top + vizHeight + 2 * padding.top] + ')',
           },
-          y: {
-            scale: yScale,
-            transform: 'translate(' + [width - vizSide, 0] + ')',
-            format: (d, i) => {
-              if (d >= 10000000) {
-                // 10 million
-                return d / 1000000 + 'm';
-              } else if ((d > 1000000 && d % 2000000 === 0) || d === 1000000) {
-                // million and evens
-                return d / 1000000 + 'm';
-              } else if (d >= 1000 && d < 1000000 && (d % 200000 === 0)) {
-                // thousands and evens
-                return d / 1000 + 'k';
-              }
-            },
-          }
         };
 
         return {videos, axes};
