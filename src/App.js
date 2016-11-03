@@ -13,28 +13,15 @@ import metadata from './data/metadata.json';
 import sectionData from './data/sections.js';
 
 var emojis = {
-  happy: ['😆', '😀', '😁', '😄', '😃'],
-  sad: '😭',
-  mad: '😡',
-  surprised: '😮',
-  neutral: '😐',
-  hat: '🎩',
-  speech: '🎙',
-  screenshot: '📸',
-  meal: '🍽',
-  retail: '👛',
-  driving: '🚘',
-  vehicle: '🚘',
-  mouth: '👄',
-  lunch: '🍽',
-  newscaster: '🎙',
-  hair: '💇',
-  building: '🏢',
-  car: '🚘',
-  floristry: '💐',
-  presentation: '📽',
-  'White House': '🏛',
-  'U.S. Capitol': '🏛',
+  happy: d3.scaleQuantize().domain([50, 90, 98, 99.7, 99.98, 100])
+    .range([
+      require('./images/smiling.svg'),
+      require('./images/smiling_closed.svg'),
+      require('./images/grinning_closed.svg'),
+      require('./images/smiling_really.svg'),
+      require('./images/tears.svg'),
+    ]),
+  neutral: require('./images/neutral.svg'),
 };
 var images = {
   B: require('./images/barack.png'),

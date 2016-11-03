@@ -30,22 +30,22 @@ var Header = React.createClass({
       emotionObj = emotionObj[_.random(emotionObj.length - 1)];
 
       var emotionFaces = _.map(emotionObj.faces, (face, i) => {
-        var fontSize = (face.bounds.head[1].x || 0) - (face.bounds.head[0].x || 0);
+        var width = (face.bounds.head[1].x || 0) - (face.bounds.head[0].x || 0);
 
         var style = {
           position: 'absolute',
           top: face.bounds.head[0].y || 0,
           left: face.bounds.head[0].x || 0,
-          fontSize,
+          width,
         };
         style.top *= imageScale;
         style.left *= imageScale;
-        style.fontSize *= imageScale;
+        style.width *= imageScale;
 
-        var emoji = face.happy ? this.props.emojis.happy : this.props.emojis.neutral;
-        emoji = _.isArray(emoji) ? emoji[_.random(emoji.length - 1)] : emoji;
+        var emoji = face.happy ? this.props.emojis.happy(face.confidence) :
+          this.props.emojis.neutral;
 
-        return (<div key={i} style={style}>{emoji}</div>);
+        return (<img key={i} style={style} src={emoji} />);
       });
 
       var style = {

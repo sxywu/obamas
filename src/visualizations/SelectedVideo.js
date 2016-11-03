@@ -31,7 +31,8 @@ var SelectedVideo = React.createClass({
     this.annotationsContainer.append('g')
       .classed('x axis', true)
       .attr('transform', 'translate(' + [0, wordsHeight] + ')');
-    this.imageContainer.append('image');
+    this.imageContainer.append('image')
+      .classed('source', true);
 
     this.renderSelectedVideo(this.props);
   },
@@ -117,12 +118,12 @@ var SelectedVideo = React.createClass({
   },
 
   calculateFaces(props, video) {
-    var fontSize = 12;
+    var width = 14;
     this.facesData = _.map(video.annotations, d => {
         var emojis = _.chain(d.faces)
           .filter(face => face.happy)
           .map((d, i) => {
-            return {emoji: props.emojis.happy[0], y: (i + 1) * fontSize, fontSize};
+            return {emoji: props.emojis.happy(d.confidence), y: (i + 0.25) * width, width};
           }).value();
         var x1 = xScale(d.start);
         var x2 = xScale(d.end);
@@ -133,7 +134,7 @@ var SelectedVideo = React.createClass({
           x: (x2 - x1) / 2 + x1,
           y: wordsHeight,
           emojis,
-          fontSize,
+          width,
           filename: d.filename,
           opacity: emojis.length ? 1 : 0.25,
           key: d.start,
@@ -142,7 +143,8 @@ var SelectedVideo = React.createClass({
   },
 
   renderFaces(props) {
-    this.emojis = this.emojisContainer.selectAll('g').data(this.facesData);
+    var emojisData = _.filter(this.facesData, d => d.emojis.length);
+    this.emojis = this.emojisContainer.selectAll('g').data(emojisData);
 
     this.emojis.exit().remove();
 
@@ -153,14 +155,14 @@ var SelectedVideo = React.createClass({
 
     var emojis = this.emojis.selectAll('.emoji').data(d => d.emojis);
     emojis.exit().remove();
-    emojis.enter().append('text')
+    emojis.enter().append('image')
       .classed('emoji', true)
-      .attr('text-anchor', 'middle')
-      .attr('dy', '.35em')
+      .attr('x', d => -d.width / 2)
       .attr('y', d => d.y)
+      .attr('width', d => d.width)
+      .attr('height', d => d.width)
       .merge(emojis)
-      .attr('font-size', d => d.fontSize)
-      .text(d => d.emoji);
+      .attr('xlink:href', d => d.emoji);
 
     // add images
     this.facesContainer.attr('transform', 'translate(' + [0, wordsHeight] + ')');
@@ -192,23 +194,24 @@ var SelectedVideo = React.createClass({
   renderImage(props) {
     this.imageContainer.attr('transform',
       'translate(' + [props.vizWidth / 2 + props.vizSide, wordsHeight * 2.5] + ')');
-    this.imageContainer.select('image')
+    this.imageContainer.select('.source')
       .attr('x', -imageWidth / 2)
       .attr('width', imageWidth)
       .attr('height', imageHeight)
       .attr('xlink:href', process.env.PUBLIC_URL + '/' + this.selectedCaption.annotation.filename);
 
-    var emojis = this.imageContainer.selectAll('text')
+    var emojis = this.imageContainer.selectAll('.emoji')
       .data(this.selectedCaption.annotation.faces);
     emojis.exit().remove();
 
-    emojis.enter().append('text')
-      .attr('dy', '1em')
+    emojis.enter().append('image')
+      .classed('emoji', true)
       .merge(emojis)
       .attr('x', d => (d.bounds.head[0].x || 0) - imageWidth / 2)
       .attr('y', d => d.bounds.head[0].y || 0)
-      .attr('font-size', d => (d.bounds.head[1].x || 0) - (d.bounds.head[0].x || 0))
-      .text(d => d.happy ? props.emojis.happy[0] : props.emojis.neutral);
+      .attr('width', d => (d.bounds.head[1].x || 0) - (d.bounds.head[0].x || 0))
+      .attr('height', d => (d.bounds.head[1].x || 0) - (d.bounds.head[0].x || 0))
+      .attr('xlink:href', d => d.happy ? props.emojis.happy(d.confidence) : props.emojis.neutral);
 
   },
 
@@ -234,8 +237,8 @@ var SelectedVideo = React.createClass({
       <g ref='container' className='SelectedVideo'>
         <text ref='videoTitle' />
         <g ref='faces' />
-        <g ref='emojis' />
         <g ref='annotations' />
+        <g ref='emojis' />
         <text ref='videoCaption' />
         <g ref='emojiImage' />
       </g>
