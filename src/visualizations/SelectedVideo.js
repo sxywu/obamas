@@ -14,6 +14,9 @@ var xAxis = d3.axisBottom().scale(xScale)
 var heightScale = d3.scaleLinear();
 var wordsHeight = 100;
 var top = 220;
+var imageScale = 0.25;
+var imageWidth = 640 * imageScale;
+var imageHeight = 360 * imageScale;
 
 var SelectedVideo = React.createClass({
   componentDidMount() {
@@ -41,7 +44,7 @@ var SelectedVideo = React.createClass({
     this.calculateFaces(props, props.selectedVideo);
 
     this.renderAnnotation();
-    this.renderFaces();
+    this.renderFaces(props);
   },
 
   calculateAnnotation(props, video) {
@@ -52,11 +55,13 @@ var SelectedVideo = React.createClass({
     heightScale.domain(wordsExtent).range([wordsHeight, 0]);
 
     this.annotationsData = _.map(video.annotations, d => {
+      var x1 = xScale(d.start);
+      var x2 = xScale(d.end);
       return {
-        x: xScale(d.start),
+        x: x1,
         y: wordsHeight - heightScale(d.words.length),
         height: heightScale(d.words.length),
-        width: 3,
+        width: x2 - x1,
         fill: props.colors[video.guest],
       };
     });
@@ -78,6 +83,7 @@ var SelectedVideo = React.createClass({
       .attr('width', d => d.width)
       .attr('height', d => d.height)
       .attr('fill', d => d.fill)
+      .attr('stroke', '#fff')
       .attr('opacity', 0.5);
   },
 
@@ -86,41 +92,59 @@ var SelectedVideo = React.createClass({
     this.facesData = _.chain(video.annotations)
       .filter(d => _.some(d.faces, face => face.happy))
       .map(d => {
-        var index = 0;
-        return _.map(d.faces, (face) => {
-          if (!face.happy) return;
+        var emojis = _.chain(d.faces)
+          .filter(face => face.happy)
+          .map((d, i) => {
+            return {emoji: props.emojis.happy[0], y: (i + 1) * fontSize, fontSize};
+          }).value();
+        var x1 = xScale(d.start);
+        var x2 = xScale(d.end);
 
-          var i = index;
-          index += 1;
-          return {
-            x: xScale(d.start),
-            y: wordsHeight + i * fontSize,
-            emoji: props.emojis.happy[0],
-            fontSize,
-            filename: d.filename,
-          };
-        });
-      }).flatten().filter().value();
+        return {
+          x1,
+          x2,
+          x: (x2 - x1) / 2 + x1,
+          y: wordsHeight,
+          emojis,
+          fontSize,
+          filename: d.filename,
+        };
+      }).value();
   },
 
-  renderFaces() {
+  renderFaces(props) {
     this.faces = this.facesContainer.selectAll('.face').data(this.facesData);
 
     this.faces.exit().remove();
 
     var enter = this.faces.enter().append('g')
       .classed('face', true);
-    enter.append('text')
-      .classed('emoji', true)
-      .attr('text-anchor', 'middle')
-      .attr('dy', '.35em');
+    enter.append('image')
+      .classed('image', true)
+      .attr('preserveAspectRatio', 'xMidYMid slice')
+      .attr('height', imageHeight)
+      .attr('stroke', props.colors.host);
 
     this.faces = this.faces.merge(enter)
       .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
 
-    this.faces.select('.emoji')
+    var emojis = this.faces.selectAll('.emoji').data(d => d.emojis);
+    emojis.exit().remove();
+    emojis.enter().append('text')
+      .classed('emoji', true)
+      .attr('text-anchor', 'middle')
+      .attr('dy', '.35em')
+      .attr('y', d => d.y)
+      .merge(emojis)
       .attr('font-size', d => d.fontSize)
       .text(d => d.emoji);
+
+    this.faces.select('image')
+      .attr('viewBox', d => '0 0 ' + [_.round(d.x2 - d.x1), imageHeight].join(' '))
+      .attr('xlink:href', d => process.env.PUBLIC_URL + '/' + d.filename)
+      .attr('width', d => d.x2 - d.x1)
+      .attr('x', d => -(d.x2 - d.x1) / 2)
+      .attr('y', d => d.fontSize * 2);
   },
 
   render() {
