@@ -30,12 +30,12 @@ var Header = React.createClass({
       emotionObj = emotionObj[_.random(emotionObj.length - 1)];
 
       var emotionFaces = _.map(emotionObj.faces, (face, i) => {
-        var fontSize = face.bounds.head[1].x - face.bounds.head[0].x;
+        var fontSize = (face.bounds.head[1].x || 0) - (face.bounds.head[0].x || 0);
 
         var style = {
           position: 'absolute',
-          top: face.bounds.head[0].y,
-          left: face.bounds.head[0].x,
+          top: face.bounds.head[0].y || 0,
+          left: face.bounds.head[0].x || 0,
           fontSize,
         };
         style.top *= imageScale;
@@ -59,10 +59,6 @@ var Header = React.createClass({
         fontStyle: 'italic',
         paddingBottom: 10,
       };
-      var imageStyle = {
-        borderBottom: '3px solid ' + this.props.colors[guest],
-        width: 100,
-      };
 
       return (
         <span style={style}>
@@ -72,7 +68,6 @@ var Header = React.createClass({
             {emotionFaces}
             <div style={footerStyle}>{emotionObj.video.channelTitle}</div>
           </div>
-          <img src={this.props.images[guest]} style={imageStyle} role="presentation" />
         </span>
       );
     });
@@ -82,14 +77,15 @@ var Header = React.createClass({
       height: '100vh',
       border: '1px solid',
     };
-    var buttonStyle = {
-      padding: '10px 20px',
-      border: '3px solid ' + this.props.colors.host,
-      color: this.props.colors.host,
-      cursor: 'pointer',
-      display: 'inline-block',
-      position: 'relative',
-      top: -90,
+    var bStyle = {
+      borderBottom: '3px solid ' + this.props.colors.B,
+      width: 100,
+      margin: 20,
+    };
+    var mStyle = {
+      borderBottom: '3px solid ' + this.props.colors.M,
+      width: 100,
+      margin: 20,
     };
 
     return (
@@ -99,9 +95,8 @@ var Header = React.createClass({
         </h3>
         {faces}
         <br />
-        <h3 style={buttonStyle} onClick={this.randomize}>
-          Random
-        </h3>
+        <img src={this.props.images.B} style={bStyle} role="presentation" />
+        <img src={this.props.images.M} style={mStyle} role="presentation" />
       </div>
     );
   }
