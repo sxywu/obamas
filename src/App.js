@@ -156,11 +156,12 @@ var App = React.createClass({
         // if not, calculate the new positions
         newState = section.position(width, section.top, section.bottom);
         topSection = section;
+        bottomSection = null;
         this.setState(newState);
       }
     } else if (section.halfway <= scrollTop && scrollTop < section.bottom) {
       // if instead they are in the bottom half of section
-      if ((bottomSection && bottomSection.id !== section.id) ||
+      if ((!bottomSection || (bottomSection && bottomSection.id !== section.id)) ||
         (!interpolateSection || interpolateSection.id !== section.id)) {
         // if we just entered this bottom section,
         // or if we havne't calculated the interpolation before
@@ -197,6 +198,7 @@ var App = React.createClass({
 
           interpolateSection = section;
           bottomSection = section;
+          topSection = null;
         }
       }
 

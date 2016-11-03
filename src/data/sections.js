@@ -23,7 +23,6 @@ export default function(data, images) {
   var durationExtent = d3.extent(data.videosData, d => d.duration);
 
   var xScale = d3.scaleTime();
-  var yScale = d3.scaleLog().domain(viewExtent);
   var opacityScale = d3.scaleLinear()
     .domain([new Date('January 20, 2009'),
       new Date('January 1, 2016'), new Date('November 8, 2016')])
@@ -243,7 +242,8 @@ export default function(data, images) {
 
         xScale.domain([new Date('January 1, 2009'), new Date('November 8, 2016')])
           .range([padding.left + obamaSize, left]);
-        yScale.range([top + window.innerHeight * 0.9 - obamaHeight, top]);
+        var yScale = d3.scaleLog().domain(viewExtent)
+          .range([top + window.innerHeight * 0.9 - obamaHeight, top]);
 
         // calculate videos
         var videos = _.chain(data.videosData)
@@ -295,7 +295,8 @@ export default function(data, images) {
     {
       id: 'show_captions',
       position(width, top) {
-        var vizHeight = window.innerHeight * 0.85;
+        top += 2 * videoSize;
+        var vizHeight = window.innerHeight * 0.75;
         var vizSide = 2 * padding.left + obamaSize;
         var vizWidth = width - 2 * vizSide;
 
@@ -303,7 +304,8 @@ export default function(data, images) {
         var dateExtent = d3.extent(filteredDates, d => d.date);
         xScale.domain(dateExtent)
           .range([vizSide, width - vizSide]);
-        // yScale.range([top + vizHeight, top]);
+        var yScale = d3.scaleLog().domain(viewExtent)
+          .range([top + vizHeight, top]);
 
         // calculate videos
         var videos = _.chain(data.videosData)
@@ -349,6 +351,22 @@ export default function(data, images) {
           x: {
             scale: xScale,
             transform: 'translate(' + [0, top + vizHeight + 2 * padding.top] + ')',
+          },
+          y: {
+            scale: yScale,
+            transform: 'translate(' + [width - vizSide, 0] + ')',
+            format: (d, i) => {
+              if (d >= 10000000) {
+                // 10 million
+                return d / 1000000 + 'm';
+              } else if ((d > 1000000 && d % 2000000 === 0) || d === 1000000) {
+                // million and evens
+                return d / 1000000 + 'm';
+              } else if (d >= 1000 && d < 1000000 && (d % 200000 === 0)) {
+                // thousands and evens
+                return d / 1000 + 'k';
+              }
+            },
           }
         };
 
