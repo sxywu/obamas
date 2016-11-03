@@ -197,6 +197,7 @@ export default function(data, images) {
                 radius,
                 captionRadius: video.caption ? radius + 4 : 0,
                 opacity: 0.5,
+                happy: [],
                 guest: video.guest,
               }
             });
@@ -262,6 +263,7 @@ export default function(data, images) {
                 y: yScale(video.statistics.viewCount),
                 host: video.host,
                 guest: video.guest,
+                happy: [],
                 video,
               }
             });
@@ -295,8 +297,9 @@ export default function(data, images) {
     {
       id: 'show_captions',
       position(width, top) {
-        top += 2 * videoSize;
-        var vizHeight = window.innerHeight * 0.75;
+        var paddingTop = 4 * videoSize;
+        top += paddingTop;
+        var vizHeight = window.innerHeight * 0.85 - paddingTop;
         var vizSide = 2 * padding.left + obamaSize;
         var vizWidth = width - 2 * vizSide;
 
@@ -310,10 +313,24 @@ export default function(data, images) {
           .sortBy(d => d.date)
           .map(video => {
             var position = positions.videoCaptions[video.videoId];
+            var captionRadius = video.caption ? captionRadiusScale(video.duration) : 0;
+            var happy = _.chain(video.annotations)
+              .filter(annotation => _.some(annotation.faces, face => face.happy))
+              .map(annotation => {
+                var theta = annotation.start / (video.duration * 1000);
+                theta = theta * 2 * Math.PI - Math.PI / 2;
+                return {
+                  x: (captionRadius / 2) * Math.cos(theta),
+                  y: (captionRadius / 2) * Math.sin(theta),
+                  guest: video.guest,
+                  data: annotation,
+                }
+              }).value();
+
             return {
               key: video.videoId,
               radius: radiusScale(video.statistics.viewCount),
-              captionRadius: video.caption ? captionRadiusScale(video.duration) : 0,
+              captionRadius,
               opacity: video.caption ? 0.5 : 0.05,
               x: position.x * vizWidth + vizSide,
               y: position.y * vizHeight + top,
@@ -321,6 +338,7 @@ export default function(data, images) {
               // focusY: yScale(video.statistics.viewCount),
               host: video.host,
               guest: video.guest,
+              happy,
               video,
             };
           }).value();

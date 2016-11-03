@@ -29,6 +29,9 @@ var Videos = React.createClass({
       .transition().duration(duration)
       .attr('r', d => d.radius / 2);
     enter.filter(d => d.captionRadius)
+      .append('g')
+      .classed('happy', true);
+    enter.filter(d => d.captionRadius)
       .append('circle')
       .classed('caption', true)
       .attr('opacity', 0.75)
@@ -52,6 +55,19 @@ var Videos = React.createClass({
       .transition().duration(props.scrollDuration)
       .attr('r', d => (d.interpolateCaption ?
         d.interpolateCaption(props.interpolateScroll) : d.captionRadius) / 2);
+
+    // denote when there is a happy face
+    var happy = this.videos.select('.happy')
+      .selectAll('circle').data(d => d.happy);
+
+    happy.exit().remove();
+
+    happy.enter().append('circle')
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y)
+      .attr('r', 2.5)
+      .attr('fill', d => props.colors[d.guest]);
+
   },
 
   render() {

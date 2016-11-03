@@ -44,6 +44,7 @@ var colors = {
   B: '#FF6B6B',
   M: '#4ECDC4',
   host: '#556270',
+  happy: '#FFA347',
 };
 var data = {videosData, annotationsData, showsData};
 
@@ -77,6 +78,8 @@ var App = React.createClass({
 
     _.each(videosData, video => {
       video.caption = false;
+      video.annotations = [];
+
       video.date = new Date(video.publishedAt);
       video.guest = _.find(metadata, data => data.id === video.videoId).guest[0];
       video.duration = (video.duration.minutes ? video.duration.minutes * 60 : 0) +
@@ -97,6 +100,8 @@ var App = React.createClass({
       var video = _.find(videosData, video => video.videoId === annotation.videoId);
       if (video) {
         video.caption = true;
+        video.annotations.push(annotation);
+
         annotation.video = video;
       }
     });
