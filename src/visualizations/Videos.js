@@ -31,17 +31,16 @@ var Videos = React.createClass({
 
     enter.append('circle')
       .classed('background', true)
-      .transition().duration(duration)
-      .attr('r', d => d.radius / 2);
+      .transition().duration(duration);
     enter.filter(d => d.captionRadius)
       .append('g')
       .classed('happy', true);
     enter.filter(d => d.captionRadius)
       .append('circle')
       .classed('caption', true)
-      .attr('opacity', 0.75)
       .attr('fill', 'none')
-      .attr('stroke', props.colors.host);
+      .attr('stroke', props.colors.host)
+      .attr('opacity', 0.75);
 
     this.videos = enter.merge(this.videos);
 
@@ -54,10 +53,11 @@ var Videos = React.createClass({
     this.videos.select('.background')
       .datum(d => d)
       .attr('fill', d => props.colors[d.guest])
-      .attr('opacity', d => d.opacity);
+      .attr('opacity', d => d.opacity)
+      .attr('r', d => (d.interpolateRadius ?
+        d.interpolateRadius(props.interpolateScroll) : d.radius) / 2);
     this.videos.select('.caption')
       .datum(d => d)
-      .transition().duration(props.scrollDuration)
       .attr('r', d => (d.interpolateCaption ?
         d.interpolateCaption(props.interpolateScroll) : d.captionRadius) / 2);
 
@@ -68,10 +68,12 @@ var Videos = React.createClass({
     happy.exit().remove();
 
     happy.enter().append('circle')
-      .attr('cx', d => d.x)
-      .attr('cy', d => d.y)
       .attr('r', 2.5)
-      .attr('fill', d => props.colors[d.guest]);
+      .attr('opacity', 0.5)
+      .attr('fill', d => props.colors[d.guest])
+      .merge(happy)
+      .attr('cx', d => d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x)
+      .attr('cy', d => d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y);
 
   },
 

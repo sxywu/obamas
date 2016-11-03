@@ -320,6 +320,7 @@ export default function(data, images) {
                 var theta = annotation.start / (video.duration * 1000);
                 theta = theta * 2 * Math.PI - Math.PI / 2;
                 return {
+                  key: annotation.filename,
                   x: (captionRadius / 2) * Math.cos(theta),
                   y: (captionRadius / 2) * Math.sin(theta),
                   guest: video.guest,
@@ -375,6 +376,57 @@ export default function(data, images) {
       text: `
 
       `
+    },
+    {
+      id: 'choose_video',
+      position(width, top) {
+        var paddingTop = 4 * videoSize;
+        top += paddingTop;
+        var vizSide = 2 * padding.left + obamaSize;
+        var vizWidth = width - 2 * vizSide;
+
+        var filteredDates = _.filter(data.videosData, d => d.caption);
+
+        // calculate videos
+        var perWidth = vizWidth / filteredDates.length;
+        var videos = _.chain(filteredDates)
+          .sortBy(d => d.date)
+          .map((video, i) => {
+            var radius = radiusScale(video.statistics.viewCount) / 2;
+            var captionRadius = captionRadiusScale(video.duration) / 2;
+            var happy = _.chain(video.annotations)
+              .filter(annotation => _.some(annotation.faces, face => face.happy))
+              .map(annotation => {
+                var theta = annotation.start / (video.duration * 1000);
+                theta = theta * 2 * Math.PI - Math.PI / 2;
+                return {
+                  key: annotation.filename,
+                  x: (captionRadius / 2) * Math.cos(theta),
+                  y: (captionRadius / 2) * Math.sin(theta),
+                  guest: video.guest,
+                  data: annotation,
+                }
+              }).value();
+
+            return {
+              key: video.videoId,
+              radius,
+              captionRadius,
+              opacity: 0.5,
+              x: (i + 1) * perWidth + vizSide,
+              y: top,
+              host: video.host,
+              guest: video.guest,
+              happy,
+              video,
+            };
+          }).value();
+
+        return {videos};
+      },
+      text: `
+
+      `,
     }
   ];
 }

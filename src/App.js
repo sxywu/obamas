@@ -193,12 +193,23 @@ var App = React.createClass({
             });
           }
           if (!_.isEmpty(nextVideos)) {
-            _.each(newState.videos, video => {
-              var nextVideo = nextVideos[video.key];
-              video.interpolateX = d3.interpolate(video.x, nextVideo.x);
-              video.interpolateY = d3.interpolate(video.y, nextVideo.y);
-              video.interpolateCaption = d3.interpolate(video.captionRadius, nextVideo.captionRadius);
-            });
+            newState.videos = _.chain(newState.videos)
+              .filter(video => nextVideos[video.key])
+              .map(video => {
+                var nextVideo = nextVideos[video.key];
+                video.interpolateX = d3.interpolate(video.x, nextVideo.x);
+                video.interpolateY = d3.interpolate(video.y, nextVideo.y);
+                video.interpolateRadius = d3.interpolate(video.radius, nextVideo.radius);
+                video.interpolateCaption = d3.interpolate(video.captionRadius, nextVideo.captionRadius);
+
+                var nextHappyByStart = _.keyBy(nextVideo.happy, 'key');
+                _.each(video.happy, happy => {
+                  var nextHappy = nextHappyByStart[happy.key];
+                  happy.interpolateX = d3.interpolate(happy.x, nextHappy.x);
+                  happy.interpolateY = d3.interpolate(happy.y, nextHappy.y);
+                });
+                return video;
+              }).value();
           }
 
           interpolateSection = section;
