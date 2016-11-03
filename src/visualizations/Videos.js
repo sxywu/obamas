@@ -22,7 +22,12 @@ var Videos = React.createClass({
     this.videos.exit().remove();
 
     var enter = this.videos.enter().append('g')
-      .classed('video', true);
+      .classed('video', true)
+      .attr('transform', d => {
+        var x = d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x;
+        var y = d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y;
+        return 'translate(' + [x, y] + ')';
+      });
 
     enter.append('circle')
       .classed('background', true)

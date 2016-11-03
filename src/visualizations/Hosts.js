@@ -22,7 +22,12 @@ var Hosts = React.createClass({
     this.hosts.exit().remove();
 
     var enter = this.hosts.enter().append('g')
-      .classed('host', true);
+      .classed('host', true)
+      .attr('transform', d => {
+        var x = d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x;
+        var y = d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y;
+        return 'translate(' + [x, y] + ')';
+      });
 
     enter.append('circle')
       .classed('stroke', true)
@@ -39,7 +44,7 @@ var Hosts = React.createClass({
 
     this.hosts = enter.merge(this.hosts);
 
-    this.hosts.transition().duration(props.scrollDuration)  
+    this.hosts.transition().duration(props.scrollDuration)
       .attr('transform', d => {
         var x = d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x;
         var y = d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y;

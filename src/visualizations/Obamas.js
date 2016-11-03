@@ -19,7 +19,12 @@ var Obamas = React.createClass({
     this.obamas.exit().remove();
 
     var enter = this.obamas.enter().append('g')
-      .classed('obama', true);
+      .classed('obama', true)
+      .attr('transform', d => {
+        var x = d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x;
+        var y = d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y;
+        return 'translate(' + [x - d.radius / 2, y - d.radius / 2] + ')';
+      });
     enter.append('image')
       .attr('xlink:href', d => d.image)
       .attr('width', d => d.radius)
