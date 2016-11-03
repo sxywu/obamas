@@ -166,7 +166,7 @@ var App = React.createClass({
         // set things for pulsing
         newState.section = section;
         newState.selectedVideo = this.state.selectedVideo ||
-          newState.videos[_.random(newState.videos.length)];
+          newState.videos && newState.videos[_.random(newState.videos.length - 1)];
 
         topSection = section;
         bottomSection = null;
@@ -229,6 +229,9 @@ var App = React.createClass({
       // interpolate
       var scrollRange = (section.bottom - section.halfway - 20);
       newState.interpolateScroll = Math.min((scrollTop - section.halfway) / scrollRange, 1);
+      newState.section = section;
+      newState.selectedVideo = this.state.selectedVideo ||
+        newState.videos && newState.videos[_.random(newState.videos.length - 1)];
       this.setState(newState);
     }
   },

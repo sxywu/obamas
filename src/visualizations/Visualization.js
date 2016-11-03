@@ -1,11 +1,11 @@
 import React from 'react';
-// import _ from 'lodash';
 
 import Hosts from './Hosts';
 import Obamas from './Obamas';
 import Videos from './Videos';
 import Links from './Links';
 import Axes from './Axes';
+import SelectedVideo from './SelectedVideo';
 
 var Visualization = React.createClass({
   render() {
@@ -19,6 +19,7 @@ var Visualization = React.createClass({
 
     return (
       <svg className="Visualization" style={style}>
+        <SelectedVideo {...this.props} />
         <Videos {...this.props} />
         <Axes {...this.props} />
         <Links {...this.props} />

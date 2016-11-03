@@ -263,6 +263,7 @@ export default function(data, images) {
                 y: yScale(video.statistics.viewCount),
                 host: video.host,
                 guest: video.guest,
+                annotations: video.annotations,
                 happy: [],
                 video,
               }
@@ -339,6 +340,7 @@ export default function(data, images) {
               // focusY: yScale(video.statistics.viewCount),
               host: video.host,
               guest: video.guest,
+              annotations: video.annotations,
               happy,
               video,
             };
@@ -414,16 +416,18 @@ export default function(data, images) {
               radius,
               captionRadius,
               opacity: 0.5,
-              x: (i + 1) * perWidth + vizSide,
+              x: (i + 0.5) * perWidth + vizSide,
               y: top,
               host: video.host,
               guest: video.guest,
+              annotations: video.annotations,
+              duration: video.duration,
               happy,
               video,
             };
           }).value();
 
-        return {videos};
+        return {videos, vizWidth, vizSide};
       },
       text: `
 
