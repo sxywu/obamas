@@ -15,8 +15,8 @@ var heightScale = d3.scaleLinear();
 var wordsHeight = 100;
 var top = 250;
 var imageScale = 0.25;
-var imageWidth = 640 * imageScale;
-var imageHeight = 360 * imageScale;
+var imageWidth = 640;
+var imageHeight = 360;
 
 var SelectedVideo = React.createClass({
   componentDidMount() {
@@ -26,12 +26,12 @@ var SelectedVideo = React.createClass({
     this.facesContainer = d3.select(this.refs.faces);
     this.emojisContainer = d3.select(this.refs.emojis);
     this.captionContainer = d3.select(this.refs.videoCaption);
-
-    this.selectedCaption = null;
+    this.imageContainer = d3.select(this.refs.emojiImage);
 
     this.annotationsContainer.append('g')
       .classed('x axis', true)
       .attr('transform', 'translate(' + [0, wordsHeight] + ')');
+    this.imageContainer.append('image');
 
     this.renderSelectedVideo(this.props);
   },
@@ -43,10 +43,6 @@ var SelectedVideo = React.createClass({
 
   renderSelectedVideo(props) {
     if (!props.section.updateSelectedVideo) return;
-    // default the selected caption to the first smiling image
-    this.selectedCaption = this.selectedCaption ||
-      _.find(props.selectedVideo.annotations, d => _.some(d.faces, face => face.happy));
-
     this.container.attr('transform', 'translate(' + [0, props.section.top + top] + ')');
     this.titleContainer
       .attr('y', -30)
@@ -63,6 +59,7 @@ var SelectedVideo = React.createClass({
     this.renderFaces(props);
 
     this.renderCaption(props);
+    this.renderImage(props);
   },
 
   calculateAnnotation(props, video) {
@@ -75,15 +72,24 @@ var SelectedVideo = React.createClass({
     this.annotationsData = _.map(video.annotations, d => {
       var x1 = xScale(d.start);
       var x2 = xScale(d.end);
+      var happy = _.some(d.faces, face => face.happy);
+
       return {
         x: x1,
         y: wordsHeight - heightScale(d.words.length),
         height: heightScale(d.words.length),
         width: x2 - x1,
         fill: props.colors[video.guest],
+        words: d.words,
+        opacity: happy ? 0.75 : 0.25,
         annotation: d,
       };
     });
+
+    // default the selected caption to the first smiling image
+    this.selectedCaption = this.selectedCaption ||
+      _.find(this.annotationsData, d => _.some(d.annotation.faces, face => face.happy));
+
   },
 
   renderAnnotation() {
@@ -103,8 +109,7 @@ var SelectedVideo = React.createClass({
       .attr('height', d => d.height)
       .attr('fill', d => d.fill)
       .attr('stroke', '#fff')
-      .attr('opacity', d => this.selectedCaption &&
-        this.selectedCaption.start === d.annotation.start ? 1 : 0.25)
+      .attr('opacity',d => d.opacity)
       .style('cursor', 'pointer')
       .on('click', this.selectCaption)
       .on('mouseover', this.mouseoverCaption)
@@ -165,9 +170,9 @@ var SelectedVideo = React.createClass({
 
     this.faces = this.faces.enter().append('image')
       .attr('preserveAspectRatio', 'xMidYMid slice')
-      .attr('height', imageHeight)
+      .attr('height', imageHeight * imageScale)
       .merge(this.faces)
-      .attr('viewBox', d => '0 0 ' + [_.round(d.x2 - d.x1), imageHeight].join(' '))
+      .attr('viewBox', d => '0 0 ' + [_.round(d.x2 - d.x1), imageHeight * imageScale].join(' '))
       .attr('xlink:href', d => process.env.PUBLIC_URL + '/' + d.filename)
       .attr('width', d => d.x2 - d.x1)
       .attr('x', d => d.x1)
@@ -180,17 +185,41 @@ var SelectedVideo = React.createClass({
       .attr('text-anchor', 'middle')
       .attr('dy', '.35em')
       .attr('font-size', 12)
-      .text(_.unescape(this.hoveredCaption ? this.hoveredCaption.words : this.selectedCaption.words));
+      .text(_.unescape(this.hoveredCaption ?
+        this.hoveredCaption.words : this.selectedCaption.words));
   },
 
-  selectCaption(d) {
-    this.selectedCaption = d.annotation;
+  renderImage(props) {
+    this.imageContainer.attr('transform',
+      'translate(' + [props.vizWidth / 2 + props.vizSide, wordsHeight * 2.5] + ')');
+    this.imageContainer.select('image')
+      .attr('x', -imageWidth / 2)
+      .attr('width', imageWidth)
+      .attr('height', imageHeight)
+      .attr('xlink:href', process.env.PUBLIC_URL + '/' + this.selectedCaption.annotation.filename);
+
+    var emojis = this.imageContainer.selectAll('text')
+      .data(this.selectedCaption.annotation.faces);
+    emojis.exit().remove();
+
+    emojis.enter().append('text')
+      .attr('dy', '1em')
+      .merge(emojis)
+      .attr('x', d => (d.bounds.head[0].x || 0) - imageWidth / 2)
+      .attr('y', d => d.bounds.head[0].y || 0)
+      .attr('font-size', d => (d.bounds.head[1].x || 0) - (d.bounds.head[0].x || 0))
+      .text(d => d.happy ? props.emojis.happy[0] : props.emojis.neutral);
+
+  },
+
+  selectCaption(annotation) {
+    this.selectedCaption = annotation;
     this.renderCaption(this.props);
-    this.renderAnnotation(this.props);
+    this.renderImage(this.props);
   },
 
-  mouseoverCaption(d) {
-    this.hoveredCaption = d.annotation;
+  mouseoverCaption(annotation) {
+    this.hoveredCaption = annotation;
     this.renderCaption(this.props);
   },
 
@@ -208,6 +237,7 @@ var SelectedVideo = React.createClass({
         <g ref='emojis' />
         <g ref='annotations' />
         <text ref='videoCaption' />
+        <g ref='emojiImage' />
       </g>
     );
   }
