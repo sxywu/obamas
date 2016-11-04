@@ -13,7 +13,7 @@ var xAxis = d3.axisBottom().scale(xScale)
   });
 var heightScale = d3.scaleLinear();
 var wordsHeight = 100;
-var top = 250;
+var top = 280;
 var imageScale = 0.25;
 var imageWidth = 640;
 var imageHeight = 360;
@@ -36,17 +36,17 @@ var SelectedVideo = React.createClass({
     this.container = d3.select(this.refs.container);
     this.titleContainer = d3.select(this.refs.videoTitle);
     this.annotationsContainer = d3.select(this.refs.annotations)
-      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 0.5] + ')');
+      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 0.6] + ')');
     this.facesContainer = d3.select(this.refs.faces)
-      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 1.5] + ')');
+      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 1.6] + ')');
     this.emojisContainer = d3.select(this.refs.emojis)
-      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 1.5] + ')');
+      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 1.6] + ')');
     this.captionContainer = d3.select(this.refs.videoCaption);
     this.imageContainer = d3.select(this.refs.emojiImage);
     this.underlineContainer = d3.select(this.refs.underline)
-      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 2.5] + ')');
+      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 0.5] + ')');
     this.mouseContainer = d3.select(this.refs.mouse)
-      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 0.5] + ')')
+      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 0.6] + ')')
       .on('click', this.selectCaption)
       .on('mousemove', this.mouseoverCaption)
       .on('mouseleave', this.mouseleaveCaption)
@@ -205,9 +205,10 @@ var SelectedVideo = React.createClass({
 
   renderCaption(props) {
     this.captionContainer
-      .attr('transform', 'translate(' + [props.vizWidth / 2, imageHeight + wordsHeight * 0.25] + ')')
+      .attr('transform', 'translate(' + [props.vizWidth / 2, imageHeight + wordsHeight * 0.2] + ')')
       .attr('text-anchor', 'middle')
       .attr('dy', '.35em')
+      .attr('font-size', 14)
       .text(_.unescape(this.hoveredCaption ?
         this.hoveredCaption.words : mousingOver ? '' : this.selectedCaption.words));
 
