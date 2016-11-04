@@ -3,7 +3,8 @@
 # dependencies
 node_modules
 data/videos
-public/screenshots
+data/screenshots
+data/finalScreenshots
 
 # testing
 coverage
