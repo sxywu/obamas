@@ -197,7 +197,7 @@ var SelectedVideo = React.createClass({
       .attr('height', imageHeight * imageScale)
       .merge(this.faces)
       .attr('viewBox', d => '0 0 ' + [_.round(d.x2 - d.x1), imageHeight * imageScale].join(' '))
-      .attr('xlink:href', d => process.env.PUBLIC_URL + '/' + d.filename)
+      .attr('xlink:href', d => 'https://storage.googleapis.com/obama-interview-screenshots/sm-' + d.filename)
       .attr('width', d => d.x2 - d.x1)
       .attr('x', d => d.x1)
       .attr('opacity', d => d.opacity);
@@ -228,7 +228,7 @@ var SelectedVideo = React.createClass({
       .attr('x', -imageWidth / 2)
       .attr('width', imageWidth)
       .attr('height', imageHeight)
-      .attr('xlink:href', process.env.PUBLIC_URL + '/' + this.selectedCaption.annotation.filename);
+      .attr('xlink:href', 'https://storage.googleapis.com/obama-interview-screenshots/' + this.selectedCaption.annotation.filename);
 
     var emojis = this.imageContainer.selectAll('.emoji')
       .data(this.selectedCaption.annotation.faces);

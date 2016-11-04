@@ -63,7 +63,7 @@ var Header = React.createClass({
       return (
         <span style={style}>
           <div>
-            <img src={process.env.PUBLIC_URL + '/' + emotionObj.filename}
+            <img src={'https://storage.googleapis.com/obama-interview-screenshots/' + emotionObj.filename}
               width={imageWidth} role="presentation" />
             {emotionFaces}
             <div style={footerStyle}>{emotionObj.video.channelTitle}</div>

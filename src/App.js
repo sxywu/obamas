@@ -86,6 +86,7 @@ var App = React.createClass({
     });
 
     _.each(annotationsData, annotation => {
+      annotation.filename = _.last(annotation.filename.split('/')).replace('.png', '.jpg');
       var video = _.find(videosData, video => video.videoId === annotation.videoId);
       if (video) {
         video.caption = true;
