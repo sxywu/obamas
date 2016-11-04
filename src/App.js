@@ -131,7 +131,8 @@ var App = React.createClass({
       this.setState({selectedVideo});
     } else if (!this.state.selectedVideo && videos) {
       // if there's currently none selected
-      selectedVideo = _.find(videos, video => video.happy.length);
+      var filteredVideos = _.filter(videos, video => video.happy.length);
+      selectedVideo = filteredVideos[_.random(filteredVideos.length - 1)];
       this.setState({selectedVideo});
     }
   },
@@ -184,7 +185,7 @@ var App = React.createClass({
         newState = section.position(width, section.top, section.bottom);
         newState.section = section;
         this.updateSelectedVideo(null, newState.videos);
-        
+
         if (next) {
           var nextState = next.position(width, next.top, next.bottom);
           var nextObamas = _.keyBy(nextState.obamas, 'key');
