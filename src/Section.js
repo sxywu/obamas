@@ -10,7 +10,7 @@ var Section = React.createClass({
       lineHeight: 2,
       padding: 20,
       background: 'rgba(255, 255, 255, 0.8)',
-      // border: '1px solid',
+      border: '1px solid',
     }, this.props.style);
 
     var rawMarkup = { __html: md.render(this.props.text())};

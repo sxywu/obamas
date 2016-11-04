@@ -90,7 +90,7 @@ You may be wondering, why do something so ridiculously silly?  Simple: because i
 
     var style = {
       textAlign: 'center',
-      height: '100vh',
+      height: 1200,
       border: '1px solid',
       paddingTop: 40,
     };

@@ -37,6 +37,7 @@ export default function(data, images, colors, emojis) {
       style: {
         width: '33%',
         paddingTop: 200,
+        minHeight: 950,
       },
       position(width, top) {
         var left = width * 0.36;
