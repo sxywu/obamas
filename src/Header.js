@@ -1,5 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
+import Remarkable from 'remarkable';
+var md = new Remarkable({linkTarget: '_new', html: true});
 
 var Header = React.createClass({
   componentWillMount() {
@@ -16,6 +18,16 @@ var Header = React.createClass({
 
   randomize() {
     this.forceUpdate();
+  },
+
+  getText() {
+    return `
+<sup>**BY [SHIRLEY WU](https://twitter.com/sxywu)**</sup>
+
+In 2009, President Obama became the [first sitting president to appear on a late-night talk show](http://fortune.com/2016/11/04/obama-comedy-late-night-shows/), and in 2012, First Lady Michelle Obama also made her appearance.  They've been on many more talk shows since, promoting [HealthCare.gov](https://www.healthcare.gov/) and urging America to [get moving](http://www.letsmove.gov/).  And with this plethora of comedic gold arose a great opportunity: to put emoji's on the <span style='color: ${this.props.colors.B}'>**POTUS**</span> and <span style='color: ${this.props.colors.M}'>**FLOTUS**</span>'s face.
+
+You may be wondering, why do something so ridiculously silly?  Simple: because it's been a long and exhausting election season, and *we'll all need a pick-me-up come Election Day*.
+    `;
   },
 
   render() {
@@ -71,11 +83,16 @@ var Header = React.createClass({
         </span>
       );
     });
+    var allEmojis = _.union([this.props.emojis.neutral], this.props.emojis.happy.range());
+    allEmojis = _.map(allEmojis, (emoji) => {
+      return (<img style={{width: 48}} src={emoji} />);
+    });
 
     var style = {
       textAlign: 'center',
       height: '100vh',
       border: '1px solid',
+      paddingTop: 40,
     };
     var bStyle = {
       borderBottom: '3px solid ' + this.props.colors.B,
@@ -88,22 +105,34 @@ var Header = React.createClass({
       margin: 20,
     };
 
+    var headerStyle = {
+      fontWeight: 400,
+      fontSize: 42,
+      lineHeight: 1.25,
+    };
+    var pStyle = {
+      // textAlign: 'left',
+      width: imageWidth * 2,
+      margin: 'auto',
+      marginBottom: 40,
+      lineHeight: 2,
+      pointerEvents: 'auto',
+    };
+
+    var rawMarkup = { __html: md.render(this.getText())};
+
     return (
       <div className="Header" style={style}>
-        <h1>The Number of Times<br />
-          <span style={{color: this.props.colors.B}}>POTUS</span> and
-          <span style={{color: this.props.colors.M}}> FLOTUS </span>
-          <img style={{width: 48}} src={this.props.emojis.happy(100)} />’d on Late Night
+        <h1 style={headerStyle}>Putting {allEmojis}s on the<br />President’s Face
         </h1>
-        <p>
-          <a href='https://twitter.com/sxywu' target='_new'>Shirley Wu</a>
-        </p>
+        <div style={pStyle} dangerouslySetInnerHTML={rawMarkup} />
+
         {faces}
         <br />
         <img src={this.props.images.B} style={bStyle} role="presentation" />
         <img src={this.props.images.M} style={mStyle} role="presentation" />
         <h3>
-          Scroll<br />
+          Start<br />
           ↓
         </h3>
       </div>
