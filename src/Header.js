@@ -90,13 +90,22 @@ var Header = React.createClass({
 
     return (
       <div className="Header" style={style}>
-        <h3>
+        <h1>The Number of Times<br />
+          <span style={{color: this.props.colors.B}}>POTUS</span> and
+          <span style={{color: this.props.colors.M}}> FLOTUS </span>
+          <img style={{width: 48}} src={this.props.emojis.happy(100)} />’d on Late Night
+        </h1>
+        <p>
           <a href='https://twitter.com/sxywu' target='_new'>Shirley Wu</a>
-        </h3>
+        </p>
         {faces}
         <br />
         <img src={this.props.images.B} style={bStyle} role="presentation" />
         <img src={this.props.images.M} style={mStyle} role="presentation" />
+        <h3>
+          Scroll<br />
+          ↓
+        </h3>
       </div>
     );
   }
