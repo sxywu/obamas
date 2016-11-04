@@ -46,9 +46,7 @@ var SelectedVideo = React.createClass({
       .attr('opacity', 0);
 
     this.imageContainer.append('image')
-      .classed('source1', true);
-    this.imageContainer.append('image')
-      .classed('source2', true);
+      .classed('source', true);
 
     this.renderSelectedVideo(this.props);
   },
@@ -211,17 +209,12 @@ var SelectedVideo = React.createClass({
   },
 
   renderImage(props) {
-    var sourceScale = (props.vizWidth / 2) / imageWidth;
-
-    this.imageContainer.attr('transform','translate(' + [0, wordsHeight * 2.5] + ')');
-    this.imageContainer.select('.source1')
-      .attr('width', imageWidth * sourceScale)
-      .attr('height', imageHeight * sourceScale)
-      .attr('xlink:href', process.env.PUBLIC_URL + '/' + this.selectedCaption.annotation.filename);
-    this.imageContainer.select('.source2')
-      .attr('x', imageWidth * sourceScale)
-      .attr('width', imageWidth * sourceScale)
-      .attr('height', imageHeight * sourceScale)
+    this.imageContainer.attr('transform',
+      'translate(' + [props.vizWidth / 2, wordsHeight * 2.5] + ')');
+    this.imageContainer.select('.source')
+      .attr('x', -imageWidth / 2)
+      .attr('width', imageWidth)
+      .attr('height', imageHeight)
       .attr('xlink:href', process.env.PUBLIC_URL + '/' + this.selectedCaption.annotation.filename);
 
     var emojis = this.imageContainer.selectAll('.emoji')
@@ -231,10 +224,10 @@ var SelectedVideo = React.createClass({
     emojis.enter().append('image')
       .classed('emoji', true)
       .merge(emojis)
-      .attr('x', d => ((d.bounds.head[0].x || 0) + imageWidth) * sourceScale)
-      .attr('y', d => (d.bounds.head[0].y || 0) * sourceScale)
-      .attr('width', d => ((d.bounds.head[1].x || 0) - (d.bounds.head[0].x || 0)) * sourceScale)
-      .attr('height', d => ((d.bounds.head[1].x || 0) - (d.bounds.head[0].x || 0)) * sourceScale)
+      .attr('x', d => (d.bounds.head[0].x || 0) - imageWidth / 2)
+      .attr('y', d => d.bounds.head[0].y || 0)
+      .attr('width', d => (d.bounds.head[1].x || 0) - (d.bounds.head[0].x || 0))
+      .attr('height', d => (d.bounds.head[1].x || 0) - (d.bounds.head[0].x || 0))
       .attr('xlink:href', d => d.happy ? props.emojis.happy(d.confidence) : props.emojis.neutral);
 
   },
