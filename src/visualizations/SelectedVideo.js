@@ -17,6 +17,7 @@ var top = 250;
 var imageScale = 0.25;
 var imageWidth = 640;
 var imageHeight = 360;
+var mousingOver = false;
 
 var distortion = 5;
 function fisheye(_, a) {
@@ -34,12 +35,18 @@ var SelectedVideo = React.createClass({
   componentDidMount() {
     this.container = d3.select(this.refs.container);
     this.titleContainer = d3.select(this.refs.videoTitle);
-    this.annotationsContainer = d3.select(this.refs.annotations);
-    this.facesContainer = d3.select(this.refs.faces);
-    this.emojisContainer = d3.select(this.refs.emojis);
+    this.annotationsContainer = d3.select(this.refs.annotations)
+      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 0.5] + ')');
+    this.facesContainer = d3.select(this.refs.faces)
+      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 1.5] + ')');
+    this.emojisContainer = d3.select(this.refs.emojis)
+      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 1.5] + ')');
     this.captionContainer = d3.select(this.refs.videoCaption);
     this.imageContainer = d3.select(this.refs.emojiImage);
+    this.underlineContainer = d3.select(this.refs.underline)
+      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 2.5] + ')');
     this.mouseContainer = d3.select(this.refs.mouse)
+      .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 0.5] + ')')
       .on('click', this.selectCaption)
       .on('mousemove', this.mouseoverCaption)
       .on('mouseleave', this.mouseleaveCaption)
@@ -82,7 +89,7 @@ var SelectedVideo = React.createClass({
     this.renderFaces(props);
 
     // default the selected caption to the first smiling image
-    this.selectedCaption = _.find(this.annotationsData, d =>
+    this.selectedCaption = _.find(this.facesData, d =>
       _.some(d.annotation.faces, face => face.happy));
 
     this.renderCaption(props);
@@ -148,7 +155,6 @@ var SelectedVideo = React.createClass({
           px1: x1,
           px2: x2,
           x: (x2 - x1) / 2 + x1,
-          y: wordsHeight,
           emojis,
           width,
           filename: d.filename,
@@ -169,7 +175,7 @@ var SelectedVideo = React.createClass({
     var enter = this.emojis.enter().append('g');
 
     this.emojis = this.emojis.merge(enter)
-      .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
+      .attr('transform', d => 'translate(' + [d.x, 0] + ')');
 
     var emojis = this.emojis.selectAll('.emoji').data(d => d.emojis);
     emojis.exit().remove();
@@ -183,8 +189,6 @@ var SelectedVideo = React.createClass({
       .attr('xlink:href', d => d.emoji);
 
     // add images
-    this.facesContainer.attr('transform', 'translate(' + [0, wordsHeight] + ')');
-
     this.faces = this.facesContainer.selectAll('image').data(this.facesData);
     this.faces.exit().remove();
 
@@ -201,16 +205,25 @@ var SelectedVideo = React.createClass({
 
   renderCaption(props) {
     this.captionContainer
-      .attr('transform', 'translate(' + [props.vizWidth / 2, wordsHeight * 2.25] + ')')
+      .attr('transform', 'translate(' + [props.vizWidth / 2, imageHeight + wordsHeight * 0.25] + ')')
       .attr('text-anchor', 'middle')
       .attr('dy', '.35em')
       .text(_.unescape(this.hoveredCaption ?
-        this.hoveredCaption.words : this.selectedCaption.words));
+        this.hoveredCaption.words : mousingOver ? '' : this.selectedCaption.words));
+
+    this.underlineContainer
+      .attr('x1', this.hoveredCaption ? this.hoveredCaption.x1 :
+        !mousingOver && this.selectedCaption.x1)
+      .attr('x2', this.hoveredCaption ? this.hoveredCaption.x2 :
+        !mousingOver && this.selectedCaption.x2)
+      .attr('stroke', props.colors[props.selectedVideo.guest])
+      .attr('stroke-width', 3);
+
   },
 
   renderImage(props) {
     this.imageContainer.attr('transform',
-      'translate(' + [props.vizWidth / 2, wordsHeight * 2.5] + ')');
+      'translate(' + [props.vizWidth / 2, 0] + ')');
     this.imageContainer.select('.source')
       .attr('x', -imageWidth / 2)
       .attr('width', imageWidth)
@@ -239,6 +252,8 @@ var SelectedVideo = React.createClass({
   },
 
   mouseoverCaption() {
+    mousingOver = true;
+
     var focusX = d3.event.offsetX - this.props.vizSide;
     var annotation = _.find(this.facesData, d => d.px1 <= focusX && focusX < d.px2);
 
@@ -270,10 +285,25 @@ var SelectedVideo = React.createClass({
   },
 
   mouseleaveCaption() {
-    this.calculateAnnotation(this.props, this.props.selectedVideo);
-    this.calculateFaces(this.props, this.props.selectedVideo);
+    mousingOver = false;
 
-    this.renderAnnotation();
+    // go through annotations and recalculate
+    _.each(this.annotationsData, d => {
+      var x1 = xScale(d.annotation.start);
+      var x2 = xScale(d.annotation.end);
+      d.x1 = x1;
+      d.x = x1;
+      d.width = x2 - x1;
+    });
+    this.renderAnnotation(this.props);
+
+    _.each(this.facesData, d => {
+      var x1 = xScale(d.annotation.start);
+      var x2 = xScale(d.annotation.end);
+      d.x1 = x1;
+      d.x2 = x2;
+      d.x = (x2 - x1) / 2 + x1;
+    });
     this.renderFaces(this.props);
 
     this.hoveredCaption = null;
@@ -288,6 +318,7 @@ var SelectedVideo = React.createClass({
         <g ref='faces' />
         <g ref='annotations' />
         <g ref='emojis' />
+        <line ref='underline' />
         <rect ref='mouse' />
         <text ref='videoCaption' />
         <g ref='emojiImage' />
