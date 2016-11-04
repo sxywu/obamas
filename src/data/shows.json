@@ -110,5 +110,21 @@
       ["January 13, 2010", "B"],
       ["June 2, 2009", "B"]
     ]
+  },
+  {
+    "shows": ["Full Frontal with Samantha Bee"],
+    "id": ["UC18vz5hUUqxbGvym9ghtX_w"],
+    "host": "Samantha Bee",
+    "dates": [
+      ["October 31, 2016", "B"]
+    ]
+  },
+  {
+    "shows": ["Real Time with Bill Maher"],
+    "id": ["UCy6kyFxaMqGtpE3pQTflK8A"],
+    "host": "Bill Maher",
+    "dates": [
+      ["November 4, 2016", "B"]
+    ]
   }
 ]
