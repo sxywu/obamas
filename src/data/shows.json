@@ -4,11 +4,11 @@
     "id": ["UC8-Th83bH_thdKZDJCrn88g"],
     "host": "Jimmy Fallon",
     "dates": [
-      ["June 9, 2016", "B"],
-      ["April 2, 2015", "M"],
-      ["February 20, 2014", "M"],
-      ["February 22, 2013", "M"],
-      ["February 7, 2012", "M"]
+      ["June 9, 2016", "B", "The Tonight Show Starring Jimmy Fallon"],
+      ["April 2, 2015", "M", "The Tonight Show Starring Jimmy Fallon"],
+      ["February 20, 2014", "M", "The Tonight Show Starring Jimmy Fallon"],
+      ["February 22, 2013", "M", "The Tonight Show Starring Jimmy Fallon"],
+      ["February 7, 2012", "M", "The Tonight Show Starring Jimmy Fallon"]
     ]
   },
   {
@@ -16,10 +16,10 @@
     "id": ["UCp0hYYBW6IMayGgR-WeoCvQ"],
     "host": "Ellen Degeneres",
     "dates": [
-      ["September 13, 2016", "M"],
-      ["February 12, 2016", "B"],
-      ["March 16, 2015", "M"],
-      ["March 3, 2014", "B"]
+      ["September 13, 2016", "M", "TheEllenShow"],
+      ["February 12, 2016", "B", "TheEllenShow"],
+      ["March 16, 2015", "M", "TheEllenShow"],
+      ["March 3, 2014", "B", "TheEllenShow"]
     ]
   },
   {
@@ -27,14 +27,14 @@
     "id": ["UCMtFAi84ehTSYSE9XoHefig", "UCUsN5ZwHx2kILm84-jPDeXw"],
     "host": "Stephen Colbert",
     "dates": [
-      ["October 17, 2016", "B"],
-      ["September 20, 2016", "M"],
-      ["February 7, 2016", "M"],
-      ["February 7, 2016", "B"],
-      ["September 28, 2015", "M"],
-      ["December 8, 2014", "B"],
-      ["April 11, 2012", "M"],
-      ["June 8, 2009", "B"]
+      ["October 17, 2016", "B", "The Late Show with Stephen Colbert"],
+      ["September 20, 2016", "M", "The Late Show with Stephen Colbert"],
+      ["February 7, 2016", "M", "The Late Show with Stephen Colbert"],
+      ["February 7, 2016", "B", "The Late Show with Stephen Colbert"],
+      ["September 28, 2015", "M", "The Late Show with Stephen Colbert"],
+      ["December 8, 2014", "B", "Colbert Report"],
+      ["April 11, 2012", "M", "Colbert Report"],
+      ["June 8, 2009", "B", "Colbert Report"]
     ]
   },
   {
@@ -42,24 +42,24 @@
     "id": ["UCUsN5ZwHx2kILm84-jPDeXw"],
     "host": "John Stewart",
     "dates": [
-      ["July 21, 2015", "B"],
-      ["October 18, 2012", "B"],
-      ["October 27, 2012", "B"],
-      ["May 29, 2012", "M"]
+      ["July 21, 2015", "B", "Daily Show"],
+      ["October 18, 2012", "B", "Daily Show"],
+      ["October 27, 2012", "B", "Daily Show"],
+      ["May 29, 2012", "M", "Daily Show"]
     ]
   },
   {
     "shows": ["Late Show with David Letterman"],
     "host": "David Letterman",
     "dates": [
-      ["May 20, 2015", "B"],
-      ["April 30, 2015", "M"],
-      ["May 4, 2015", "B"],
-      ["September 18, 2012", "B"],
-      ["August 29, 2012", "M"],
-      ["June 5, 2012", "M"],
-      ["March 19, 2012", "M"],
-      ["September 21, 2009", "B"]
+      ["May 20, 2015", "B", "Late Show with David Letterman"],
+      ["April 30, 2015", "M", "Late Show with David Letterman"],
+      ["May 4, 2015", "B", "Late Show with David Letterman"],
+      ["September 18, 2012", "B", "Late Show with David Letterman"],
+      ["August 29, 2012", "M", "Late Show with David Letterman"],
+      ["June 5, 2012", "M", "Late Show with David Letterman"],
+      ["March 19, 2012", "M", "Late Show with David Letterman"],
+      ["September 21, 2009", "B", "Late Show with David Letterman"]
     ]
   },
   {
@@ -67,22 +67,22 @@
     "id": ["UCa6vGFO9ty8v5KZJXQxdhaw"],
     "host": "Jimmy Kimmel",
     "dates": [
-      ["October 24, 2016", "B"],
-      ["March 12, 2015", "B"],
-      ["August 20, 2015", "M"]
+      ["October 24, 2016", "B", "Jimmy Kimmel Live!"],
+      ["March 12, 2015", "B", "Jimmy Kimmel Live!"],
+      ["August 20, 2015", "M", "Jimmy Kimmel Live!"]
     ]
   },
   {
     "shows": ["Tonight Show with Jay Leno"],
     "host": "Jay Leno",
     "dates": [
-      ["September 12, 2013", "M"],
-      ["August 6, 2013", "B"],
-      ["October 24, 2012", "B"],
-      ["August 13, 2012", "M"],
-      ["January 31, 2012", "M"],
-      ["October 25, 2011", "B"],
-      ["March 19, 2009", "B"]
+      ["September 12, 2013", "M", "Tonight Show with Jay Leno"],
+      ["August 6, 2013", "B", "Tonight Show with Jay Leno"],
+      ["October 24, 2012", "B", "Tonight Show with Jay Leno"],
+      ["August 13, 2012", "M", "Tonight Show with Jay Leno"],
+      ["January 31, 2012", "M", "Tonight Show with Jay Leno"],
+      ["October 25, 2011", "B", "Tonight Show with Jay Leno"],
+      ["March 19, 2009", "B", "Tonight Show with Jay Leno"]
     ]
   },
   {
@@ -90,7 +90,7 @@
     "id": ["UCVTyTA7-g9nopHeHbeuvpRA"],
     "host": "Seth Meyers",
     "dates": [
-      ["September 9, 2016", "M"]
+      ["September 9, 2016", "M", "Late Night with Seth Meyers"]
     ]
   },
   {
@@ -98,7 +98,7 @@
     "id": ["UCJ0uqCI0Vqr2Rrt1HseGirg"],
     "host": "James Corden",
     "dates": [
-      ["July 20, 2016", "M"]
+      ["July 20, 2016", "M", "Late Late Show with James Corden"]
     ]
   },
   {
@@ -106,9 +106,9 @@
     "id": ["UCi7GJNg51C3jgmYTUwqoUXA"],
     "host": "Conan O'Brien",
     "dates": [
-      ["January 25, 2016", "M"],
-      ["January 13, 2010", "B"],
-      ["June 2, 2009", "B"]
+      ["January 25, 2016", "M", "Team Coco"],
+      ["January 13, 2010", "B", "Tonight Show with Conan O'Brien"],
+      ["June 2, 2009", "B", "Tonight Show with Conan O'Brien"]
     ]
   },
   {
@@ -116,7 +116,7 @@
     "id": ["UC18vz5hUUqxbGvym9ghtX_w"],
     "host": "Samantha Bee",
     "dates": [
-      ["October 31, 2016", "B"]
+      ["October 31, 2016", "B", "Full Frontal with Samantha Bee"]
     ]
   },
   {
@@ -124,7 +124,7 @@
     "id": ["UCy6kyFxaMqGtpE3pQTflK8A"],
     "host": "Bill Maher",
     "dates": [
-      ["November 4, 2016", "B"]
+      ["November 4, 2016", "B", "Real Time with Bill Maher"]
     ]
   }
 ]

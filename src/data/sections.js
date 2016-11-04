@@ -17,7 +17,7 @@ function getQuarterFromDate(date) {
   return new Date(date.getFullYear(), quarter, 1);
 }
 
-export default function(data, images) {
+export default function(data, images, colors, emojis) {
   // initialize all the scales
   var viewExtent = d3.extent(data.videosData, d => d.statistics.viewCount);
   var durationExtent = d3.extent(data.videosData, d => d.duration);
@@ -34,9 +34,14 @@ export default function(data, images) {
   return [
     {
       id: 'by_hosts',
+      style: {
+        width: '33%',
+        paddingTop: 200,
+      },
       position(width, top) {
-        width *= 2 / 3;
-        top += window.innerHeight * 0.25;
+        var left = width * 0.36;
+        width *= 0.64;
+        top += this.style.paddingTop;
 
         // position hosts first
         var perRow = 4;
@@ -49,7 +54,7 @@ export default function(data, images) {
           .sortBy(show => -show.dates.length)
           .map((show, i) => {
             var row = Math.floor(i / perRow);
-            var x = (i % perRow + 0.5) * perWidth;
+            var x = (i % perRow + 0.5) * perWidth + left;
             var y = 1.5 * row * perWidth + top;
 
             if (row === rows) {
@@ -105,9 +110,31 @@ export default function(data, images) {
 
         return {hosts, obamas, links: [], videos: []};
       },
-      text: `
-1.
-      `
+      text() {
+        var barackHosts = _.filter(data.showsData, show => _.some(show.dates, date => date[1] === 'B'));
+        var barackShows = _.chain(data.showsData)
+          .map(show => _.chain(show.dates)
+              .filter(date => date[1] === 'B').map(2).value())
+          .flatten().uniq().value();
+        var michelleHosts = _.filter(data.showsData, show => _.some(show.dates, date => date[1] === 'M'));
+        var michelleShows = _.chain(data.showsData)
+          .map(show => _.chain(show.dates)
+              .filter(date => date[1] === 'M').map(2).value())
+          .flatten().uniq().value();
+        var numTimes = _.chain(data.showsData)
+          .map(show => _.map(show.dates, date => date[1])).flatten().countBy().value();
+
+          console.log(barackShows, michelleShows)
+        return `
+Since his first time on *The Tonight Show with Jay Leno*, the <span style='color: ${colors.B}'>President</span> has made **${numTimes.B}** late-night appearances on ${barackShows.length} shows with ${barackHosts.length} different hosts.  Impressively, the <span style='color: ${colors.M}'>Fist Lady</span> has very similar numbers despite a three-year late start: **${numTimes.M}** appearances, also with ${michelleHosts.length} hosts.
+
+They both seem to favor hosts David Letterman and Stephen Colbert, with appearances spanning 2009 to as recent as 2015 and 2016.  In the last half year, the <span style='color: ${colors.B}'>POTUS</span> and <span style='color: ${colors.M}'>FLOTUS</span> have appeared on newer shows hosted by Seth Meyers, James Corden and Samantha Bee.
+
+<p style='line-height: 1'>
+  <sup>(Mouse over images for more details on the host or appearance.)</sup>
+</p>
+        `;
+      },
     },
     {
       id: 'by_time',
@@ -237,9 +264,9 @@ export default function(data, images) {
 
         return {hosts, obamas, links, axes, videos};
       },
-      text: `
-2.
-      `,
+      text() {
+        return ``;
+      }
     },
     {
       id: 'show_videos',
@@ -298,9 +325,9 @@ export default function(data, images) {
 
         return {videos, axes};
       },
-      text: `
-3.
-      `
+      text() {
+        return ``;
+      }
     },
     {
       id: 'show_captions',
@@ -382,9 +409,9 @@ export default function(data, images) {
 
         return {videos, axes};
       },
-      text: `
-
-      `
+      text() {
+        return ``;
+      }
     },
     {
       id: 'choose_video',
@@ -437,9 +464,9 @@ export default function(data, images) {
 
         return {videos, vizWidth, vizSide};
       },
-      text: `
-
-      `,
+      text() {
+        return ``;
+      }
     }
   ];
 }

@@ -101,7 +101,7 @@ var App = React.createClass({
       video.annotations = _.sortBy(video.annotations, d => d.start);
     });
 
-    data.sectionData = sectionData(data, images);
+    data.sectionData = sectionData(data, images, colors, emojis);
   },
 
   componentDidMount() {
