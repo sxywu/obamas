@@ -81,6 +81,10 @@ var SelectedVideo = React.createClass({
     this.renderAnnotation();
     this.renderFaces(props);
 
+    // default the selected caption to the first smiling image
+    this.selectedCaption = _.find(this.annotationsData, d =>
+      _.some(d.annotation.faces, face => face.happy));
+
     this.renderCaption(props);
     this.renderImage(props);
   },
@@ -108,11 +112,6 @@ var SelectedVideo = React.createClass({
         annotation: d,
       };
     });
-
-    // default the selected caption to the first smiling image
-    this.selectedCaption = this.selectedCaption ||
-      _.find(this.annotationsData, d => _.some(d.annotation.faces, face => face.happy));
-
   },
 
   renderAnnotation() {

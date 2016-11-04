@@ -27,7 +27,7 @@ export default function(data, images) {
     .domain([new Date('January 20, 2009'),
       new Date('January 1, 2016'), new Date('November 8, 2016')])
     .range([0.05, 0.25, 1]);
-  var radiusScale = d3.scaleLog().domain(viewExtent).range([videoSize / 8, videoSize]);
+  var radiusScale = d3.scaleLog().domain(viewExtent).range([videoSize / 6, videoSize]);
   var captionRadiusScale = d3.scaleLog().domain(durationExtent)
     .range([videoSize / 4, videoSize * 2]);
 

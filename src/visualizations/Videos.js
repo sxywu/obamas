@@ -43,9 +43,12 @@ var Videos = React.createClass({
       .attr('stroke', props.colors.host)
       .attr('opacity', 0.75);
 
+    // ENTER+UPDATE
     this.videos = enter.merge(this.videos)
       .attr('opacity', d => props.selectedVideo.key === d.key ||
-        !props.section.updateSelectedVideo ? 1 : 0.25);
+        !props.section.updateSelectedVideo ? 1 : 0.25)
+      .style('cursor', 'pointer')
+      .on('click', this.clickVideo);
 
     this.videos.transition().duration(props.scrollDuration)
       .attr('transform', d => {
@@ -81,6 +84,14 @@ var Videos = React.createClass({
       .attr('cx', d => d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x)
       .attr('cy', d => d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y);
 
+  },
+
+  clickVideo(d) {
+    if (this.props.section.updateSelectedVideo) {
+      this.props.updateSelectedVideo(d);
+    } else {
+      window.open('http://www.youtube.com/watch?v=' + d.video.videoId, '_new');
+    }
   },
 
   render() {
