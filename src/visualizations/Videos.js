@@ -45,7 +45,7 @@ var Videos = React.createClass({
 
     // ENTER+UPDATE
     this.videos = enter.merge(this.videos)
-      .attr('opacity', d => props.selectedVideo.key === d.key ||
+      .attr('opacity', d => props.selectedVideo && props.selectedVideo.key === d.key ||
         !props.section.updateSelectedVideo ? 1 : 0.25)
       .style('cursor', 'pointer')
       .on('click', this.clickVideo);
@@ -66,9 +66,6 @@ var Videos = React.createClass({
       .datum(d => d)
       .attr('r', d => (d.interpolateCaption ?
         d.interpolateCaption(props.interpolateScroll) : d.captionRadius) / 2);
-
-    // selected video
-    this.videos.filter(d => props.selectedVideo.key === d.key)
 
     // denote when there is a happy face
     var happy = this.videos.select('.happy')

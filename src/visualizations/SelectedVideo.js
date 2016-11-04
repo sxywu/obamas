@@ -213,9 +213,9 @@ var SelectedVideo = React.createClass({
 
     this.underlineContainer
       .attr('x1', this.hoveredCaption ? this.hoveredCaption.x1 :
-        !mousingOver && this.selectedCaption.x1)
+        mousingOver ? 0 : this.selectedCaption.x1)
       .attr('x2', this.hoveredCaption ? this.hoveredCaption.x2 :
-        !mousingOver && this.selectedCaption.x2)
+        mousingOver ? 0 : this.selectedCaption.x2)
       .attr('stroke', props.colors[props.selectedVideo.guest])
       .attr('stroke-width', 3);
 

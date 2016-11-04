@@ -182,6 +182,9 @@ var App = React.createClass({
         // or if we havne't calculated the interpolation before
         // then calculate section positions as well as the next section positions
         newState = section.position(width, section.top, section.bottom);
+        newState.section = section;
+        this.updateSelectedVideo(null, newState.videos);
+        
         if (next) {
           var nextState = next.position(width, next.top, next.bottom);
           var nextObamas = _.keyBy(nextState.obamas, 'key');
@@ -231,8 +234,6 @@ var App = React.createClass({
       // interpolate
       var scrollRange = (section.bottom - section.halfway - 20);
       newState.interpolateScroll = Math.min((scrollTop - section.halfway) / scrollRange, 1);
-      newState.section = section;
-      this.updateSelectedVideo(null, newState.videos);
       this.setState(newState);
     }
   },
