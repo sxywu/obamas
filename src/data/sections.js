@@ -116,18 +116,18 @@ export default function(data, images) {
         minHeight: 500,
       },
       position(width, top) {
-        top += this.half + 2 * hostSize;
-        var bottom = top + 4 * hostSize + 6 * obamaSize;
+        top += this.half;
+        var bottom = top + 6 * hostSize + 6 * obamaSize;
 
         xScale.domain([new Date('January 1, 2009'), new Date('November 8, 2016')])
           .range([padding.left + obamaSize, width - padding.left - obamaSize]);
 
         var hosts = _.map(data.showsData, (show, i) => {
           var position = positions.hostTime[show.host];
-
           return {
             key: show.host,
             x: position.x * width,
+            // fy: (i % 2 === 0) ? top : top + 1.75 * hostSize,
             y: (i % 2 === 0) ? top : top + 2 * hostSize,
             radius: hostSize,
             host: show.host,
@@ -205,17 +205,24 @@ export default function(data, images) {
 
         // // use force layout to lay out the hosts/obamas and the links
         // var simulation = d3.forceSimulation(_.union(obamas, hosts))
-        //   .force('charge', d3.forceCollide(d => d.radius))
+        //   .force('collide', d3.forceCollide(d => d.radius))
         //   .force("link", d3.forceLink(links))
         //   .stop();
         //
         // _.times(1000, i => {
         //   simulation.tick();
+        //   // go through each node and make sure it's in the bounds
+        //   _.each(hosts, host => {
+        //     if (host.x > width - padding.left - obamaSize) {
+        //       console.log(host)
+        //       host.x = width - padding.left - obamaSize - 2 * hostSize;
+        //     }
+        //   });
         // });
-
+        //
         // var positions = _.reduce(hosts, (obj, host) => {
         //   obj[host.key] = {
-        //     x: host.x / width,
+        //     x: _.round(host.x / width, 5),
         //   };
         //   return obj;
         // }, {});
