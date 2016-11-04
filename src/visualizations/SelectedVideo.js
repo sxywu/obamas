@@ -45,9 +45,6 @@ var SelectedVideo = React.createClass({
       .on('mouseleave', this.mouseleaveCaption)
       .attr('opacity', 0);
 
-    this.annotationsContainer.append('g')
-      .classed('x axis', true)
-      .attr('transform', 'translate(' + [0, wordsHeight] + ')');
     this.imageContainer.append('image')
       .classed('source', true);
 
@@ -89,7 +86,8 @@ var SelectedVideo = React.createClass({
   },
 
   calculateAnnotation(props, video) {
-    xScale.domain([0, video.duration * 1000]).range([0, props.vizWidth]);
+    xScale.domain([video.annotations[0].start, _.last(video.annotations).end])
+      .range([0, props.vizWidth]);
 
     // y scale is frequency of words in the annotation
     var wordsExtent = d3.extent(video.annotations, d => d.words.length);
@@ -118,9 +116,6 @@ var SelectedVideo = React.createClass({
   },
 
   renderAnnotation() {
-    this.annotationsContainer.select('.axis')
-      .call(xAxis);
-
     this.annotations = this.annotationsContainer
       .selectAll('rect').data(this.annotationsData);
 
@@ -143,7 +138,7 @@ var SelectedVideo = React.createClass({
         var emojis = _.chain(d.faces)
           .filter(face => face.happy)
           .map((d, i) => {
-            return {emoji: props.emojis.happy(d.confidence), y: (i + 0.25) * width, width};
+            return {emoji: props.emojis.happy(d.confidence), y: (i - 0.5) * width, width};
           }).value();
         var x1 = xScale(d.start);
         var x2 = xScale(d.end);
@@ -250,7 +245,7 @@ var SelectedVideo = React.createClass({
 
     // update cursor
     this.mouseContainer.style('cursor', annotation ? 'pointer' : 'default');
-    
+
     // go through annotations and recalculate
     _.each(this.annotationsData, d => {
       var x1 = fisheye(d.annotation.start, focusX);

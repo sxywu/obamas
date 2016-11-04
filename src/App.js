@@ -95,6 +95,11 @@ var App = React.createClass({
       }
     });
 
+    // go through all the videos and sort the annotations...
+    _.each(videosData, video => {
+      video.annotations = _.sortBy(video.annotations, d => d.start);
+    });
+
     data.sectionData = sectionData(data, images);
   },
 
