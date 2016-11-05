@@ -122,6 +122,7 @@ var Videos = React.createClass({
       return;
     }
     var hover = {
+      type: 'video',
       x: video.interpolateX ? video.interpolateX(this.props.interpolateScroll) : video.x,
       y: (video.interpolateY ? video.interpolateY(this.props.interpolateScroll) : video.y) + video.radius / 2,
       content: (

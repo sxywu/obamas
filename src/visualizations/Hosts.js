@@ -61,6 +61,8 @@ var Hosts = React.createClass({
       return;
     }
     var hover = {
+      type: 'host',
+      key: host.key,
       x: host.interpolateX ? host.interpolateX(this.props.interpolateScroll) : host.x,
       y: (host.interpolateY ? host.interpolateY(this.props.interpolateScroll) : host.y) + host.radius / 2,
       content: (

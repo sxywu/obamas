@@ -26,19 +26,22 @@ var Links = React.createClass({
 
     this.links.exit().remove();
 
-    this.links = this.links.enter().append('path')
+    var enter = this.links.enter().append('path')
       .classed('link', true)
       .attr('d', link)
       .attr('fill', 'none')
       .attr('stroke-width', 3)
-      .attr('opacity', d => d.opacity)
       .attr('stroke', d => props.colors[d.target.guest])
       .attr('stroke-dasharray', function(d) {
         d.length = this.getTotalLength();
         return d.length;
-      }).attr('stroke-dashoffset', d => d.length)
-      .transition().duration(duration)
+      }).attr('stroke-dashoffset', d => d.length);
+
+    enter.transition().duration(duration)
       .attr('stroke-dashoffset', 0);
+
+    this.links = enter.merge(this.links)
+      .attr('opacity', d => d.opacity);
   },
 
   render() {

@@ -39,7 +39,10 @@ export default function(data, images, colors, emojis) {
         paddingTop: 200,
         minHeight: 800,
       },
-      position(width, top) {
+      position(width, top, hover) {
+        // if something's been hovered, do nothing
+        if (hover) return {};
+
         var left = width * 0.36;
         width *= 0.64;
         top += this.style.paddingTop;
@@ -133,7 +136,7 @@ Since his first time on *The Tonight Show with Jay Leno*, the <span style='color
 They seem to favor hosts David Letterman and Stephen Colbert over the years, appearing four times each on both shows.  Over the past half year however, the <span style='color: ${colors.B}'>POTUS</span> and <span style='color: ${colors.M}'>FLOTUS</span> have both appeared on newer shows hosted by Seth Meyers, James Corden and Samantha Bee.
 
 <p style='line-height: 1'>
-  <sup>(Mouse over images for more details on the host or appearance.)</sup>
+  <sup>(Hover over images for more detail on the host or appearance.)</sup>
 </p>
         `;
       },
@@ -144,9 +147,13 @@ They seem to favor hosts David Letterman and Stephen Colbert over the years, app
       style: {
         width: '33%',
         minHeight: 500,
-        paddingTop: 200,
+        paddingTop: 175,
       },
-      position(width, top) {
+      position(width, top, hover) {
+        // if something's been hovered, we only want to change
+        // opacity for things if it's host that's been hovered
+        if (!_.isEmpty(hover) && hover.type !== 'host') return {};
+
         top += this.half + 2 * hostSize;
         var bottom = top + 4 * hostSize + 6 * obamaSize;
 
@@ -172,6 +179,10 @@ They seem to favor hosts David Letterman and Stephen Colbert over the years, app
         var obamas = _.chain(data.showsData)
           .map(show => {
             var host = _.find(hosts, d => d.key === show.host);
+            var opacity = 1;
+            if (!_.isEmpty(hover) && hover.key !== host.key) {
+              opacity = 0.05;
+            }
 
             return _.map(show.dates, data => {
               var [date, guest, show] = data;
@@ -182,13 +193,14 @@ They seem to favor hosts David Letterman and Stephen Colbert over the years, app
                 guest,
                 show,
                 radius: obamaSize * 0.85,
+                opacity,
               };
 
               // add this to the links
               links.push({
                 source: host,
                 target: interview,
-                opacity: opacityScale(date),
+                opacity: !_.isEmpty(hover) ? opacity : opacityScale(date),
               });
 
               return interview;
@@ -204,7 +216,7 @@ They seem to favor hosts David Letterman and Stephen Colbert over the years, app
               .map((data, i) => {
                 var {quarter} = data;
                 var x = xScale(quarter);
-                var y = bottom - (i + 1.25) * obamaSize;
+                var y = bottom - (i + 1) * obamaSize;
 
                 return Object.assign(data, {
                   x, y,
@@ -213,6 +225,11 @@ They seem to favor hosts David Letterman and Stephen Colbert over the years, app
                 });
               }).value();
           }).flatten().value();
+
+        // if it's been hovered, return here bc i don't want to change videos
+        if (hover) {
+          return {hosts, obamas, links};
+        }
 
         // videos
         // calculate videos
@@ -276,6 +293,10 @@ They seem to favor hosts David Letterman and Stephen Colbert over the years, app
 The <span style='color: ${colors.M}'>FLOTUS</span> have made many appearances since 2012 for [Let's Move!](http://www.letsmove.gov/) (2010), [Reach Higher](https://www.whitehouse.gov/reach-higher) (2014), and [Let Girls Learn](https://www.whitehouse.gov/letgirlslearn) (2015) to promote healthy living and girls' education around the world.
 
 The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other hand, peaked in 2012 (presumably for the election) and again in the last year to [reflect on his presidency](https://www.youtube.com/watch?v=ziwYbVx_-qg) and promote Hillary Clinton's run for presidency.
+
+<p style='line-height: 1'>
+  <sup>(Hover over the hosts to see the corresponding guest appearances.)</sup>
+</p>
         `;
       }
     },
@@ -284,8 +305,12 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
       style: {
         width: '33%',
         paddingTop: 200,
+        height: '110vh',
       },
-      position(width, top) {
+      position(width, top, hover) {
+        // if something's been hovered, do nothing
+        if (hover) return {};
+
         var obamaHeight = 3 * obamaSize;
         top += obamaHeight;
         var left = width - padding.left - obamaSize;
@@ -293,7 +318,7 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
         xScale.domain([new Date('January 1, 2009'), new Date('November 8, 2016')])
           .range([padding.left + obamaSize, left]);
         var yScale = d3.scaleLog().domain(viewExtent)
-          .range([top + window.innerHeight * 0.9 - obamaHeight, top]);
+          .range([top + window.innerHeight - obamaHeight, top]);
 
         var includeTitles = ["ln3wAdRAim4", "ziwYbVx_-qg"];
         // calculate videos
@@ -348,7 +373,10 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
     },
     {
       id: 'show_captions',
-      position(width, top) {
+      position(width, top, hover) {
+        // if something's been hovered, do nothing
+        if (hover) return {};
+
         var paddingTop = 4 * videoSize;
         top += paddingTop;
         var vizHeight = window.innerHeight * 0.85 - paddingTop;
@@ -433,7 +461,10 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
     {
       id: 'choose_video',
       updateSelectedVideo: true,
-      position(width, top) {
+      position(width, top, hover) {
+        // if something's been hovered, do nothing
+        if (hover) return {};
+
         var paddingTop = 4 * videoSize;
         top += paddingTop;
         var vizSide = 2 * padding.left + obamaSize;

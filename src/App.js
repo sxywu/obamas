@@ -140,7 +140,11 @@ var App = React.createClass({
   },
 
   updateHover(hover) {
-    this.setState({hover});
+    var section = this.state.section;
+    var newState = section.position(width, section.top, hover || {});
+    newState.hover = hover;
+
+    this.setState(newState);
   },
 
   onScroll() {
@@ -160,7 +164,7 @@ var App = React.createClass({
       topSection = bottomSection = interpolateSection = section;
       // if there's no section, just draw the first one
       section = sectionPositions[0];
-      var {hosts, obamas} = section.position(width, section.top, section.bottom);
+      var {hosts, obamas} = section.position(width, section.top);
       this.setState({hosts, obamas});
       return;
     };
@@ -171,7 +175,7 @@ var App = React.createClass({
       // have we come into this top section before?
       if (!topSection || (topSection && topSection.id !== section.id)) {
         // if not, calculate the new positions
-        newState = section.position(width, section.top, section.bottom);
+        newState = section.position(width, section.top);
 
         // set things for pulsing
         newState.section = section;
@@ -188,12 +192,12 @@ var App = React.createClass({
         // if we just entered this bottom section,
         // or if we havne't calculated the interpolation before
         // then calculate section positions as well as the next section positions
-        newState = section.position(width, section.top, section.bottom);
+        newState = section.position(width, section.top);
         newState.section = section;
         this.updateSelectedVideo(null, newState.videos);
 
         if (next) {
-          var nextState = next.position(width, next.top, next.bottom);
+          var nextState = next.position(width, next.top);
           var nextObamas = _.keyBy(nextState.obamas, 'key');
           var nextHosts = _.keyBy(nextState.hosts, 'key');
           var nextVideos = _.keyBy(nextState.videos, 'key');

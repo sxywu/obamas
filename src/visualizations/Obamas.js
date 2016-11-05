@@ -41,6 +41,7 @@ var Obamas = React.createClass({
       .attr('opacity', 0.5);
 
     this.obamas = this.obamas.merge(enter)
+      .attr('opacity', d => d.opacity)
       .on('mouseenter', d => this.hoverObama(d))
       .on('mouseleave', d => this.hoverObama());
 
@@ -58,6 +59,7 @@ var Obamas = React.createClass({
       return;
     }
     var hover = {
+      type: 'obama',
       x: obama.interpolateX ? obama.interpolateX(this.props.interpolateScroll) : obama.x,
       y: (obama.interpolateY ? obama.interpolateY(this.props.interpolateScroll) : obama.y) + obama.radius / 2,
       content: (
