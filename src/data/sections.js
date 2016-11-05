@@ -129,14 +129,13 @@ export default function(data, images, colors, emojis) {
           .flatten().uniq().value();
         var numTimes = _.chain(data.showsData)
           .map(show => _.map(show.dates, date => date[1])).flatten().countBy().value();
-
         return `
-Since his first time on *The Tonight Show with Jay Leno*, the <span style='color: ${colors.B}'>President</span> has made **${numTimes.B}** late-night appearances on ${barackShows.length} shows with ${barackHosts.length} different hosts.  Impressively, the <span style='color: ${colors.M}'>Fist Lady</span> has very similar numbers despite a three-year late start: **${numTimes.M}** appearances, also with ${michelleHosts.length} hosts.
+Since his first time on *The Tonight Show with Jay Leno*, the <span style='color: ${colors.B}'>President</span> has made **${numTimes.B}** late-night appearances on ${barackShows.length} shows with ${barackHosts.length} different hosts.  Impressively, the <span style='color: ${colors.M}'>Fist Lady</span> has very similar numbers despite a three-year late start: **${numTimes.M}** appearances across ${michelleShows.length} shows, also with ${michelleHosts.length} hosts.
 
 They seem to favor hosts David Letterman and Stephen Colbert over the years, appearing four times each on both shows.  Over the past half year however, the <span style='color: ${colors.B}'>POTUS</span> and <span style='color: ${colors.M}'>FLOTUS</span> have both appeared on newer shows hosted by Seth Meyers, James Corden and Samantha Bee.
 
 <p style='line-height: 1'>
-  <sup>(Hover over images for more detail on the host or appearance.)</sup>
+  <sup>(Hover over the images for more detail on the host or appearance.)</sup>
 </p>
         `;
       },
@@ -320,7 +319,7 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
         var yScale = d3.scaleLog().domain(viewExtent)
           .range([top + window.innerHeight - obamaHeight, top]);
 
-        var includeTitles = ["ln3wAdRAim4", "ziwYbVx_-qg"];
+        var includeTitles = ["ln3wAdRAim4", "RDocnbkHjhI", "95KTrtzOY-g", "Hq-URl9F17Y"];
         // calculate videos
         var videos = _.chain(data.videosData)
           .sortBy(d => d.date)
@@ -368,7 +367,16 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
         return {videos, axes};
       },
       text() {
-        return ``;
+        // calculate total appearances
+        var numAppearances = _.chain(data.showsData).map('dates').flatten().value();
+
+        return `
+Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color: ${colors.M}'>FLOTUS</span>'s **${numAppearances.length}** appearances on late-night, **${data.videosData.length}** video clips have made it on to the hosts' official Youtube channels.  The earliest uploaded video was the [Evolution of Mom Dancing](https://www.youtube.com/watch?v=Hq-URl9F17Y) (<span style='color: ${colors.M}'>FLOTUS</span>) on *Late Night with Jimmy Fallon* in 2013, and the most viewed were [Mean Tweets](https://www.youtube.com/watch?v=RDocnbkHjhI) (<span style='color: ${colors.B}'>POTUS</span>) on *Jimmy Kimmel Live* with 46M views and [Carpool Karaoke](https://www.youtube.com/watch?v=ln3wAdRAim4) (<span style='color: ${colors.M}'>FLOTUS</span>) with 45M views on the *Late Late Show with James Corden*.
+
+<p style='line-height: 1'>
+  <sup>(Click any circle to watch the video on Youtube.  If nothing else, please watch <a href='https://www.youtube.com/watch?v=ln3wAdRAim4' target='_new'>Carpool Karaoke</a> because <span style='color: ${colors.M}'>FLOTUS</span> is the coolest.)</sup>
+</p>
+        `;
       }
     },
     {

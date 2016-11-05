@@ -86,7 +86,7 @@ var Videos = React.createClass({
       .attr('cy', d => d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y);
 
     // add titles when appropriate
-    var titles = this.videos.selectAll('.title')
+    var titles = this.videos.selectAll('.header')
       .data(d => {
         return d.title ? [{
           radius: d.captionRadius || d.radius,
@@ -97,14 +97,31 @@ var Videos = React.createClass({
     titles.exit().remove();
 
     titles.enter().append('text')
-      .classed('title', true)
-      .attr('dy', '.35em')
-      .attr('text-anchor', 'end')
+      .classed('header', true)
+      .attr('text-anchor', 'middle')
       .attr('font-size', 10)
       .merge(titles)
-      .attr('x', d => -d.radius / 2 - 2)
+      .attr('y', d => d.radius / 2 + 5)
       .style('pointer-events', 'none')
-      .text(d => d.title);
+      .html(d => {
+        var text = d.title.split(' ');
+        var html = '';
+        var perRow = 3;
+
+        _.each(text, (t, i) => {
+          // if it's the first in the row, add the start
+          if (i % perRow === 0) {
+            html += '<tspan x="0" dy="1.35em">' + t;
+          } else if (i % perRow === (perRow - 1)) {
+            // else if it's the last in the row, close it
+            html += ' ' + t + '</tspan>';
+          } else {
+            // everything else, just append the word
+            html += ' ' + t;
+          }
+        });
+        return html;
+      });
 
   },
 
@@ -127,9 +144,8 @@ var Videos = React.createClass({
       y: (video.interpolateY ? video.interpolateY(this.props.interpolateScroll) : video.y) + video.radius / 2,
       content: (
         <div>
-          <span className='header'>{video.video.title} </span>
-          on {video.video.channelTitle}<br />
-          {formatTime(video.video.date)}<br />
+          <span className='header'>{video.video.title}</span><br />
+          published on {video.video.channelTitle}, {formatTime(video.video.date)}<br />
           ({formatViews(video.video.statistics.viewCount)} views)
         </div>
       ),
