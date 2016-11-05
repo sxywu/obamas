@@ -93,6 +93,7 @@ You may be wondering, why do something so ridiculously silly?  Simple: because i
       height: 1200,
       border: '1px solid',
       paddingTop: 40,
+      position: 'relative',
     };
     var bStyle = {
       borderBottom: '3px solid ' + this.props.colors.B,

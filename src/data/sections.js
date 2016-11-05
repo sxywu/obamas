@@ -37,7 +37,7 @@ export default function(data, images, colors, emojis) {
       style: {
         width: '33%',
         paddingTop: 200,
-        minHeight: 950,
+        minHeight: 800,
       },
       position(width, top) {
         var left = width * 0.36;
@@ -125,11 +125,10 @@ export default function(data, images, colors, emojis) {
         var numTimes = _.chain(data.showsData)
           .map(show => _.map(show.dates, date => date[1])).flatten().countBy().value();
 
-          console.log(barackShows, michelleShows)
         return `
 Since his first time on *The Tonight Show with Jay Leno*, the <span style='color: ${colors.B}'>President</span> has made **${numTimes.B}** late-night appearances on ${barackShows.length} shows with ${barackHosts.length} different hosts.  Impressively, the <span style='color: ${colors.M}'>Fist Lady</span> has very similar numbers despite a three-year late start: **${numTimes.M}** appearances, also with ${michelleHosts.length} hosts.
 
-They both seem to favor hosts David Letterman and Stephen Colbert, with appearances spanning 2009 to as recent as 2015 and 2016.  In the last half year, the <span style='color: ${colors.B}'>POTUS</span> and <span style='color: ${colors.M}'>FLOTUS</span> have appeared on newer shows hosted by Seth Meyers, James Corden and Samantha Bee.
+They seem to favor hosts David Letterman and Stephen Colbert over the years, appearing four times each on both shows.  Over the past half year however, the <span style='color: ${colors.B}'>POTUS</span> and <span style='color: ${colors.M}'>FLOTUS</span> have both appeared on newer shows hosted by Seth Meyers, James Corden and Samantha Bee.
 
 <p style='line-height: 1'>
   <sup>(Mouse over images for more details on the host or appearance.)</sup>
@@ -139,13 +138,15 @@ They both seem to favor hosts David Letterman and Stephen Colbert, with appearan
     },
     {
       id: 'by_time',
-      half: 200,
+      half: 250,
       style: {
-        minHeight: 500,
+        width: '33%',
+        minHeight: 550,
+        paddingTop: 200,
       },
       position(width, top) {
-        top += this.half;
-        var bottom = top + 6 * hostSize + 6 * obamaSize;
+        top += this.half + 2 * hostSize;
+        var bottom = top + 4 * hostSize + 6 * obamaSize;
 
         xScale.domain([new Date('January 1, 2009'), new Date('November 8, 2016')])
           .range([padding.left + obamaSize, width - padding.left - obamaSize]);
@@ -227,6 +228,7 @@ They both seem to favor hosts David Letterman and Stephen Colbert, with appearan
                 opacity: 0.5,
                 happy: [],
                 guest: video.guest,
+                video,
               }
             });
           }).flatten().value();
@@ -266,11 +268,19 @@ They both seem to favor hosts David Letterman and Stephen Colbert, with appearan
         return {hosts, obamas, links, axes, videos};
       },
       text() {
-        return ``;
+        return `
+The <span style='color: ${colors.M}'>FLOTUS</span> have made many appearances since 2012 for [Let's Move!](http://www.letsmove.gov/) (2010), [Reach Higher](https://www.whitehouse.gov/reach-higher) (2014), and [Let Girls Learn](https://www.whitehouse.gov/letgirlslearn) (2015) to promote healthy living and girls' education around the world.
+
+The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other hand, peaked in 2012 (presumably for the election) and again in the last year to [reflect on his presidency](https://www.youtube.com/watch?v=ziwYbVx_-qg) and promote Hillary Clinton's run for presidency.
+        `;
       }
     },
     {
       id: 'show_videos',
+      style: {
+        width: '33%',
+        paddingTop: 200,
+      },
       position(width, top) {
         var obamaHeight = 2 * hostSize + 5 * obamaSize;
         top += obamaHeight;
