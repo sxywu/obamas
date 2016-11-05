@@ -57,7 +57,6 @@ var Hosts = React.createClass({
 
   hoverHost(host) {
     if (!host) {
-      console.log(host)
       this.props.updateHover();
       return;
     }
@@ -66,7 +65,7 @@ var Hosts = React.createClass({
       y: host.y + host.radius / 2,
       content: (
         <div>
-          <span className='header'>{host.host}</span>, 
+          <span className='header'>{host.host}</span>,
           host of {host.shows.join(' and ')}
         </div>
       ),

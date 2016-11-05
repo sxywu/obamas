@@ -86,7 +86,7 @@ export default function(data, images, colors, emojis) {
             return _.chain(show.dates)
               .sortBy(date => date[1])
               .map((data, i) => {
-                var [date, guest] = data;
+                var [date, guest, show] = data;
                 var y = Math.floor(i / perRow);
                 var x = (i % perRow + 0.5) * obamaSize;
 
@@ -105,6 +105,7 @@ export default function(data, images, colors, emojis) {
                   image: images[guest],
                   date,
                   guest,
+                  show,
                   radius: obamaSize * 0.85,
                 };
               }).value();
@@ -173,12 +174,13 @@ They seem to favor hosts David Letterman and Stephen Colbert over the years, app
             var host = _.find(hosts, d => d.key === show.host);
 
             return _.map(show.dates, data => {
-              var [date, guest] = data;
+              var [date, guest, show] = data;
               var interview = {
                 key: date + guest,
                 image: images[guest],
                 date,
                 guest,
+                show,
                 radius: obamaSize * 0.85,
               };
 

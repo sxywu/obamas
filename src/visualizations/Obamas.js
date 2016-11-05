@@ -1,6 +1,8 @@
 import React from 'react';
 import * as d3 from 'd3';
 
+var formatTime = d3.timeFormat("%B %d, %Y");
+
 var Obamas = React.createClass({
   componentDidMount() {
     this.container = d3.select(this.refs.container);
@@ -38,7 +40,9 @@ var Obamas = React.createClass({
       .attr('stroke-width', 3)
       .attr('opacity', 0.5);
 
-    this.obamas = this.obamas.merge(enter);
+    this.obamas = this.obamas.merge(enter)
+      .on('mouseenter', d => this.hoverObama(d))
+      .on('mouseleave', d => this.hoverObama());
 
     this.obamas.transition().duration(props.scrollDuration)
       .attr('transform', d => {
@@ -46,6 +50,24 @@ var Obamas = React.createClass({
         var y = d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y;
         return 'translate(' + [x - d.radius / 2, y - d.radius / 2] + ')';
       });
+  },
+
+  hoverObama(obama) {
+    if (!obama) {
+      this.props.updateHover();
+      return;
+    }
+    var hover = {
+      x: obama.x,
+      y: obama.y + obama.radius / 2,
+      content: (
+        <div>
+          <span className='header'>{obama.guest === 'B' ? 'Barack Obama' : 'Michelle Obama'} </span>
+          on {obama.show}, {formatTime(obama.date)}
+        </div>
+      ),
+    }
+    this.props.updateHover(hover);
   },
 
   render() {
