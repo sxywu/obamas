@@ -3,6 +3,7 @@ import _ from 'lodash';
 import * as d3 from 'd3';
 
 var duration = 250;
+var formatTime = d3.timeFormat("%B %d, %Y");
 
 var Videos = React.createClass({
   componentDidMount() {
@@ -48,7 +49,9 @@ var Videos = React.createClass({
       .attr('opacity', d => props.selectedVideo && props.selectedVideo.key === d.key ||
         !props.section.updateSelectedVideo ? 1 : 0.25)
       .style('cursor', 'pointer')
-      .on('click', this.clickVideo);
+      .on('click', this.clickVideo)
+      .on('mouseenter', d => this.hoverVideo(d))
+      .on('mouseleave', d => this.hoverVideo());
 
     this.videos.transition().duration(props.scrollDuration)
       .attr('transform', d => {
@@ -99,6 +102,7 @@ var Videos = React.createClass({
       .attr('font-size', 10)
       .merge(titles)
       .attr('x', d => -d.radius / 2 - 2)
+      .style('pointer-events', 'none')
       .text(d => d.title);
 
   },
@@ -109,6 +113,24 @@ var Videos = React.createClass({
     } else {
       window.open('http://www.youtube.com/watch?v=' + d.video.videoId, '_new');
     }
+  },
+
+  hoverVideo(video) {
+    if (!video) {
+      this.props.updateHover();
+      return;
+    }
+    var hover = {
+      x: video.interpolateX ? video.interpolateX(this.props.interpolateScroll) : video.x,
+      y: (video.interpolateY ? video.interpolateY(this.props.interpolateScroll) : video.y) + video.radius / 2,
+      content: (
+        <div>
+          <span className='header'>{video.video.title} </span>
+          on {video.video.channelTitle}, published {formatTime(video.video.date)}
+        </div>
+      ),
+    }
+    this.props.updateHover(hover);
   },
 
   render() {

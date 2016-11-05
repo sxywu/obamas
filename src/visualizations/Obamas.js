@@ -58,8 +58,8 @@ var Obamas = React.createClass({
       return;
     }
     var hover = {
-      x: obama.x,
-      y: obama.y + obama.radius / 2,
+      x: obama.interpolateX ? obama.interpolateX(this.props.interpolateScroll) : obama.x,
+      y: (obama.interpolateY ? obama.interpolateY(this.props.interpolateScroll) : obama.y) + obama.radius / 2,
       content: (
         <div>
           <span className='header'>{obama.guest === 'B' ? 'Barack Obama' : 'Michelle Obama'} </span>
