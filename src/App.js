@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 
 import Header from './Header';
 import Section from './Section';
+import Hover from './Hover';
 import Visualization from './visualizations/Visualization';
 
 import videosData from './data/videos.json';
@@ -53,6 +54,7 @@ var App = React.createClass({
       scrollDuration: 200,
       section: {},
       selectedVideo: null,
+      hover: null,
     };
   },
 
@@ -135,6 +137,10 @@ var App = React.createClass({
       selectedVideo = filteredVideos[_.random(filteredVideos.length - 1)];
       this.setState({selectedVideo});
     }
+  },
+
+  updateHover(hover) {
+    this.setState({hover});
   },
 
   onScroll() {
@@ -258,9 +264,11 @@ var App = React.createClass({
     return (
       <div className="App" style={style}>
         <Visualization {...props} {...this.state}
-          updateSelectedVideo={this.updateSelectedVideo} />
+          updateSelectedVideo={this.updateSelectedVideo}
+          updateHover={this.updateHover} />
         <Header {...props} {...data} />
         {sections}
+        <Hover hover={this.state.hover} />
       </div>
     );
   }

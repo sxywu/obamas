@@ -70,6 +70,7 @@ export default function(data, images, colors, emojis) {
               radius: hostSize,
               host: show.host,
               image: show.image,
+              shows: show.shows,
             };
           }).value();
         var hostsByKey = _.keyBy(hosts, 'host');
@@ -161,6 +162,7 @@ They seem to favor hosts David Letterman and Stephen Colbert over the years, app
             radius: hostSize,
             host: show.host,
             image: show.image,
+            shows: show.shows,
           };
         });
 

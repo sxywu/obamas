@@ -1,5 +1,5 @@
 import React from 'react';
-// import _ from 'lodash';
+import _ from 'lodash';
 import * as d3 from 'd3';
 
 var Hosts = React.createClass({
@@ -32,15 +32,10 @@ var Hosts = React.createClass({
       .attr('fill', props.colors.host);
     enter.append('image')
       .classed('image', true);
-    enter.append('text')
-      .classed('name', true)
-      .attr('dy', '.35em')
-      .attr('text-anchor', 'middle')
-      .attr('font-size', 12)
-      .attr('font-weight', 700)
-      .attr('fill', props.colors.host);
 
-    this.hosts = enter.merge(this.hosts);
+    this.hosts = enter.merge(this.hosts)
+      .on('mouseenter', (d) => this.hoverHost(d))
+      .on('mouseleave', (d) => this.hoverHost());
 
     this.hosts.transition().duration(props.scrollDuration)
       .attr('transform', d => {
@@ -58,10 +53,25 @@ var Hosts = React.createClass({
       .attr('width', d => (d.radius - padding))
       .attr('height', d => (d.radius - padding))
       .attr('xlink:href', d => d.image);
+  },
 
-    // this.hosts.selectAll('.name')
-    //   .attr('y', d => d.radius / 2 + 15)
-    //   .text(d => d.host);
+  hoverHost(host) {
+    if (!host) {
+      console.log(host)
+      this.props.updateHover();
+      return;
+    }
+    var hover = {
+      x: host.x,
+      y: host.y + host.radius / 2,
+      content: (
+        <div>
+          <span className='header'>{host.host}</span>, 
+          host of {host.shows.join(' and ')}
+        </div>
+      ),
+    }
+    this.props.updateHover(hover);
   },
 
   render() {
