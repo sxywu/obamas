@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 
 var duration = 250;
 var formatTime = d3.timeFormat("%B %d, %Y");
+var formatViews = d3.format(".2s");
 
 var Videos = React.createClass({
   componentDidMount() {
@@ -126,7 +127,9 @@ var Videos = React.createClass({
       content: (
         <div>
           <span className='header'>{video.video.title} </span>
-          on {video.video.channelTitle}, published {formatTime(video.video.date)}
+          on {video.video.channelTitle}<br />
+          {formatTime(video.video.date)}<br />
+          ({formatViews(video.video.statistics.viewCount)} views)
         </div>
       ),
     }
