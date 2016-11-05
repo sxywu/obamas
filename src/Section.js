@@ -9,11 +9,13 @@ var Section = React.createClass({
       minHeight: '125vh',
       // border: '1px solid',
       position: 'relative',
+      pointerEvents: 'none',
     }, this.props.style);
     var textStyle = {
       lineHeight: 2,
       padding: 20,
       background: 'rgba(255, 255, 255, 0.8)',
+      pointerEvents: 'auto',
     };
 
     var rawMarkup = { __html: md.render(this.props.text())};
