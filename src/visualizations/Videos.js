@@ -81,6 +81,26 @@ var Videos = React.createClass({
       .attr('cx', d => d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x)
       .attr('cy', d => d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y);
 
+    // add titles when appropriate
+    var titles = this.videos.selectAll('.title')
+      .data(d => {
+        return d.title ? [{
+          radius: d.captionRadius || d.radius,
+          title: d.title,
+        }] : [];
+      }, d => d.key);
+
+    titles.exit().remove();
+
+    titles.enter().append('text')
+      .classed('title', true)
+      .attr('dy', '.35em')
+      .attr('text-anchor', 'end')
+      .attr('font-size', 10)
+      .merge(titles)
+      .attr('x', d => -d.radius / 2 - 2)
+      .text(d => d.title);
+
   },
 
   clickVideo(d) {

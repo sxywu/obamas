@@ -141,7 +141,7 @@ They seem to favor hosts David Letterman and Stephen Colbert over the years, app
       half: 250,
       style: {
         width: '33%',
-        minHeight: 550,
+        minHeight: 500,
         paddingTop: 200,
       },
       position(width, top) {
@@ -282,7 +282,7 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
         paddingTop: 200,
       },
       position(width, top) {
-        var obamaHeight = 2 * hostSize + 5 * obamaSize;
+        var obamaHeight = 3 * obamaSize;
         top += obamaHeight;
         var left = width - padding.left - obamaSize;
 
@@ -291,6 +291,7 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
         var yScale = d3.scaleLog().domain(viewExtent)
           .range([top + window.innerHeight * 0.9 - obamaHeight, top]);
 
+        var includeTitles = ["ln3wAdRAim4", "ziwYbVx_-qg"];
         // calculate videos
         var videos = _.chain(data.videosData)
           .sortBy(d => d.date)
@@ -310,6 +311,7 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
                 guest: video.guest,
                 annotations: video.annotations,
                 happy: [],
+                title: _.includes(includeTitles, video.videoId) ? video.title : '',
                 video,
               }
             });
