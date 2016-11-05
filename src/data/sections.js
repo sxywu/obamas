@@ -381,13 +381,17 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
     },
     {
       id: 'show_captions',
+      style: {
+        width: '33%',
+        paddingTop: 200,
+        height: '110vh',
+      },
       position(width, top, hover) {
         // if something's been hovered, do nothing
         if (hover) return {};
 
-        var paddingTop = 4 * videoSize;
-        top += paddingTop;
-        var vizHeight = window.innerHeight * 0.85 - paddingTop;
+        top += this.style.paddingTop;
+        var vizHeight = window.innerHeight - this.style.paddingTop;
         var vizSide = 2 * padding.left + obamaSize;
         var vizWidth = width - 2 * vizSide;
 
@@ -402,19 +406,21 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
           .map(video => {
             var position = positions.videoCaptions[video.videoId];
             var captionRadius = video.caption ? captionRadiusScale(video.duration) : 0;
-            var happy = _.chain(video.annotations)
-              .filter(annotation => _.some(annotation.faces, face => face.happy))
-              .map(annotation => {
-                var theta = annotation.start / (video.duration * 1000);
-                theta = theta * 2 * Math.PI - Math.PI / 2;
-                return {
-                  key: annotation.filename,
-                  x: (captionRadius / 2) * Math.cos(theta),
-                  y: (captionRadius / 2) * Math.sin(theta),
-                  guest: video.guest,
-                  data: annotation,
-                }
-              }).value();
+            var happy = _.filter(video.annotations, annotation =>
+              _.some(annotation.faces, face => face.happy));
+            happy = _.map(happy, (annotation, i) => {
+              var theta = annotation.start / (video.duration * 1000);
+              theta = theta * 2 * Math.PI - Math.PI / 2;
+              return {
+                index: i,
+                total: happy.length,
+                key: annotation.filename,
+                x: (captionRadius / 2) * Math.cos(theta),
+                y: (captionRadius / 2) * Math.sin(theta),
+                guest: video.guest,
+                data: annotation,
+              }
+            });
 
             return {
               key: video.videoId,
@@ -488,19 +494,21 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
           .map((video, i) => {
             var radius = radiusScale(video.statistics.viewCount) / 2;
             var captionRadius = captionRadiusScale(video.duration) / 2;
-            var happy = _.chain(video.annotations)
-              .filter(annotation => _.some(annotation.faces, face => face.happy))
-              .map(annotation => {
-                var theta = annotation.start / (video.duration * 1000);
-                theta = theta * 2 * Math.PI - Math.PI / 2;
-                return {
-                  key: annotation.filename,
-                  x: (captionRadius / 2) * Math.cos(theta),
-                  y: (captionRadius / 2) * Math.sin(theta),
-                  guest: video.guest,
-                  data: annotation,
-                }
-              }).value();
+            var happy = _.filter(video.annotations, annotation =>
+              _.some(annotation.faces, face => face.happy));
+            happy = _.map(happy, (annotation, i) => {
+              var theta = annotation.start / (video.duration * 1000);
+              theta = theta * 2 * Math.PI - Math.PI / 2;
+              return {
+                index: i,
+                total: happy.length,
+                key: annotation.filename,
+                x: (captionRadius / 2) * Math.cos(theta),
+                y: (captionRadius / 2) * Math.sin(theta),
+                guest: video.guest,
+                data: annotation,
+              }
+            });
 
             return {
               key: video.videoId,

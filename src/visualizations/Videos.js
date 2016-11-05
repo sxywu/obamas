@@ -48,11 +48,7 @@ var Videos = React.createClass({
     // ENTER+UPDATE
     this.videos = enter.merge(this.videos)
       .attr('opacity', d => props.selectedVideo && props.selectedVideo.key === d.key ||
-        !props.section.updateSelectedVideo ? 1 : 0.25)
-      .style('cursor', 'pointer')
-      .on('click', this.clickVideo)
-      .on('mouseenter', d => this.hoverVideo(d))
-      .on('mouseleave', d => this.hoverVideo());
+        !props.section.updateSelectedVideo ? 1 : 0.25);
 
     this.videos.transition().duration(props.scrollDuration)
       .attr('transform', d => {
@@ -65,25 +61,38 @@ var Videos = React.createClass({
       .attr('fill', d => props.colors[d.guest])
       .attr('opacity', d => d.opacity)
       .attr('r', d => (d.interpolateRadius ?
-        d.interpolateRadius(props.interpolateScroll) : d.radius) / 2);
+        d.interpolateRadius(props.interpolateScroll) : d.radius) / 2)
+      .style('cursor', 'pointer')
+      .on('click', this.clickVideo)
+      .on('mouseenter', d => this.hoverVideo(d))
+      .on('mouseleave', d => this.hoverVideo());
     this.videos.select('.caption')
       .datum(d => d)
       .attr('r', d => (d.interpolateCaption ?
-        d.interpolateCaption(props.interpolateScroll) : d.captionRadius) / 2);
+        d.interpolateCaption(props.interpolateScroll) : d.captionRadius) / 2)
+      .style('pointer-events', 'none');
 
     // denote when there is a happy face
     var happy = this.videos.select('.happy')
-      .selectAll('circle').data(d => d.happy);
+      .selectAll('circle').data(d => {
+        return _.map(d.happy, happy => {
+          // add parent x and y
+          return Object.assign({video: d}, happy);
+        });
+      });
 
     happy.exit().remove();
 
     happy.enter().append('circle')
-      .attr('r', 2.5)
+      .attr('r', 4)
       .attr('opacity', 0.5)
       .attr('fill', d => props.colors[d.guest])
       .merge(happy)
       .attr('cx', d => d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x)
-      .attr('cy', d => d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y);
+      .attr('cy', d => d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y)
+      .style('cursor', 'pointer')
+      .on('mouseenter', d => this.hoverEmoji(d))
+      .on('mouseleave', d => this.hoverEmoji());
 
     // add titles when appropriate
     var titles = this.videos.selectAll('.header')
@@ -141,12 +150,39 @@ var Videos = React.createClass({
     var hover = {
       type: 'video',
       x: video.interpolateX ? video.interpolateX(this.props.interpolateScroll) : video.x,
-      y: (video.interpolateY ? video.interpolateY(this.props.interpolateScroll) : video.y) + video.radius / 2,
+      y: (video.interpolateY ? video.interpolateY(this.props.interpolateScroll) : video.y) +
+        (video.captionRadius || video.radius) / 2,
       content: (
         <div>
           <span className='header'>{video.video.title}</span><br />
           published on {video.video.channelTitle}, {formatTime(video.video.date)}<br />
           ({formatViews(video.video.statistics.viewCount)} views)
+        </div>
+      ),
+    }
+    this.props.updateHover(hover);
+  },
+
+  hoverEmoji(emoji) {
+    if (!emoji) {
+      this.props.updateHover();
+      return;
+    }
+    var faces = _.map(emoji.data.faces, face => {
+      var emoji = face.happy ? this.props.emojis.happy(face.confidence) : this.props.emojis.neutral;
+      return (<img style={{padding: '5px 0'}} src={emoji} width={20} />);
+    });
+    var hover = {
+      type: 'video',
+      x: emoji.video.interpolateX ? emoji.video.interpolateX(this.props.interpolateScroll) :
+        emoji.video.x,
+      y: (emoji.video.interpolateY ? emoji.video.interpolateY(this.props.interpolateScroll) :
+        emoji.video.y) + (emoji.video.captionRadius || emoji.video.radius) / 2,
+      content: (
+        <div>
+          <span className='header'>{emoji.video.video.title}</span><br />
+          {faces}<br />
+          {emoji.index + 1} out of {emoji.total} happy faces
         </div>
       ),
     }

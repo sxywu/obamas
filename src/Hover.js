@@ -20,6 +20,7 @@ var Hover = React.createClass({
       borderRadius: 3,
       boxShadow: '0 0 5px #999',
       padding,
+      pointerEvents: 'none',
     };
 
     return (
