@@ -3,14 +3,6 @@ import _ from 'lodash';
 import * as d3 from 'd3';
 
 var xScale = d3.scaleLinear();
-var xAxis = d3.axisBottom().scale(xScale)
-  .tickFormat(d => {
-    var min = d / 1000 / 60;
-    if (min % 0.25 === 0) {
-      return min + 'min';
-    }
-    return;
-  });
 var heightScale = d3.scaleLinear();
 var wordsHeight = 100;
 var top = 280;

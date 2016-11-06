@@ -47,7 +47,7 @@ var Videos = React.createClass({
 
     // ENTER+UPDATE
     this.videos = enter.merge(this.videos)
-      .attr('opacity', d => props.selectedVideo && props.selectedVideo.key === d.key ||
+      .attr('opacity', d => (props.selectedVideo && props.selectedVideo.key === d.key) ||
         !props.section.updateSelectedVideo ? 1 : 0.25);
 
     this.videos.transition().duration(props.scrollDuration)
@@ -170,7 +170,7 @@ var Videos = React.createClass({
     }
     var faces = _.map(emoji.data.faces, face => {
       var emoji = face.happy ? this.props.emojis.happy(face.confidence) : this.props.emojis.neutral;
-      return (<img style={{paddingTop: 5}} src={emoji} width={20} />);
+      return (<img style={{paddingTop: 5}} src={emoji} width={20} role="presentation" />);
     });
     var hover = {
       type: 'video',

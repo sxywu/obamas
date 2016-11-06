@@ -37,7 +37,6 @@ You may be wondering, why do something so ridiculously silly?  Simple: because i
     var images = [[this.barackPhotos, 'B'], [this.michellePhotos, 'M']];
     var faces = _.map(images, (image) => {
       var emotionObj = image[0];
-      var guest = image[1];
       if (!emotionObj.length) return;
       emotionObj = emotionObj[_.random(emotionObj.length - 1)];
 
@@ -57,7 +56,7 @@ You may be wondering, why do something so ridiculously silly?  Simple: because i
         var emoji = face.happy ? this.props.emojis.happy(face.confidence) :
           this.props.emojis.neutral;
 
-        return (<img key={i} style={style} src={emoji} />);
+        return (<img key={i} style={style} src={emoji} role="presentation" />);
       });
 
       var style = {
@@ -85,7 +84,7 @@ You may be wondering, why do something so ridiculously silly?  Simple: because i
     });
     var allEmojis = _.union([this.props.emojis.neutral], this.props.emojis.happy.range());
     allEmojis = _.map(allEmojis, (emoji) => {
-      return (<img style={{width: 48}} src={emoji} />);
+      return (<img style={{width: 48}} src={emoji} role="presentation" />);
     });
 
     var style = {
