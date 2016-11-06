@@ -4,7 +4,6 @@ import * as d3 from 'd3';
 import isMobile from 'ismobilejs';
 import {
   ShareButtons,
-  ShareCounts,
   generateShareIcon,
 } from 'react-share';
 
@@ -53,9 +52,6 @@ const {
   FacebookShareButton,
   TwitterShareButton,
 } = ShareButtons;
-const {
-  FacebookShareCount,
-} = ShareCounts;
 const FacebookIcon = generateShareIcon('facebook');
 const TwitterIcon = generateShareIcon('twitter');
 
