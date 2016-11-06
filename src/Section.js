@@ -4,6 +4,10 @@ import Remarkable from 'remarkable';
 var md = new Remarkable({linkTarget: '_new', html: true});
 
 var Section = React.createClass({
+  shouldComponentUpdate() {
+    return false;
+  },
+  
   render() {
     var style = Object.assign({
       minHeight: '125vh',
