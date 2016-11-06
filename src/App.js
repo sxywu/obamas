@@ -2,6 +2,11 @@ import React from 'react';
 import _ from 'lodash';
 import * as d3 from 'd3';
 import isMobile from 'ismobilejs';
+import {
+  ShareButtons,
+  ShareCounts,
+  generateShareIcon,
+} from 'react-share';
 
 import Header from './Header';
 import Section from './Section';
@@ -43,6 +48,16 @@ var sectionPositions = [];
 var topSection;
 var bottomSection;
 var interpolateSection;
+
+const {
+  FacebookShareButton,
+  TwitterShareButton,
+} = ShareButtons;
+const {
+  FacebookShareCount,
+} = ShareCounts;
+const FacebookIcon = generateShareIcon('facebook');
+const TwitterIcon = generateShareIcon('twitter');
 
 var App = React.createClass({
   getInitialState() {
@@ -256,7 +271,6 @@ var App = React.createClass({
       position: 'relative',
       width,
       margin: 'auto',
-      paddingBottom: '100vh',
     };
     var props = {
       emojis,
@@ -267,6 +281,19 @@ var App = React.createClass({
     var sections = _.map(data.sectionData, section => {
       return <Section {...props} {...section} />;
     });
+    var footerStyle = {
+      textAlign: 'center',
+      position: 'relative',
+      minHeight: '50vh',
+    };
+    var title = 'Putting Emojis on the President’s Face';
+    var url = 'http://sxywu.com/obamas/';
+    var shareStyle = {
+      display: 'inline-block',
+      verticalAlign: 'top',
+      padding: 5,
+      cursor: 'pointer',
+    };
 
     return (
       <div className="App" style={style}>
@@ -275,6 +302,29 @@ var App = React.createClass({
           updateHover={this.updateHover} />
         <Header {...props} {...data} />
         {sections}
+        <div style={footerStyle}>
+          <h2>
+No matter what happens on Tuesday, I hope this put a <img style={{width: 24}} src={emojis.happy(100)} role="presentation" /> on your face.
+          </h2>
+          <p>
+If it did, consider sharing the 💖:
+          </p>
+          <span style={shareStyle}>
+            <FacebookShareButton url={url} title={title} >
+              <FacebookIcon size={32} round />
+            </FacebookShareButton>
+          </span>
+          <span style={shareStyle}>
+            <TwitterShareButton url={url} title={title} via='sxywu'>
+              <TwitterIcon size={32} round />
+            </TwitterShareButton>
+          </span>
+
+        </div>
+        <div style={{textAlign: 'center', paddingBottom: 40, position: 'relative'}}>
+Made with 💕 by <a href='https://twitter.com/sxywu' src='_new'>Shirley Wu</a> for October <a href='http://www.datasketch.es/' src='_new'>Datasketch|es</a>.<br />
+<em>Thank you for eight years, Mr. and Mrs. Obama ✨.</em>
+        </div>
         <Hover hover={this.state.hover} />
       </div>
     );
