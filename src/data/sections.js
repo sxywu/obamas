@@ -530,7 +530,7 @@ The result is that videos with the First Lady have significantly more smiles tha
 
         var paddingTop = 4 * videoSize;
         top += paddingTop;
-        var vizSide = 2 * padding.left + obamaSize;
+        var vizSide = isMobilePhone ? padding.left / 2 : 2 * padding.left + obamaSize;
         var vizWidth = width - 2 * vizSide;
 
         var filteredVideos = _.filter(data.videosData, d => d.caption &&
