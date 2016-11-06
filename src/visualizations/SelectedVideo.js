@@ -19,6 +19,7 @@ var imageWidth = 640;
 var imageHeight = 360;
 var mousingOver = false;
 var formatTime = d3.timeFormat("%B %d, %Y");
+var currentVideo;
 
 var distortion = 5;
 function fisheye(_, a) {
@@ -95,8 +96,11 @@ var SelectedVideo = React.createClass({
     this.renderFaces(props);
 
     // default the selected caption to the first smiling image
-    this.selectedCaption = _.find(this.facesData, d =>
-      _.some(d.annotation.faces, face => face.happy));
+    if (!currentVideo || (currentVideo && currentVideo.key !== props.selectedVideo.key)) {
+      this.selectedCaption = _.find(this.facesData, d =>
+        _.some(d.annotation.faces, face => face.happy));
+      currentVideo = props.selectedVideo;
+    }
 
     this.renderCaption(props);
     this.renderImage(props);
