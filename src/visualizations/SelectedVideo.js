@@ -5,7 +5,7 @@ import * as d3 from 'd3';
 var xScale = d3.scaleLinear();
 var heightScale = d3.scaleLinear();
 var wordsHeight = 100;
-var top = 280;
+var top = 450;
 var imageScale = 0.25;
 var imageWidth = 640;
 var imageHeight = 360;
@@ -27,6 +27,10 @@ function fisheye(_, a) {
 
 var SelectedVideo = React.createClass({
   componentDidMount() {
+    if (this.props.isMobilePhone) {
+      top = 600;
+    }
+
     this.container = d3.select(this.refs.container);
     this.titleContainer = d3.select(this.refs.videoTitle);
     this.annotationsContainer = d3.select(this.refs.annotations)
@@ -323,7 +327,7 @@ var SelectedVideo = React.createClass({
 
   clickImage() {
     var videoId = this.selectedCaption.annotation.videoId;
-    var start = _.round(this.selectedCaption.annotation.start / 1000);
+    var start = _.round(this.selectedCaption.annotation.start / 1000) - 1;
     // clicking should take to video at that time
     var url = 'https://youtu.be/' + videoId + '?t=' + start;
     window.open(url, '_new');

@@ -142,7 +142,7 @@ Since his first time on *The Tonight Show with Jay Leno*, the <span style='color
 They seem to favor hosts David Letterman and Stephen Colbert over the years, appearing four times each on both shows.  Over the past half year however, the <span style='color: ${colors.B}'>POTUS</span> and <span style='color: ${colors.M}'>FLOTUS</span> have both appeared on newer shows hosted by Seth Meyers, James Corden and Samantha Bee.
 
 <p style='line-height: 1.5'>
-  <sup>(${isMobilePhone ? 'Tap' : 'Hover over'} the images for more detail on the host or appearance.)</sup>
+  <sup>(<em>${isMobilePhone ? 'Tap' : 'Hover over'} the images</em> for more detail on the host or appearance.)</sup>
 </p>
         `;
       },
@@ -302,7 +302,7 @@ The <span style='color: ${colors.M}'>FLOTUS</span> have made many appearances si
 The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other hand, peaked in 2012 (presumably for the election) and again in the last year to [reflect on his presidency](https://www.youtube.com/watch?v=ziwYbVx_-qg) and promote Hillary Clinton's run for presidency.
 
 <p style='line-height: 1.5'>
-  <sup>(${isMobilePhone ? 'Tap' : 'Hover over'} the hosts to see the corresponding guest appearances.)</sup>
+  <sup>(<em>${isMobilePhone ? 'Tap' : 'Hover over'} the hosts</em> to see the corresponding guest appearances.)</sup>
 </p>
         `;
       }
@@ -313,7 +313,7 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
       style: {
         width: isMobilePhone ? '100%' : '33%',
         paddingTop: 150,
-        height: isMobilePhone ? 1100 : '110vh',
+        height: isMobilePhone ? 1100 : '100vh',
       },
       position(width, top, hover) {
         // if something's been hovered, do nothing
@@ -388,7 +388,7 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
 Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color: ${colors.M}'>FLOTUS</span>'s **${numAppearances.length}** appearances on late-night, **${data.videosData.length}** video clips have made it on to the hosts' official Youtube channels.  The earliest uploaded video was the [Evolution of Mom Dancing](https://www.youtube.com/watch?v=Hq-URl9F17Y) (<span style='color: ${colors.M}'>FLOTUS</span>) on *Late Night with Jimmy Fallon* in 2013, and the most viewed were [Mean Tweets](https://www.youtube.com/watch?v=RDocnbkHjhI) (<span style='color: ${colors.B}'>POTUS</span>) on *Jimmy Kimmel Live* with 46M views and [Carpool Karaoke](https://www.youtube.com/watch?v=ln3wAdRAim4) (<span style='color: ${colors.M}'>FLOTUS</span>) with 45M views on the *Late Late Show with James Corden*.
 
 <p style='line-height: 1.5'>
-  <sup>(${isMobilePhone ? 'Tap' : 'Click'} any circle to watch the video on Youtube.  If nothing else, please watch <a href='https://www.youtube.com/watch?v=ln3wAdRAim4' target='_new'>Carpool Karaoke</a> because <span style='color: ${colors.M}'>FLOTUS</span> is the coolest.)</sup>
+  <sup>(<em>${isMobilePhone ? 'Tap' : 'Click'} any circle</em> to watch the video on Youtube.  If nothing else, watch <a href='https://www.youtube.com/watch?v=ln3wAdRAim4' target='_new'>Carpool Karaoke</a> because <span style='color: ${colors.M}'>FLOTUS</span> is the coolest.)</sup>
 </p>
         `;
       }
@@ -399,7 +399,7 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
       style: {
         width: isMobilePhone ? '100%' : '75%',
         paddingTop: 50,
-        height: isMobilePhone ? 1250 : '110vh',
+        height: isMobilePhone ? 1250 : '100vh',
       },
       position(width, top, hover) {
         // if something's been hovered, do nothing
@@ -516,7 +516,7 @@ Here's the fun part: out of the **${data.videosData.length}** videos, **${numCap
 The result is that videos with the First Lady have significantly more smiles than those with the President.  Out of ${michelleVideos.length} videos, those with <span style='color: ${colors.M}'>FLOTUS</span> had **${michelleHappy}** expressions of joy, with a max of ${michelleMax} in a video.  Those with <span style='color: ${colors.B}'>POTUS</span>, on the other hand, only had **${barackHappy}** across ${barackVideos.length} videos, with a max of ${barackMax}.  That's an average of **${michelleAverage}** smiles per video for the First Lady, and **${barackAverage}** for the President; in other words, <span style='color: ${colors.M}'>FLOTUS</span> had **${_.round((michelleAverage - barackAverage) / barackAverage * 100, 2)}%** more smiles than <span style='color: ${colors.B}'>POTUS</span>.
 
 <p style='line-height: 1.5'>
-  <sup>(The smaller dots are every time someone smiled in a video.  ${isMobilePhone ? 'Tap' : 'Hover'} for more details.)</sup>
+  <sup>(The smaller dots are every time someone smiled in a video.  <em>${isMobilePhone ? 'Tap' : 'Hover'}</em> for more details.)</sup>
 </p>
         `;
       }
@@ -524,12 +524,18 @@ The result is that videos with the First Lady have significantly more smiles tha
     {
       id: 'choose_video',
       updateSelectedVideo: true,
+      style: {
+        textAlign: 'center',
+        paddingTop: 150,
+        minHeight: 1200,
+        width: isMobilePhone ? '100%' : '80%',
+        margin: 'auto',
+      },
       position(width, top, hover) {
         // if something's been hovered, do nothing
         if (hover) return {};
 
-        var paddingTop = 4 * videoSize;
-        top += paddingTop;
+        top += (isMobilePhone ? 400 : 250) + 2 * videoSize;
         var vizSide = isMobilePhone ? padding.left / 2 : 2 * padding.left + obamaSize;
         var vizWidth = width - 2 * vizSide;
 
@@ -578,7 +584,16 @@ The result is that videos with the First Lady have significantly more smiles tha
         return {videos, vizWidth, vizSide};
       },
       text() {
-        return ``;
+        var numCaptions = _.filter(data.videosData, video => video.caption);
+
+        if (isMobilePhone) {
+          return `
+  And finally, the pick-me-up: the **${numCaptions.length}** videos are below, each with a screenshot for every time someone talked.  *Tap on a video* to see the images, and *scrub over the timeline* to read the corresponding captions.  *Let go* to see <img width='24' src=${emojis.happy(100)} />'s on the President's face, and *tap the image* to go to the video at that moment.
+          `;
+        }
+        return `
+And finally, the pick-me-up: the **${numCaptions.length}** videos are below, each with a screenshot for every time someone talked.  *Select a video* to see the images, and *hover the timeline* to read the corresponding captions.  *Click on the timeline* while hovering to see <img width='24' src=${emojis.happy(100)} />'s on the President's face, and *click the image* to go to the video at that moment.
+        `;
       }
     }
   ];
