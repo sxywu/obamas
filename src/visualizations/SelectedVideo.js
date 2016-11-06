@@ -18,6 +18,7 @@ var imageScale = 0.25;
 var imageWidth = 640;
 var imageHeight = 360;
 var mousingOver = false;
+var formatTime = d3.timeFormat("%B %d, %Y");
 
 var distortion = 5;
 function fisheye(_, a) {
@@ -73,12 +74,17 @@ var SelectedVideo = React.createClass({
       .attr('height', wordsHeight * 2);
 
     this.titleContainer
-      .attr('y', -30)
-      .attr('dy', '.35em')
+      .attr('y', -75)
       .attr('text-anchor', 'middle')
-      .attr('font-weight', 700)
       .attr('x', props.vizWidth / 2)
-      .text(props.selectedVideo.video.title);
+      .html(() => {
+        var tspan = '<tspan x="' + (props.vizWidth / 2) + '"';
+        return tspan + ' dy="1.35em" class="header" style="font-size:18px">' +
+            props.selectedVideo.video.title + '</tspan>' +
+          tspan + ' dy="2em" style="font-size:12px">on ' +
+            props.selectedVideo.video.channelTitle +
+            ', ' + formatTime(props.selectedVideo.video.date) + '</tspan>';
+      });
 
     // this.mouseContainer.attr('transform', )
 
@@ -224,7 +230,9 @@ var SelectedVideo = React.createClass({
 
   renderImage(props) {
     this.imageContainer.attr('transform',
-      'translate(' + [props.vizWidth / 2, 0] + ')');
+      'translate(' + [props.vizWidth / 2, 0] + ')')
+      .style('cursor', 'pointer')
+      .on('click', this.clickImage);
     this.imageContainer.select('.source')
       .attr('x', -imageWidth / 2)
       .attr('width', imageWidth)
@@ -309,6 +317,14 @@ var SelectedVideo = React.createClass({
 
     this.hoveredCaption = null;
     this.renderCaption(this.props);
+  },
+
+  clickImage() {
+    var videoId = this.selectedCaption.annotation.videoId;
+    var start = _.round(this.selectedCaption.annotation.start / 1000);
+    // clicking should take to video at that time
+    var url = 'https://youtu.be/' + videoId + '?t=' + start;
+    window.open(url, '_new');
   },
 
   render() {
