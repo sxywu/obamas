@@ -34,7 +34,7 @@ export default function(data, images, colors, emojis, isMobilePhone) {
   return [
     {
       id: 'by_hosts',
-      half: isMobilePhone ? 900 : false,
+      half: isMobilePhone ? 900 : 0,
       style: {
         width: isMobilePhone ? window.innerWidth : '33%',
         paddingTop: 150,
@@ -153,7 +153,7 @@ They seem to favor hosts David Letterman and Stephen Colbert over the years, app
       style: {
         width: isMobilePhone ? '100%' : '33%',
         minHeight: isMobilePhone ? 900 : 500,
-        paddingTop: 150,
+        paddingTop: isMobilePhone ? 150 : 175,
       },
       position(width, top, hover) {
         // if something's been hovered, we only want to change
@@ -309,25 +309,31 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
     },
     {
       id: 'show_videos',
+      half: isMobilePhone ? 520 : 0,
       style: {
-        width: '33%',
+        width: isMobilePhone ? '100%' : '33%',
         paddingTop: 150,
-        height: '110vh',
+        height: isMobilePhone ? 1100 : '110vh',
       },
       position(width, top, hover) {
         // if something's been hovered, do nothing
         if (hover) return {};
 
-        var obamaHeight = 4 * obamaSize;
-        top += obamaHeight;
-        var left = width - padding.left - obamaSize;
+        var obamaHeight = isMobilePhone ? 0 : 4 * obamaSize;
+        top += this.half + obamaHeight;
+        var vizSize = padding.left + (isMobilePhone ? padding.left : obamaSize);
 
-        xScale.domain([new Date('January 1, 2009'), new Date('November 8, 2016')])
-          .range([padding.left + obamaSize, left]);
+        var startDate = new Date(isMobilePhone ? 'January 1, 2013' : 'January 1, 2009');
+        var xScale = d3.scaleTime().domain([startDate, new Date('November 8, 2016')])
+          .range([padding.left + obamaSize, width - (vizSize / 2)]);
         var yScale = d3.scaleLog().domain(viewExtent)
           .range([top + window.innerHeight * 0.95 - obamaHeight, top]);
 
         var includeTitles = ["ln3wAdRAim4", "RDocnbkHjhI", "95KTrtzOY-g", "Hq-URl9F17Y"];
+        if (isMobilePhone) {
+          // only show 2 instead of all 4
+          includeTitles = ["RDocnbkHjhI", "Hq-URl9F17Y"];
+        }
         // calculate videos
         var videos = _.chain(data.videosData)
           .sortBy(d => d.date)
@@ -355,7 +361,7 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
 
         var axes = {
           y: {
-            transform: 'translate(' + [left, 0] + ')',
+            transform: 'translate(' + [width - vizSize, 0] + ')',
             scale: yScale,
             format: (d, i) => {
               if (d >= 10000000) {
@@ -382,7 +388,7 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
 Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color: ${colors.M}'>FLOTUS</span>'s **${numAppearances.length}** appearances on late-night, **${data.videosData.length}** video clips have made it on to the hosts' official Youtube channels.  The earliest uploaded video was the [Evolution of Mom Dancing](https://www.youtube.com/watch?v=Hq-URl9F17Y) (<span style='color: ${colors.M}'>FLOTUS</span>) on *Late Night with Jimmy Fallon* in 2013, and the most viewed were [Mean Tweets](https://www.youtube.com/watch?v=RDocnbkHjhI) (<span style='color: ${colors.B}'>POTUS</span>) on *Jimmy Kimmel Live* with 46M views and [Carpool Karaoke](https://www.youtube.com/watch?v=ln3wAdRAim4) (<span style='color: ${colors.M}'>FLOTUS</span>) with 45M views on the *Late Late Show with James Corden*.
 
 <p style='line-height: 1.5'>
-  <sup>(Click any circle to watch the video on Youtube.  If nothing else, please watch <a href='https://www.youtube.com/watch?v=ln3wAdRAim4' target='_new'>Carpool Karaoke</a> because <span style='color: ${colors.M}'>FLOTUS</span> is the coolest.)</sup>
+  <sup>(${isMobilePhone ? 'Tap' : 'Click'} any circle to watch the video on Youtube.  If nothing else, please watch <a href='https://www.youtube.com/watch?v=ln3wAdRAim4' target='_new'>Carpool Karaoke</a> because <span style='color: ${colors.M}'>FLOTUS</span> is the coolest.)</sup>
 </p>
         `;
       }
