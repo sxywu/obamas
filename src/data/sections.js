@@ -395,19 +395,20 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
     },
     {
       id: 'show_captions',
+      half: isMobilePhone ? 550 : 0,
       style: {
-        width: '75%',
+        width: isMobilePhone ? '100%' : '75%',
         paddingTop: 50,
-        height: '110vh',
+        height: isMobilePhone ? 1250 : '110vh',
       },
       position(width, top, hover) {
         // if something's been hovered, do nothing
         if (hover) return {};
 
-        var paddingTop = 150;
+        var paddingTop = isMobilePhone ? 550 : 150;
         top += paddingTop;
-        var vizHeight = window.innerHeight * 0.95 - paddingTop;
-        var vizSide = 2 * padding.left + obamaSize;
+        var vizHeight = window.innerHeight * 0.95 - (isMobilePhone ? 0 : paddingTop);
+        var vizSide = 2 * padding.left + (isMobilePhone ? 0 : obamaSize);
         var vizWidth = width - 2 * vizSide;
 
         var filteredDates = _.filter(data.videosData, d => d.caption);
@@ -515,7 +516,7 @@ Here's the fun part: out of the **${data.videosData.length}** videos, **${numCap
 The result is that videos with the First Lady have significantly more smiles than those with the President.  Out of ${michelleVideos.length} videos, those with <span style='color: ${colors.M}'>FLOTUS</span> had **${michelleHappy}** expressions of joy, with a max of ${michelleMax} in a video.  Those with <span style='color: ${colors.B}'>POTUS</span>, on the other hand, only had **${barackHappy}** across ${barackVideos.length} videos, with a max of ${barackMax}.  That's an average of **${michelleAverage}** smiles per video for the First Lady, and **${barackAverage}** for the President; in other words, <span style='color: ${colors.M}'>FLOTUS</span> had **${_.round((michelleAverage - barackAverage) / barackAverage * 100, 2)}%** more smiles than <span style='color: ${colors.B}'>POTUS</span>.
 
 <p style='line-height: 1.5'>
-  <sup>(The smaller dots are every time someone smiled in a video.  Hover for more details.)</sup>
+  <sup>(The smaller dots are every time someone smiled in a video.  ${isMobilePhone ? 'Tap' : 'Hover'} for more details.)</sup>
 </p>
         `;
       }
