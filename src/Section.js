@@ -11,7 +11,6 @@ var Section = React.createClass({
   render() {
     var style = Object.assign({
       minHeight: '125vh',
-      border: '1px solid',
       position: 'relative',
       pointerEvents: 'none',
     }, this.props.style);

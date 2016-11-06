@@ -278,13 +278,25 @@ var App = React.createClass({
       colors,
       isMobilePhone,
     };
+
     var sections = _.map(data.sectionData, section => {
       return <Section {...props} {...section} />;
     });
+
     var footerStyle = {
       textAlign: 'center',
       position: 'relative',
-      minHeight: '50vh',
+      minHeight: '60vh',
+    };
+    var bStyle = {
+      borderBottom: '2px solid ' + colors.B,
+      width: 40,
+      margin: 5,
+    };
+    var mStyle = {
+      borderBottom: '2px solid ' + colors.M,
+      width: 40,
+      margin: 5,
     };
     var title = 'Putting Emojis on the President’s Face';
     var url = 'http://sxywu.com/obamas/';
@@ -303,8 +315,11 @@ var App = React.createClass({
         <Header {...props} {...data} />
         {sections}
         <div style={footerStyle}>
+          <img src={images.B} style={bStyle} role="presentation" />
+          <img src={images.M} style={mStyle} role="presentation" />
           <h2>
-No matter what happens on Tuesday, I hope this put a <img style={{width: 24}} src={emojis.happy(100)} role="presentation" /> on your face.
+No matter what happens on Tuesday,<br />
+I hope this put a <img style={{width: 24}} src={emojis.happy(100)} role="presentation" /> on your face.
           </h2>
           <p>
 If it did, consider sharing the 💖:
@@ -322,7 +337,7 @@ If it did, consider sharing the 💖:
 
         </div>
         <div style={{textAlign: 'center', paddingBottom: 40, position: 'relative'}}>
-Made with 💕 by <a href='https://twitter.com/sxywu' src='_new'>Shirley Wu</a> for October <a href='http://www.datasketch.es/' src='_new'>Datasketch|es</a>.<br />
+Made with 💕 by <a href='https://twitter.com/sxywu' src='_new'>Shirley Wu</a> for <a href='http://www.datasketch.es/' src='_new'>Datasketch|es</a>.<br />
 <em>Thank you for eight years, Mr. and Mrs. Obama ✨.</em>
         </div>
         <Hover hover={this.state.hover} />

@@ -94,7 +94,6 @@ You may be wondering, why do something so ridiculously silly?  Simple: it's been
     var style = {
       textAlign: 'center',
       height: this.props.isMobilePhone ? 1400 : 1200,
-      // border: '1px solid',
       paddingTop: 40,
       position: 'relative',
     };
@@ -115,7 +114,6 @@ You may be wondering, why do something so ridiculously silly?  Simple: it's been
       lineHeight: 1.25,
     };
     var pStyle = {
-      // textAlign: 'left',
       width: imageWidth * (this.props.isMobilePhone ? 1 : 2),
       margin: 'auto',
       marginBottom: 40,
