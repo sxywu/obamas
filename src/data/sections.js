@@ -149,11 +149,11 @@ They seem to favor hosts David Letterman and Stephen Colbert over the years, app
     },
     {
       id: 'by_time',
-      half: 250,
+      half: isMobilePhone ? 500 : 250,
       style: {
-        width: '33%',
-        minHeight: 500,
-        paddingTop: 175,
+        width: isMobilePhone ? '100%' : '33%',
+        minHeight: isMobilePhone ? 900 : 500,
+        paddingTop: 150,
       },
       position(width, top, hover) {
         // if something's been hovered, we only want to change
@@ -162,9 +162,10 @@ They seem to favor hosts David Letterman and Stephen Colbert over the years, app
 
         top += this.half + 2 * hostSize;
         var bottom = top + 4 * hostSize + 6 * obamaSize;
+        var vizSide = padding.left + (isMobilePhone ? 10 : obamaSize);
 
         xScale.domain([new Date('January 1, 2009'), new Date('November 8, 2016')])
-          .range([padding.left + obamaSize, width - padding.left - obamaSize]);
+          .range([vizSide, width - vizSide]);
 
         var hosts = _.map(data.showsData, (show, i) => {
           var position = positions.hostTime[show.host];
@@ -301,7 +302,7 @@ The <span style='color: ${colors.M}'>FLOTUS</span> have made many appearances si
 The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other hand, peaked in 2012 (presumably for the election) and again in the last year to [reflect on his presidency](https://www.youtube.com/watch?v=ziwYbVx_-qg) and promote Hillary Clinton's run for presidency.
 
 <p style='line-height: 1.5'>
-  <sup>(Hover over the hosts to see the corresponding guest appearances.)</sup>
+  <sup>(${isMobilePhone ? 'Tap' : 'Hover over'} the hosts to see the corresponding guest appearances.)</sup>
 </p>
         `;
       }
