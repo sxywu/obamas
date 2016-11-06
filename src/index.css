@@ -1,6 +1,7 @@
 body {
   font-family: 'Libre Baskerville', serif;
   color: #333;
+  font-size: 14px;
 }
 
 h1, h2, h3, h4, .header {

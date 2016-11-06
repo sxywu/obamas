@@ -29,7 +29,7 @@ export default function(data, images, colors, emojis) {
     .range([0.05, 0.25, 1]);
   var radiusScale = d3.scaleLog().domain(viewExtent).range([videoSize / 6, videoSize]);
   var captionRadiusScale = d3.scaleLog().domain(durationExtent)
-    .range([videoSize / 4, videoSize * 2]);
+    .range([videoSize / 4, videoSize * 1.5]);
 
   return [
     {
@@ -134,7 +134,7 @@ Since his first time on *The Tonight Show with Jay Leno*, the <span style='color
 
 They seem to favor hosts David Letterman and Stephen Colbert over the years, appearing four times each on both shows.  Over the past half year however, the <span style='color: ${colors.B}'>POTUS</span> and <span style='color: ${colors.M}'>FLOTUS</span> have both appeared on newer shows hosted by Seth Meyers, James Corden and Samantha Bee.
 
-<p style='line-height: 1'>
+<p style='line-height: 1.5'>
   <sup>(Hover over the images for more detail on the host or appearance.)</sup>
 </p>
         `;
@@ -293,7 +293,7 @@ The <span style='color: ${colors.M}'>FLOTUS</span> have made many appearances si
 
 The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other hand, peaked in 2012 (presumably for the election) and again in the last year to [reflect on his presidency](https://www.youtube.com/watch?v=ziwYbVx_-qg) and promote Hillary Clinton's run for presidency.
 
-<p style='line-height: 1'>
+<p style='line-height: 1.5'>
   <sup>(Hover over the hosts to see the corresponding guest appearances.)</sup>
 </p>
         `;
@@ -303,14 +303,14 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
       id: 'show_videos',
       style: {
         width: '33%',
-        paddingTop: 100,
+        paddingTop: 150,
         height: '110vh',
       },
       position(width, top, hover) {
         // if something's been hovered, do nothing
         if (hover) return {};
 
-        var obamaHeight = 3 * obamaSize;
+        var obamaHeight = 4 * obamaSize;
         top += obamaHeight;
         var left = width - padding.left - obamaSize;
 
@@ -373,7 +373,7 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
         return `
 Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color: ${colors.M}'>FLOTUS</span>'s **${numAppearances.length}** appearances on late-night, **${data.videosData.length}** video clips have made it on to the hosts' official Youtube channels.  The earliest uploaded video was the [Evolution of Mom Dancing](https://www.youtube.com/watch?v=Hq-URl9F17Y) (<span style='color: ${colors.M}'>FLOTUS</span>) on *Late Night with Jimmy Fallon* in 2013, and the most viewed were [Mean Tweets](https://www.youtube.com/watch?v=RDocnbkHjhI) (<span style='color: ${colors.B}'>POTUS</span>) on *Jimmy Kimmel Live* with 46M views and [Carpool Karaoke](https://www.youtube.com/watch?v=ln3wAdRAim4) (<span style='color: ${colors.M}'>FLOTUS</span>) with 45M views on the *Late Late Show with James Corden*.
 
-<p style='line-height: 1'>
+<p style='line-height: 1.5'>
   <sup>(Click any circle to watch the video on Youtube.  If nothing else, please watch <a href='https://www.youtube.com/watch?v=ln3wAdRAim4' target='_new'>Carpool Karaoke</a> because <span style='color: ${colors.M}'>FLOTUS</span> is the coolest.)</sup>
 </p>
         `;
@@ -382,15 +382,15 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
     {
       id: 'show_captions',
       style: {
-        width: '33%',
-        paddingTop: 100,
+        width: '75%',
+        paddingTop: 50,
         height: '110vh',
       },
       position(width, top, hover) {
         // if something's been hovered, do nothing
         if (hover) return {};
 
-        var paddingTop = 200;
+        var paddingTop = 150;
         top += paddingTop;
         var vizHeight = window.innerHeight - paddingTop;
         var vizSide = 2 * padding.left + obamaSize;
@@ -402,7 +402,7 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
           .range([vizSide, width - vizSide]);
 
         // calculate videos
-        var includeTitles = ["ln3wAdRAim4", "jiMUoVjQ5uI", "2TtdPbeKNFc"];
+        var includeTitles = [];
         var videos = _.chain(data.videosData)
           .sortBy(d => d.date)
           .map(video => {
@@ -441,7 +441,6 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
               video,
             };
           }).value();
-
         // // use force layout to lay out the hosts/obamas and the links
         // var simulation = d3.forceSimulation(videos)
         //   .force('charge', d3.forceCollide(d => d.captionRadius * 0.5))
@@ -497,11 +496,11 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
         var barackAverage = _.round(barackHappy / barackVideos.length, 2);
 
         return `
-Here's the fun part: out of the **${data.videosData.length}** videos, **${numCaptions.length}** of them had captions.  So I took the liberty of taking a screenshot of the video every time someone talked, and fed the image into a [fancy facial recognition software](https://cloud.google.com/vision/) by Google.
+Here's the fun part: out of the **${data.videosData.length}** videos, **${numCaptions.length}** of them had captions.  So I took the liberty of taking a screenshot of the video every time someone talked, and fed the images into Google's [fancy facial recognition software](https://cloud.google.com/vision/).
 
-The result is that videos with the First Lady have significantly more smiles than those with the President.  Out of ${michelleVideos.length} videos, those with <span style='color: ${colors.M}'>FLOTUS</span> had **${michelleHappy}** expressions of joy, with a max of ${michelleMax} in a video.  Those with <span style='color: ${colors.B}'>POTUS</span>, on the other hand, only had **${barackHappy}** across ${barackVideos.length} videos, with a max of ${barackMax}.  That's an average of **${michelleAverage}** smiles per video for the First Lady, and **${barackAverage}** for the President; in other words, the <span style='color: ${colors.M}'>FLOTUS</span> had **${_.round((michelleAverage - barackAverage) / barackAverage * 100, 2)}%** more smiles than <span style='color: ${colors.B}'>POTUS</span>.
+The result is that videos with the First Lady have significantly more smiles than those with the President.  Out of ${michelleVideos.length} videos, those with <span style='color: ${colors.M}'>FLOTUS</span> had **${michelleHappy}** expressions of joy, with a max of ${michelleMax} in a video.  Those with <span style='color: ${colors.B}'>POTUS</span>, on the other hand, only had **${barackHappy}** across ${barackVideos.length} videos, with a max of ${barackMax}.  That's an average of **${michelleAverage}** smiles per video for the First Lady, and **${barackAverage}** for the President; in other words, <span style='color: ${colors.M}'>FLOTUS</span> had **${_.round((michelleAverage - barackAverage) / barackAverage * 100, 2)}%** more smiles than <span style='color: ${colors.B}'>POTUS</span>.
 
-<p style='line-height: 1'>
+<p style='line-height: 1.5'>
   <sup>(The smaller dots are every time someone smiled in a video.  Hover for more details.)</sup>
 </p>
         `;

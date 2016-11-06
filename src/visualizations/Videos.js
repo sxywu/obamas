@@ -84,7 +84,7 @@ var Videos = React.createClass({
     happy.exit().remove();
 
     happy.enter().append('circle')
-      .attr('r', 4)
+      .attr('r', 3)
       .attr('opacity', 0.5)
       .attr('fill', d => props.colors[d.guest])
       .merge(happy)
