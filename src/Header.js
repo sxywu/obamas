@@ -93,7 +93,7 @@ You may be wondering, why do something so ridiculously silly?  Simple: it's been
 
     var style = {
       textAlign: 'center',
-      height: 1200,
+      height: this.props.isMobilePhone ? 1400 : 1200,
       // border: '1px solid',
       paddingTop: 40,
       position: 'relative',

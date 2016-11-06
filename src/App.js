@@ -258,15 +258,15 @@ var App = React.createClass({
       margin: 'auto',
       paddingBottom: '100vh',
     };
-    var sections = _.map(data.sectionData, section => {
-      return <Section {...section} />;
-    });
     var props = {
       emojis,
       images,
       colors,
       isMobilePhone,
     };
+    var sections = _.map(data.sectionData, section => {
+      return <Section {...props} {...section} />;
+    });
 
     return (
       <div className="App" style={style}>

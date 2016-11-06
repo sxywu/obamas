@@ -34,21 +34,22 @@ export default function(data, images, colors, emojis, isMobilePhone) {
   return [
     {
       id: 'by_hosts',
+      half: isMobilePhone ? 900 : false,
       style: {
-        width: '33%',
-        paddingTop: 200,
-        minHeight: 800,
+        width: isMobilePhone ? window.innerWidth : '33%',
+        paddingTop: 150,
+        minHeight: isMobilePhone ? 1400 : 800,
       },
       position(width, top, hover) {
         // if something's been hovered, do nothing
         if (hover) return {};
 
-        var left = width * 0.36;
-        width *= 0.64;
-        top += this.style.paddingTop;
+        var left = isMobilePhone ? padding.left : width * 0.36;
+        width = isMobilePhone ? width - 2 * padding.left : width * 0.64;
+        top += isMobilePhone ? 700 : 200;
 
         // position hosts first
-        var perRow = 4;
+        var perRow = isMobilePhone ? 3 : 4;
         var perWidth = width / perRow;
         var length = data.showsData.length;
         var rows = Math.floor(length / perRow);
@@ -59,7 +60,13 @@ export default function(data, images, colors, emojis, isMobilePhone) {
           .map((show, i) => {
             var row = Math.floor(i / perRow);
             var x = (i % perRow + 0.5) * perWidth + left;
-            var y = 1.5 * row * perWidth + top;
+            var ySpacing = 3;
+            if (row === 2) {
+              ySpacing = 2.5;
+            } else if (row > 2) {
+              ySpacing = 2;
+            };
+            var y = (2 * hostSize + ySpacing * obamaSize) * row + top;
 
             if (row === rows) {
               // if it's the last row
@@ -104,7 +111,7 @@ export default function(data, images, colors, emojis, isMobilePhone) {
                 return {
                   key: date + guest,
                   x: host.x + x,
-                  y: host.y + 1.5 * host.radius + y,
+                  y: host.y + 1 * host.radius + y,
                   image: images[guest],
                   date,
                   guest,
@@ -135,7 +142,7 @@ Since his first time on *The Tonight Show with Jay Leno*, the <span style='color
 They seem to favor hosts David Letterman and Stephen Colbert over the years, appearing four times each on both shows.  Over the past half year however, the <span style='color: ${colors.B}'>POTUS</span> and <span style='color: ${colors.M}'>FLOTUS</span> have both appeared on newer shows hosted by Seth Meyers, James Corden and Samantha Bee.
 
 <p style='line-height: 1.5'>
-  <sup>(Hover over the images for more detail on the host or appearance.)</sup>
+  <sup>(${isMobilePhone ? 'Tap' : 'Hover over'} the images for more detail on the host or appearance.)</sup>
 </p>
         `;
       },
