@@ -299,6 +299,7 @@ var App = React.createClass({
       margin: 5,
     };
     var title = 'Putting Emojis on the President’s Face';
+    var description = "The POTUS and FLOTUS 😂'd 550 times on late-night - an interactive visualization.";
     var url = 'http://sxywu.com/obamas/';
     var shareStyle = {
       display: 'inline-block',
@@ -325,7 +326,7 @@ I hope this put a <img style={{width: 24}} src={emojis.happy(100)} role="present
 If it did, consider sharing the 💖:
           </p>
           <span style={shareStyle}>
-            <FacebookShareButton url={url} title={title} >
+            <FacebookShareButton url={url} title={title} description={description}>
               <FacebookIcon size={32} round />
             </FacebookShareButton>
           </span>
