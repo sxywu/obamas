@@ -303,7 +303,7 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
       id: 'show_videos',
       style: {
         width: '33%',
-        paddingTop: 200,
+        paddingTop: 100,
         height: '110vh',
       },
       position(width, top, hover) {
@@ -383,15 +383,16 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
       id: 'show_captions',
       style: {
         width: '33%',
-        paddingTop: 200,
+        paddingTop: 100,
         height: '110vh',
       },
       position(width, top, hover) {
         // if something's been hovered, do nothing
         if (hover) return {};
 
-        top += this.style.paddingTop;
-        var vizHeight = window.innerHeight - this.style.paddingTop;
+        var paddingTop = 200;
+        top += paddingTop;
+        var vizHeight = window.innerHeight - paddingTop;
         var vizSide = 2 * padding.left + obamaSize;
         var vizWidth = width - 2 * vizSide;
 
@@ -401,6 +402,7 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
           .range([vizSide, width - vizSide]);
 
         // calculate videos
+        var includeTitles = ["ln3wAdRAim4", "jiMUoVjQ5uI", "2TtdPbeKNFc"];
         var videos = _.chain(data.videosData)
           .sortBy(d => d.date)
           .map(video => {
@@ -434,6 +436,7 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
               host: video.host,
               guest: video.guest,
               annotations: video.annotations,
+              title: _.includes(includeTitles, video.videoId) ? video.title : '',
               happy,
               video,
             };
@@ -469,7 +472,39 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
         return {videos, axes};
       },
       text() {
-        return ``;
+        var numCaptions = _.filter(data.videosData, video => video.caption);
+
+        var michelleVideos = _.filter(data.videosData, video => video.caption && video.guest === 'M');
+        var michelleMax = 0;
+        var michelleHappy = _.reduce(michelleVideos, (total, video) => {
+          var sum = _.reduce(video.annotations, (sum, annotation) => {
+            return sum + _.filter(annotation.faces, face => face.happy).length;
+          }, 0);
+          michelleMax = Math.max(sum, michelleMax);
+          return total + sum;
+        }, 0);
+        var michelleAverage = michelleHappy / michelleVideos.length;
+
+        var barackVideos = _.filter(data.videosData, video => video.caption && video.guest === 'B');
+        var barackMax = 0;
+        var barackHappy = _.reduce(barackVideos, (total, video) => {
+          var sum = _.reduce(video.annotations, (sum, annotation) => {
+            return sum + _.filter(annotation.faces, face => face.happy).length;
+          }, 0);
+          barackMax = Math.max(sum, barackMax);
+          return total + sum;
+        }, 0);
+        var barackAverage = _.round(barackHappy / barackVideos.length, 2);
+
+        return `
+Here's the fun part: out of the **${data.videosData.length}** videos, **${numCaptions.length}** of them had captions.  So I took the liberty of taking a screenshot of the video every time someone talked, and fed the image into a [fancy facial recognition software](https://cloud.google.com/vision/) by Google.
+
+The result is that videos with the First Lady have significantly more smiles than those with the President.  Out of ${michelleVideos.length} videos, those with <span style='color: ${colors.M}'>FLOTUS</span> had **${michelleHappy}** expressions of joy, with a max of ${michelleMax} in a video.  Those with <span style='color: ${colors.B}'>POTUS</span>, on the other hand, only had **${barackHappy}** across ${barackVideos.length} videos, with a max of ${barackMax}.  That's an average of **${michelleAverage}** smiles per video for the First Lady, and **${barackAverage}** for the President; in other words, the <span style='color: ${colors.M}'>FLOTUS</span> had **${_.round((michelleAverage - barackAverage) / barackAverage * 100, 2)}%** more smiles than <span style='color: ${colors.B}'>POTUS</span>.
+
+<p style='line-height: 1'>
+  <sup>(The smaller dots are every time someone smiled in a video.  Hover for more details.)</sup>
+</p>
+        `;
       }
     },
     {

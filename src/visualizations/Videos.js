@@ -170,7 +170,7 @@ var Videos = React.createClass({
     }
     var faces = _.map(emoji.data.faces, face => {
       var emoji = face.happy ? this.props.emojis.happy(face.confidence) : this.props.emojis.neutral;
-      return (<img style={{padding: '5px 0'}} src={emoji} width={20} />);
+      return (<img style={{paddingTop: 5}} src={emoji} width={20} />);
     });
     var hover = {
       type: 'video',
@@ -182,7 +182,6 @@ var Videos = React.createClass({
         <div>
           <span className='header'>{emoji.video.video.title}</span><br />
           {faces}<br />
-          {emoji.index + 1} out of {emoji.total} happy faces
         </div>
       ),
     }
