@@ -26,12 +26,12 @@ var Header = React.createClass({
 
 In 2009, President Obama became the [first sitting president to appear on a late-night talk show](http://fortune.com/2016/11/04/obama-comedy-late-night-shows/), and in 2012, First Lady Michelle Obama also made her appearance.  They've been on many more talk shows since, promoting [HealthCare.gov](https://www.healthcare.gov/) and urging America to [get moving](http://www.letsmove.gov/).  And with this plethora of comedic gold arose a great opportunity: to put emoji's on the <span style='color: ${this.props.colors.B}'>**POTUS**</span> and <span style='color: ${this.props.colors.M}'>**FLOTUS**</span>'s face.
 
-You may be wondering, why do something so ridiculously silly?  Simple: because it's been a long and exhausting election season, and *we'll all need a pick-me-up come Election Day*.
+You may be wondering, why do something so ridiculously silly?  Simple: it's been a long and exhausting election season, and *we'll all need a pick-me-up come Election Day*.
     `;
   },
 
   render() {
-    var imageScale = 0.65;
+    var imageScale = this.props.isMobilePhone ? (window.innerWidth - 40) / 640 : 0.65;
     var imageWidth = 640 * imageScale;
 
     var images = [[this.barackPhotos, 'B'], [this.michellePhotos, 'M']];
@@ -83,9 +83,13 @@ You may be wondering, why do something so ridiculously silly?  Simple: because i
       );
     });
     var allEmojis = _.union([this.props.emojis.neutral], this.props.emojis.happy.range());
-    allEmojis = _.map(allEmojis, (emoji) => {
-      return (<img style={{width: 48}} src={emoji} role="presentation" />);
-    });
+    if (this.props.isMobilePhone) {
+      allEmojis = (<img style={{width: 48}} src={this.props.emojis.happy(100)} role="presentation" />);
+    } else {
+      allEmojis = _.map(allEmojis, (emoji) => {
+        return (<img style={{width: 48}} src={emoji} role="presentation" />);
+      });
+    }
 
     var style = {
       textAlign: 'center',
@@ -112,7 +116,7 @@ You may be wondering, why do something so ridiculously silly?  Simple: because i
     };
     var pStyle = {
       // textAlign: 'left',
-      width: imageWidth * 2,
+      width: imageWidth * (this.props.isMobilePhone ? 1 : 2),
       margin: 'auto',
       marginBottom: 40,
       lineHeight: 2,
@@ -120,6 +124,15 @@ You may be wondering, why do something so ridiculously silly?  Simple: because i
     };
 
     var rawMarkup = { __html: md.render(this.getText())};
+    var mobileWarning;
+    if (this.props.isMobilePhone) {
+      mobileWarning = `
+<sup>Interaction is limited on mobile<br />
+Consider **going on desktop**<br />
+for full experience</sup>
+      `;
+      mobileWarning = { __html: md.render(mobileWarning)};
+    }
 
     return (
       <div className="Header" style={style}>
@@ -131,6 +144,8 @@ You may be wondering, why do something so ridiculously silly?  Simple: because i
         <br />
         <img src={this.props.images.B} style={bStyle} role="presentation" />
         <img src={this.props.images.M} style={mStyle} role="presentation" />
+
+        <div style={{paddingTop: 20}} dangerouslySetInnerHTML={mobileWarning} />
         <h3>
           Start<br />
           ↓

@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import * as d3 from 'd3';
+import isMobile from 'ismobilejs';
 
 import Header from './Header';
 import Section from './Section';
@@ -36,7 +37,8 @@ var colors = {
 };
 var data = {videosData, annotationsData, showsData};
 
-var width = 1100;
+var isMobilePhone = isMobile.phone;
+var width = isMobilePhone ? window.innerWidth : 1100;
 var sectionPositions = [];
 var topSection;
 var bottomSection;
@@ -103,7 +105,7 @@ var App = React.createClass({
       video.annotations = _.sortBy(video.annotations, d => d.start);
     });
 
-    data.sectionData = sectionData(data, images, colors, emojis);
+    data.sectionData = sectionData(data, images, colors, emojis, isMobilePhone);
   },
 
   componentDidMount() {
@@ -263,6 +265,7 @@ var App = React.createClass({
       emojis,
       images,
       colors,
+      isMobilePhone,
     };
 
     return (

@@ -17,7 +17,7 @@ function getQuarterFromDate(date) {
   return new Date(date.getFullYear(), quarter, 1);
 }
 
-export default function(data, images, colors, emojis) {
+export default function(data, images, colors, emojis, isMobilePhone) {
   // initialize all the scales
   var viewExtent = d3.extent(data.videosData, d => d.statistics.viewCount);
   var durationExtent = d3.extent(data.videosData, d => d.duration);
@@ -317,7 +317,7 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
         xScale.domain([new Date('January 1, 2009'), new Date('November 8, 2016')])
           .range([padding.left + obamaSize, left]);
         var yScale = d3.scaleLog().domain(viewExtent)
-          .range([top + window.innerHeight - obamaHeight, top]);
+          .range([top + window.innerHeight * 0.95 - obamaHeight, top]);
 
         var includeTitles = ["ln3wAdRAim4", "RDocnbkHjhI", "95KTrtzOY-g", "Hq-URl9F17Y"];
         // calculate videos
@@ -392,7 +392,7 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
 
         var paddingTop = 150;
         top += paddingTop;
-        var vizHeight = window.innerHeight - paddingTop;
+        var vizHeight = window.innerHeight * 0.95 - paddingTop;
         var vizSide = 2 * padding.left + obamaSize;
         var vizWidth = width - 2 * vizSide;
 
