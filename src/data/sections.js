@@ -592,7 +592,7 @@ The result is that videos with the First Lady have significantly more smiles tha
           `;
         }
         return `
-And finally, the pick-me-up: below are circles representing the **${numCaptions.length}** videos, each with a screenshot for every time someone talked.  *Select a video* to see the images, and *hover over the timeline* to read the corresponding captions.  *Click on the timeline* while hovering to see <img width='24' src=${emojis.happy(100)} />'s on the President's face.  Then, *click on the image* to jump to that moment of the video.
+And finally, the pick-me-up: below are circles representing the **${numCaptions.length}** videos, each with a screenshot for every time someone talked.  *Select a video* to see the images, and *hover over the timeline* to read the corresponding captions.  *Click on the timeline* to see <img width='24' src=${emojis.happy(100)} />'s on the President's face.  Then, *click on the image* to jump to that moment of the video.
         `;
       }
     }
