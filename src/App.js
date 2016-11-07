@@ -161,7 +161,7 @@ var App = React.createClass({
   },
 
   onScroll() {
-    var scrollTop = document.body.scrollTop;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
 
     var next;
     var section = _.find(sectionPositions, (section, i) => {

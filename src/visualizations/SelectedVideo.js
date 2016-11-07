@@ -72,6 +72,7 @@ var SelectedVideo = React.createClass({
     this.mouseContainer
       .attr('width', props.vizWidth)
       .attr('height', wordsHeight * 2);
+    this.mouseContainerLeft = this.refs.mouse.getBoundingClientRect().left;
 
     this.titleContainer
       .attr('y', -75)
@@ -266,7 +267,7 @@ var SelectedVideo = React.createClass({
   mouseoverCaption() {
     mousingOver = true;
 
-    var focusX = d3.event.offsetX - this.props.vizSide;
+    var focusX = d3.event.clientX - this.mouseContainerLeft;
     if (this.props.isMobilePhone) {
       focusX = d3.touches(this.refs.mouse)[0][0];
     }
