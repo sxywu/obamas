@@ -309,7 +309,7 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
     },
     {
       id: 'show_videos',
-      half: isMobilePhone ? 520 : 0,
+      half: isMobilePhone ? 550 : 0,
       style: {
         width: isMobilePhone ? '100%' : '33%',
         paddingTop: 150,
@@ -395,7 +395,7 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
     },
     {
       id: 'show_captions',
-      half: isMobilePhone ? 550 : 0,
+      half: isMobilePhone ? 600 : 0,
       style: {
         width: isMobilePhone ? '100%' : '75%',
         paddingTop: 50,
@@ -405,7 +405,7 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
         // if something's been hovered, do nothing
         if (hover) return {};
 
-        var paddingTop = isMobilePhone ? 550 : 150;
+        var paddingTop = isMobilePhone ? 600 : 150;
         top += paddingTop;
         var vizHeight = window.innerHeight * 0.95 - (isMobilePhone ? 0 : paddingTop);
         var vizSide = 2 * padding.left + (isMobilePhone ? 0 : obamaSize);
