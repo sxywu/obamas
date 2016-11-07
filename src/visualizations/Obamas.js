@@ -41,9 +41,14 @@ var Obamas = React.createClass({
       .attr('opacity', 0.5);
 
     this.obamas = this.obamas.merge(enter)
-      .attr('opacity', d => d.opacity)
-      .on('mouseenter', d => this.hoverObama(d))
-      .on('mouseleave', d => this.hoverObama());
+      .attr('opacity', d => d.opacity);
+
+    if (this.props.isMobilePhone) {
+      this.obamas.on('click', d => this.hoverObama(d));
+    } else {
+      this.obamas.on('mouseenter', d => this.hoverObama(d))
+        .on('mouseleave', d => this.hoverObama());
+    }
 
     this.obamas.transition().duration(props.scrollDuration)
       .attr('transform', d => {

@@ -516,7 +516,7 @@ Here's the fun part: out of the **${data.videosData.length}** videos, **${numCap
 The result is that videos with the First Lady have significantly more smiles than those with the President.  Out of ${michelleVideos.length} videos, those with <span style='color: ${colors.M}'>FLOTUS</span> had **${michelleHappy}** expressions of joy, with [as many as ${michelleMax} in a video](https://www.youtube.com/watch?v=ln3wAdRAim4).  Those with <span style='color: ${colors.B}'>POTUS</span>, on the other hand, only had **${barackHappy}** across ${barackVideos.length} videos, with a [high of ${barackMax}](https://www.youtube.com/watch?v=2TtdPbeKNFc).  That's an average of **${michelleAverage}** smiles per video for the First Lady, and **${barackAverage}** for the President; in other words, <span style='color: ${colors.M}'>FLOTUS</span> had **${_.round((michelleAverage - barackAverage) / barackAverage * 100, 2)}%** more smiles than <span style='color: ${colors.B}'>POTUS</span>.
 
 <p style='line-height: 1.5'>
-  <sup>(The smaller dots are every time someone smiled in a video.  <em>${isMobilePhone ? 'Tap' : 'Hover'}</em> for more details.)</sup>
+  <sup>(The smaller dots are every time someone smiled in a video.<em>${isMobilePhone ? '' : '  Hover for more details.'}</em>)</sup>
 </p>
         `;
       }

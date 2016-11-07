@@ -63,9 +63,13 @@ var Videos = React.createClass({
       .attr('r', d => (d.interpolateRadius ?
         d.interpolateRadius(props.interpolateScroll) : d.radius) / 2)
       .style('cursor', 'pointer')
-      .on('click', this.clickVideo)
-      .on('mouseenter', d => this.hoverVideo(d))
-      .on('mouseleave', d => this.hoverVideo());
+      .on('click', this.clickVideo);
+    if (!this.props.isMobilePhone) {
+      this.videos.select('.background')
+        .on('mouseenter', d => this.hoverVideo(d))
+        .on('mouseleave', d => this.hoverVideo());
+    }
+
     this.videos.select('.caption')
       .datum(d => d)
       .attr('r', d => (d.interpolateCaption ?
@@ -83,16 +87,18 @@ var Videos = React.createClass({
 
     happy.exit().remove();
 
-    happy.enter().append('circle')
+    happy = happy.enter().append('circle')
       .attr('r', 3)
       .attr('opacity', 0.5)
       .attr('fill', d => props.colors[d.guest])
       .merge(happy)
       .attr('cx', d => d.interpolateX ? d.interpolateX(props.interpolateScroll) : d.x)
       .attr('cy', d => d.interpolateY ? d.interpolateY(props.interpolateScroll) : d.y)
-      .style('cursor', 'pointer')
-      .on('mouseenter', d => this.hoverEmoji(d))
-      .on('mouseleave', d => this.hoverEmoji());
+      .style('cursor', 'pointer');
+    if (!this.props.isMobilePhone) {
+      happy.on('mouseenter', d => this.hoverEmoji(d))
+        .on('mouseleave', d => this.hoverEmoji());
+    }
 
     // add titles when appropriate
     var titles = this.videos.selectAll('.header')

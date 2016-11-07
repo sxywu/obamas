@@ -33,9 +33,13 @@ var Hosts = React.createClass({
     enter.append('image')
       .classed('image', true);
 
-    this.hosts = enter.merge(this.hosts)
-      .on('mouseenter', (d) => this.hoverHost(d))
-      .on('mouseleave', (d) => this.hoverHost());
+    this.hosts = enter.merge(this.hosts);
+    if (this.props.isMobilePhone) {
+      this.hosts.on('click', d => this.hoverHost(d));
+    } else {
+      this.hosts.on('mouseenter', d => this.hoverHost(d))
+        .on('mouseleave', d => this.hoverHost());
+    }
 
     this.hosts.transition().duration(props.scrollDuration)
       .attr('transform', d => {
