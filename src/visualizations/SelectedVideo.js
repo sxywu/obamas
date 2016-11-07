@@ -72,7 +72,10 @@ var SelectedVideo = React.createClass({
   },
 
   renderSelectedVideo(props) {
-    if (!props.section.updateSelectedVideo) return;
+    // if it's not the right section, OR if we've scrolled back into the same
+    // section, then don't do anything
+    if (!props.section.updateSelectedVideo ||
+      (currentVideo && currentVideo.key === props.selectedVideo.key)) return;
 
     this.container.attr('transform', 'translate(' + [props.vizSide, props.section.top + top] + ')');
 
@@ -103,14 +106,13 @@ var SelectedVideo = React.createClass({
     this.renderFaces(props);
 
     // default the selected caption to the first smiling image
-    if (!currentVideo || (currentVideo && currentVideo.key !== props.selectedVideo.key)) {
-      this.selectedCaption = _.find(this.facesData, d =>
-        _.some(d.annotation.faces, face => face.happy));
-      currentVideo = props.selectedVideo;
-    }
+    this.selectedCaption = _.find(this.facesData, d =>
+      _.some(d.annotation.faces, face => face.happy));
 
     this.renderCaption(props);
     this.renderImage(props);
+
+    currentVideo = props.selectedVideo;
   },
 
   calculateAnnotation(props, video) {
