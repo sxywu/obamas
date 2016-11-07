@@ -35,7 +35,8 @@ var Hosts = React.createClass({
 
     this.hosts = enter.merge(this.hosts);
     if (this.props.isMobilePhone) {
-      this.hosts.on('click', d => this.hoverHost(d));
+      this.hosts.on('click', d => this.hoverHost(d))
+        .on('blur', d => this.hoverHost());
     } else {
       this.hosts.on('mouseenter', d => this.hoverHost(d))
         .on('mouseleave', d => this.hoverHost());

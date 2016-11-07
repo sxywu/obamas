@@ -43,15 +43,22 @@ var SelectedVideo = React.createClass({
     this.imageContainer = d3.select(this.refs.emojiImage);
     this.underlineContainer = d3.select(this.refs.underline)
       .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 0.5] + ')');
-    var mouseMove = this.props.isMobilePhone ? 'touchmove' : 'mousemove';
-    var mouseLeave = this.props.isMobilePhone ? '' : 'mouseleave';
-    var click = this.props.isMobilePhone ? 'touchend' : 'click';
     this.mouseContainer = d3.select(this.refs.mouse)
       .attr('transform', 'translate(' + [0, imageHeight + wordsHeight * 0.6] + ')')
-      .on(click, this.selectCaption)
-      .on(mouseMove, this.mouseoverCaption)
-      .on(mouseLeave, this.mouseleaveCaption)
       .attr('opacity', 0);
+
+    if (this.props.isMobilePhone) {
+      // if it's mobile, use d3 drag
+      var drag = d3.drag()
+        .on('drag', () => this.mouseoverCaption(d3.event.x))
+        .on('end', this.selectCaption);
+      this.mouseContainer.call(drag);
+    } else {
+      this.mouseContainer
+        .on('click', this.selectCaption)
+        .on('mousemove', this.mouseoverCaption)
+        .on('mouseleave', this.mouseleaveCaption);
+    }
 
     this.imageContainer.append('image')
       .classed('source', true);
@@ -264,13 +271,10 @@ var SelectedVideo = React.createClass({
     this.renderImage(this.props);
   },
 
-  mouseoverCaption() {
+  mouseoverCaption(focusX) {
     mousingOver = true;
 
-    var focusX = d3.event.clientX - this.mouseContainerLeft;
-    if (this.props.isMobilePhone) {
-      focusX = d3.touches(this.refs.mouse)[0][0];
-    }
+    focusX = focusX || d3.event.clientX - this.mouseContainerLeft;
     var annotation = _.find(this.facesData, d => d.px1 <= focusX && focusX < d.px2);
 
     // update cursor

@@ -44,7 +44,8 @@ var Obamas = React.createClass({
       .attr('opacity', d => d.opacity);
 
     if (this.props.isMobilePhone) {
-      this.obamas.on('click', d => this.hoverObama(d));
+      this.obamas.on('click', d => this.hoverObama(d))
+        .on('blur', d => this.hoverObama());
     } else {
       this.obamas.on('mouseenter', d => this.hoverObama(d))
         .on('mouseleave', d => this.hoverObama());
