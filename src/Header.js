@@ -24,9 +24,9 @@ var Header = React.createClass({
     return `
 <sup>**BY [SHIRLEY WU](https://twitter.com/sxywu)**</sup>
 
-In 2009, President Obama became the [first sitting president to appear on a late-night talk show](http://fortune.com/2016/11/04/obama-comedy-late-night-shows/), and in 2012, First Lady Michelle Obama also made her appearance.  They've been on many more talk shows since, promoting [HealthCare.gov](https://www.healthcare.gov/) and urging America to [get moving](http://www.letsmove.gov/).  And with this plethora of comedic gold arose a great opportunity: to put emoji's on the <span style='color: ${this.props.colors.B}'>**POTUS**</span> and <span style='color: ${this.props.colors.M}'>**FLOTUS**</span>'s face.
+In 2009, President Obama became the [first sitting president to appear on a late-night talk show](http://fortune.com/2016/11/04/obama-comedy-late-night-shows/).  First Lady Michelle Obama followed suit in 2012, appearing on *The Tonight Show with Jay Leno*.  They've been on many more talk shows since, promoting [HealthCare.gov](https://www.healthcare.gov/) and urging America to [get moving](http://www.letsmove.gov/).  From this plethora of comedic gold arose a great opportunity: to put emojis on the <span style='color: ${this.props.colors.B}'>**POTUS**</span> and <span style='color: ${this.props.colors.M}'>**FLOTUS**</span>'s face.
 
-You may be wondering, why do something so ridiculously silly?  Simple: it's been a long and exhausting election season, and *we'll all need a pick-me-up come Election Day*.
+You may be wondering, "why do something so ridiculously silly"?  Simple: it's been a long and exhausting election season, and *we'll all need a pick-me-up come Election Day*.
     `;
   },
 

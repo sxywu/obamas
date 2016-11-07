@@ -319,7 +319,7 @@ No matter what happens on Tuesday,<br />
 I hope this put a <img style={{width: 24}} src={emojis.happy(100)} role="presentation" /> on your face.
           </h2>
           <p>
-If it did, consider sharing the 💖:
+If it did, consider sharing the 💖
           </p>
           <span style={shareStyle}>
             <FacebookShareButton url={url} title={title} description={description}>
@@ -335,7 +335,7 @@ If it did, consider sharing the 💖:
         </div>
         <div style={{textAlign: 'center', paddingBottom: 40, position: 'relative'}}>
 Made with 💕 by <a href='https://twitter.com/sxywu' src='_new'>Shirley Wu</a> for <a href='http://www.datasketch.es/' src='_new'>Datasketch|es</a>.<br />
-<em>Thank you for eight years, Mr. and Mrs. Obama ✨.</em>
+<em>Thank you for eight years, Mr. and Mrs. Obama ✨</em>
         </div>
         <Hover hover={this.state.hover} />
       </div>

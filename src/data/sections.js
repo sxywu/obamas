@@ -137,7 +137,7 @@ export default function(data, images, colors, emojis, isMobilePhone) {
         var numTimes = _.chain(data.showsData)
           .map(show => _.map(show.dates, date => date[1])).flatten().countBy().value();
         return `
-Since his first time on *The Tonight Show with Jay Leno*, the <span style='color: ${colors.B}'>President</span> has made **${numTimes.B}** late-night appearances on ${barackShows.length} shows with ${barackHosts.length} different hosts.  Impressively, the <span style='color: ${colors.M}'>Fist Lady</span> has very similar numbers despite a three-year late start: **${numTimes.M}** appearances across ${michelleShows.length} shows, also with ${michelleHosts.length} hosts.
+Since his first time on *The Tonight Show with Jay Leno*, the <span style='color: ${colors.B}'>President</span> has made **${numTimes.B}** late-night appearances on ${barackShows.length} shows with ${barackHosts.length} different hosts.  Impressively, the <span style='color: ${colors.M}'>First Lady</span> has very similar numbers despite a three-year late start: **${numTimes.M}** appearances across ${michelleShows.length} shows, also with ${michelleHosts.length} hosts.
 
 They seem to favor hosts David Letterman and Stephen Colbert over the years, appearing four times each on both shows.  Over the past half year however, the <span style='color: ${colors.B}'>POTUS</span> and <span style='color: ${colors.M}'>FLOTUS</span> have both appeared on newer shows hosted by Seth Meyers, James Corden and Samantha Bee.
 
@@ -219,7 +219,7 @@ They seem to favor hosts David Letterman and Stephen Colbert over the years, app
             return data.quarter = getQuarterFromDate(date);
           }).map(dates => {
             return _.chain(dates)
-              .sortBy(date => date.guest)
+              .sortBy(date => date.date)
               .map((data, i) => {
                 var {quarter} = data;
                 var x = xScale(quarter);
@@ -297,7 +297,7 @@ They seem to favor hosts David Letterman and Stephen Colbert over the years, app
       },
       text() {
         return `
-The <span style='color: ${colors.M}'>FLOTUS</span> have made many appearances since 2012 for [Let's Move!](http://www.letsmove.gov/) (2010), [Reach Higher](https://www.whitehouse.gov/reach-higher) (2014), and [Let Girls Learn](https://www.whitehouse.gov/letgirlslearn) (2015) to promote healthy living and girls' education around the world.
+The <span style='color: ${colors.M}'>FLOTUS</span> has made many appearances since 2012 for [Let's Move!](http://www.letsmove.gov/), [Reach Higher](https://www.whitehouse.gov/reach-higher), and [Let Girls Learn](https://www.whitehouse.gov/letgirlslearn) to promote healthy living and girls' education around the world.
 
 The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other hand, peaked in 2012 (presumably for the election) and again in the last year to [reflect on his presidency](https://www.youtube.com/watch?v=ziwYbVx_-qg) and promote Hillary Clinton's run for presidency.
 
@@ -417,7 +417,7 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
           .range([vizSide, width - vizSide]);
 
         // calculate videos
-        var includeTitles = [];
+        var includeTitles = ['ln3wAdRAim4'];
         var videos = _.chain(data.videosData)
           .sortBy(d => d.date)
           .map(video => {
@@ -513,7 +513,7 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
         return `
 Here's the fun part: out of the **${data.videosData.length}** videos, **${numCaptions.length}** of them had captions.  So I took the liberty of taking a screenshot of the video every time someone talked, and fed the images into Google's [fancy facial recognition software](https://cloud.google.com/vision/).
 
-The result is that videos with the First Lady have significantly more smiles than those with the President.  Out of ${michelleVideos.length} videos, those with <span style='color: ${colors.M}'>FLOTUS</span> had **${michelleHappy}** expressions of joy, with a max of ${michelleMax} in a video.  Those with <span style='color: ${colors.B}'>POTUS</span>, on the other hand, only had **${barackHappy}** across ${barackVideos.length} videos, with a max of ${barackMax}.  That's an average of **${michelleAverage}** smiles per video for the First Lady, and **${barackAverage}** for the President; in other words, <span style='color: ${colors.M}'>FLOTUS</span> had **${_.round((michelleAverage - barackAverage) / barackAverage * 100, 2)}%** more smiles than <span style='color: ${colors.B}'>POTUS</span>.
+The result is that videos with the First Lady have significantly more smiles than those with the President.  Out of ${michelleVideos.length} videos, those with <span style='color: ${colors.M}'>FLOTUS</span> had **${michelleHappy}** expressions of joy, with [as many as ${michelleMax} in a video](https://www.youtube.com/watch?v=ln3wAdRAim4).  Those with <span style='color: ${colors.B}'>POTUS</span>, on the other hand, only had **${barackHappy}** across ${barackVideos.length} videos, with a [high of ${barackMax}](https://www.youtube.com/watch?v=2TtdPbeKNFc).  That's an average of **${michelleAverage}** smiles per video for the First Lady, and **${barackAverage}** for the President; in other words, <span style='color: ${colors.M}'>FLOTUS</span> had **${_.round((michelleAverage - barackAverage) / barackAverage * 100, 2)}%** more smiles than <span style='color: ${colors.B}'>POTUS</span>.
 
 <p style='line-height: 1.5'>
   <sup>(The smaller dots are every time someone smiled in a video.  <em>${isMobilePhone ? 'Tap' : 'Hover'}</em> for more details.)</sup>
@@ -588,11 +588,11 @@ The result is that videos with the First Lady have significantly more smiles tha
 
         if (isMobilePhone) {
           return `
-  And finally, the pick-me-up: the **${numCaptions.length}** videos are below, each with a screenshot for every time someone talked.  *Tap on a video* to see the images, and *scrub over the timeline* to read the corresponding captions.  *Let go* to see <img width='24' src=${emojis.happy(100)} />'s on the President's face, and *tap the image* to go to the video at that moment.
+  And finally, the pick-me-up: below are circles representing the **${numCaptions.length}** videos, each with a screenshot for every time someone talked.  *Tap on a video* to see the images, and *scrub over the timeline* to read the corresponding captions.  *Let go* to see <img width='24' src=${emojis.happy(100)} />'s on the President's face, then *tap the image* to jump to that moment of the video.
           `;
         }
         return `
-And finally, the pick-me-up: the **${numCaptions.length}** videos are below, each with a screenshot for every time someone talked.  *Select a video* to see the images, and *hover the timeline* to read the corresponding captions.  *Click on the timeline* while hovering to see <img width='24' src=${emojis.happy(100)} />'s on the President's face, and *click the image* to go to the video at that moment.
+And finally, the pick-me-up: below are circles representing the **${numCaptions.length}** videos, each with a screenshot for every time someone talked.  *Select a video* to see the images, and *hover over the timeline* to read the corresponding captions.  *Click on the timeline* while hovering to see <img width='24' src=${emojis.happy(100)} />'s on the President's face.  Then, *click on the image* to jump to that moment of the video.
         `;
       }
     }
