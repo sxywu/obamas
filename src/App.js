@@ -295,7 +295,7 @@ var App = React.createClass({
       margin: 5,
     };
     var title = 'Putting Emojis on the President’s Face';
-    var description = "The POTUS and FLOTUS laughed 550 times on late-night - an interactive visualization.";
+    var description = "The number of times POTUS and FLOTUS laughed on late-night - an interactive visualization.";
     var url = 'http://sxywu.com/obamas/';
     var shareStyle = {
       display: 'inline-block',
