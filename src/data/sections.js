@@ -378,7 +378,7 @@ The <span style='color: ${colors.B}'>POTUS</span>'s appearances, on the other ha
           },
         };
 
-        return {videos, axes};
+        return {videos, axes, obamas: [], hosts: [], links: []};
       },
       text() {
         // calculate total appearances
@@ -483,7 +483,7 @@ Out of the <span style='color: ${colors.B}'>POTUS</span> and <span style='color:
           },
         };
 
-        return {videos, axes};
+        return {videos, axes, obamas: [], hosts: [], links: []};
       },
       text() {
         var numCaptions = _.filter(data.videosData, video => video.caption);
@@ -581,7 +581,7 @@ The result is that videos with the First Lady have significantly more smiles tha
             };
           }).value();
 
-        return {videos, vizWidth, vizSide};
+        return {videos, vizWidth, vizSide, obamas: [], hosts: [], links: []};
       },
       text() {
         var numCaptions = _.filter(data.videosData, video => video.caption);
