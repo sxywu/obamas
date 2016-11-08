@@ -1,7 +1,7 @@
 var fs = require('fs');
 var youtubedl = require('youtube-dl');
 
-var allVideos = fs.readFileSync('filtered_videos.json', 'utf-8');
+var allVideos = fs.readFileSync('final_videos.json', 'utf-8');
 allVideos = JSON.parse(allVideos);
 
 function downloadVideos(video, videos) {
