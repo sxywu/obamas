@@ -6,7 +6,7 @@ var youTube = new YouTube();
 var key = fs.readFileSync('key.txt', 'utf-8');
 youTube.setKey(key);
 
-var allVideos = fs.readFileSync('data/filtered_videos.json', 'utf-8');
+var allVideos = fs.readFileSync('filtered_videos.json', 'utf-8');
 allVideos = JSON.parse(allVideos);
 var final = [];
 
@@ -24,7 +24,7 @@ function getDetail(video, videos) {
 
       // if videos is now empty, save and exit
       if (_.isEmpty(videos)) {
-        fs.writeFile('data/final_videos.json', JSON.stringify(final));
+        fs.writeFile('final_videos.json', JSON.stringify(final));
         return;
       }
 
