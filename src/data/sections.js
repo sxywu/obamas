@@ -37,7 +37,8 @@ export default function(data, images, colors, emojis, isMobilePhone) {
       updateSelectedVideo: true,
       style: {
         textAlign: 'center',
-        minHeight: 800,
+        paddingTop: 150,
+        minHeight: 1200,
         width: isMobilePhone ? '100%' : '80%',
         margin: 'auto',
       },
@@ -45,7 +46,7 @@ export default function(data, images, colors, emojis, isMobilePhone) {
         // if something's been hovered, do nothing
         if (hover) return {};
 
-        top += 140;
+        top += (isMobilePhone ? 400 : 250) + 2 * videoSize;
         var vizSide = isMobilePhone ? padding.left / 2 : 2 * padding.left + obamaSize;
         var vizWidth = width - 2 * vizSide;
 

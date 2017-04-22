@@ -16,6 +16,7 @@ var Section = React.createClass({
     }, this.props.style);
     var textStyle = {
       lineHeight: 2,
+      padding: 20,
       background: this.props.isMobilePhone ? '' : 'rgba(255, 255, 255, 0.8)',
       pointerEvents: 'auto',
     };

@@ -5,7 +5,7 @@ import * as d3 from 'd3';
 var xScale = d3.scaleLinear();
 var heightScale = d3.scaleLinear();
 var wordsHeight = 100;
-var top = 250;
+var top = 450;
 var imageScale = 0.25;
 var imageWidth = 640;
 var imageHeight = 360;
