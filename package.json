@@ -22,7 +22,6 @@
     "youtube-dl": "^1.11.1",
     "youtube-node": "^1.3.0"
   },
-  "homepage": "http://sxywu.github.io/obamas",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
