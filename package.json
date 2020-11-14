@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "0.6.1"
-  },
-  "dependencies": {
+    "react-scripts": "0.6.1",
     "@google-cloud/storage": "^0.4.0",
     "@google-cloud/vision": "^0.4.0",
-    "d3": "^4.3.0",
     "fluent-ffmpeg": "^2.1.0",
-    "gm": "^1.23.0",
+    "gm": "^1.23.0"
+  },
+  "dependencies": {
+    "d3": "4.10.0",
     "ismobilejs": "^0.4.0",
     "lodash": "^4.16.4",
     "moment": "^2.15.1",
