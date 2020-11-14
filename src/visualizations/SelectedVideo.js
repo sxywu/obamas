@@ -219,7 +219,8 @@ var SelectedVideo = React.createClass({
       .attr('xlink:href', d => 'https://storage.googleapis.com/obama-interview-screenshots/sm-' + d.filename)
       .attr('width', d => d.x2 - d.x1)
       .attr('x', d => d.x1)
-      .attr('opacity', d => d.opacity);
+      .attr('opacity', d => d.opacity)
+      .attr('filter', 'url(#blurThumbnail)');
   },
 
   renderCaption(props) {
@@ -250,6 +251,7 @@ var SelectedVideo = React.createClass({
       .attr('x', -imageWidth / 2)
       .attr('width', imageWidth)
       .attr('height', imageHeight)
+      .attr('filter', 'url(#blurVideo)')
       .attr('xlink:href', 'https://storage.googleapis.com/obama-interview-screenshots/' + this.selectedCaption.annotation.filename);
 
     var emojis = this.imageContainer.selectAll('.emoji')
@@ -344,6 +346,14 @@ var SelectedVideo = React.createClass({
 
     return (
       <g ref='container' className='SelectedVideo'>
+        <defs>
+          <filter id='blurVideo'>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="15" />
+          </filter>
+          <filter id='blurThumbnail'>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
+          </filter>
+        </defs>
         <text ref='videoTitle' />
         <g ref='faces' />
         <g ref='annotations' />

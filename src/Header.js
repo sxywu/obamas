@@ -75,7 +75,7 @@ You may be wondering, "why do something so ridiculously silly"?  Simple: it's be
         <span style={style}>
           <div>
             <img src={'https://storage.googleapis.com/obama-interview-screenshots/' + emotionObj.filename}
-              width={imageWidth} role="presentation" />
+              width={imageWidth} style={{ filter: 'blur(20px)' }} role="presentation" />
             {emotionFaces}
             <div style={footerStyle}>{emotionObj.video.channelTitle}</div>
           </div>

@@ -57,6 +57,8 @@ var Hosts = React.createClass({
       .attr('y', d => -(d.radius - padding) / 2)
       .attr('width', d => (d.radius - padding))
       .attr('height', d => (d.radius - padding))
+      .attr('filter', 'url(#blurHost)')
+      .attr('clip-path', 'url(#clipHost)')
       .attr('xlink:href', d => d.image);
   },
 
@@ -83,7 +85,16 @@ var Hosts = React.createClass({
   render() {
 
     return (
-      <g ref='container' className='hosts' />
+      <g ref='container' className='hosts'>
+        <defs>
+          <filter id='blurHost'>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="6" />
+          </filter>
+          <clipPath id='clipHost'>
+            <circle r='25' />
+          </clipPath>
+        </defs>
+      </g>
     );
   }
 });
