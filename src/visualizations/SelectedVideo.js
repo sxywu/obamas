@@ -348,10 +348,10 @@ var SelectedVideo = React.createClass({
       <g ref='container' className='SelectedVideo'>
         <defs>
           <filter id='blurVideo'>
-            <feGaussianBlur in="SourceGraphic" stdDeviation="15" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="20" />
           </filter>
           <filter id='blurThumbnail'>
-            <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="8" />
           </filter>
         </defs>
         <text ref='videoTitle' />
